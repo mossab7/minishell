@@ -72,6 +72,6 @@ int main(int ac, char **av, const char *envp[])
 		ft_free(tokens);
 		ft_free(input);
 	}
-	cleanup_memory_tracker(get_memory_tracker());
+	//cleanup_memory_tracker(get_memory_tracker());
 	return 0;
 }

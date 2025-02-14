@@ -13,22 +13,24 @@ t_env	*env_construct()
 	return (env);
 }
 
-t_env	*env_copy(t_env *env)
+t_env    *env_copy(t_env *env)
 {
-	t_env	*_env;
+    t_env    *_env;
 
-	_env = alloc(sizeof(*env));
-	_env->size = 0;
-	_env->cap = env->cap;
-	_env->cells = alloc(_env->cap * sizeof(*(env->cells)));
-	_env->path = strv_construct();
-	while (_env->size < env->size)
-	{
-		_env->cells[_env->size].key = ft_strdup(env->cells[_env->size].key);
-		_env->cells[_env->size].value = ft_strdup(env->cells[_env->size].value);
-		_env->size++;
-	}
-	return (_env);
+    _env = alloc(sizeof(*env));
+    _env->size = 0;
+    _env->cap = env->cap;
+    _env->cells = alloc(_env->cap * sizeof(*(env->cells)));
+    _env->path = strv_construct();
+    while (_env->size < env->size)
+    {
+        _env->cells[_env->size].key = ft_strdup(env->cells[_env->size].key);
+        _env->cells[_env->size].value = ft_strdup(env->cells[_env->size].value);
+        _env->size++;
+    }
+    for (; _env->path->size < env->path->size;)
+        strv_push_back(_env->path, env->path->cstrings[_env->path->size]);
+    return (_env);
 }
 
 void	env_expand(t_env *env)

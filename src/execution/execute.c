@@ -3,10 +3,8 @@
 #include <sys/wait.h>
 #include <termios.h>
 
-volatile sig_atomic_t g_signal_received = 0;
-pid_t g_current_pid = 0;
-
-int setup_redirections(t_command *cmd, int *saved_fds) {
+int setup_redirections(t_command *cmd, int *saved_fds)
+{
     saved_fds[0] = dup(STDIN_FILENO);
     saved_fds[1] = dup(STDOUT_FILENO);
 
@@ -74,91 +72,41 @@ int setup_redirections(t_command *cmd, int *saved_fds) {
     return 0;
 }
 
-int execute_command(t_command *cmd, t_env *env) {
+int execute_command(t_command *cmd, t_env *env)
+{
     int saved_fds[2];
     int status = 0;
 
-    if (cmd->argc == 0) return 0;
-
-    if (ft_strcmp(cmd->args[0], "cd") == 0) {
-        if (cmd->argc > 2) {
-            ft_printf("cd: too many arguments\n");
-            return 1;
-        }
-        const char *dir = cmd->argc == 1 ? env_get(env, "HOME") : cmd->args[1];
-        if (chdir(dir) != 0) {
-            perror("cd");
-            return 1;
-        }
-        char *pwd = getcwd(NULL, 0);
-        if (pwd) {
-            env_set(env, "PWD", pwd);
-            free(pwd);
-        }
-        return 0;
-    }
-    else if (ft_strcmp(cmd->args[0], "export") == 0) {
-        if (cmd->argc == 1) {
-            env_print(env);
-            return 0;
-        }
-        for (int i = 1; i < cmd->argc; i++) {
-            char **parts = ft_split(cmd->args[i], '=');
-            if (parts && parts[0]) {
-                env_set(env, parts[0], parts[1] ? parts[1] : "");
-            }
-            char **tmp = parts;
-            while (*tmp) {
-                free(*tmp);
-                tmp++;
-            }
-            free(parts);
-        }
-        return 0;
-    }
-    else if (ft_strcmp(cmd->args[0], "unset") == 0) {
-        for (int i = 1; i < cmd->argc; i++) {
-            env_del(env, cmd->args[i]);
-        }
-        env_join(env);
-        return 0;
-    }
-    else if (ft_strcmp(cmd->args[0], "env") == 0) {
-        env_print(env);
-        return 0;
-    }
-
-    g_current_pid = fork();
-    if (g_current_pid == -1) {
+    if (cmd->argc == 0)
+		return 0;
+    pid_t current_pid = fork();
+	if (current_pid == -1)
+	{
         perror("fork");
         return -1;
     }
-
-    if (g_current_pid == 0) {
+    if (current_pid == 0)
+	{
         if (setup_redirections(cmd, saved_fds) == -1)
             exit(EXIT_FAILURE);
-
         t_string *cmd_path = search_path(env->path, cmd->args[0]);
-        if (cmd_path) {
+		if (cmd_path)
+		{
             execve(cmd_path->cstring, cmd->args, env->envp);
             str_destruct(cmd_path);
-        } else {
-            execve(cmd->args[0], cmd->args, env->envp);
         }
         ft_printf("minishell: %s: command not found\n", cmd->args[0]);
         exit(127);
     }
 
-    waitpid(g_current_pid, &status, 0);
-    g_current_pid = 0;
-
+    waitpid(current_pid, &status, 0);
     if (WIFSIGNALED(status)) {
         env->last_command_status = 128 + WTERMSIG(status);
     } else {
         env->last_command_status = WEXITSTATUS(status);
     }
 
-    return env->last_command_status;
+    return (env->last_command_status);
 }
 
 int execute_pipe(t_ast *node, t_env *env) {
@@ -212,14 +160,17 @@ int execute_pipe(t_ast *node, t_env *env) {
     return env->last_command_status;
 }
 
-int execute_subshell(t_ast *node, t_env *env) {
+int execute_subshell(t_ast *node, t_env *env)
+{
     pid_t pid = fork();
-    if (pid == -1) {
+    if (pid == -1)
+	{
         perror("fork");
         return -1;
     }
 
-    if (pid == 0) {
+    if (pid == 0)
+	{
         t_env *subshell_env = env_copy(env);
         int result = execute_ast(node->left, subshell_env);
         env_destroy(subshell_env);

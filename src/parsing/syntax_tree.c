@@ -78,24 +78,6 @@ void syntax_error(const char *message) {
     exit(EXIT_FAILURE);
 }
 
-void *xalloc(size_t size) {
-    void *ptr = calloc(1, size);
-    if (!ptr) {
-        perror("Allocation failed");
-        exit(EXIT_FAILURE);
-    }
-    return ptr;
-}
-
-char *xstrdup(const char *str) {
-    char *dup = strdup(str);
-    if (!dup) {
-        perror("strdup failed");
-        exit(EXIT_FAILURE);
-    }
-    return dup;
-}
-
 t_ast *create_command_node(char **args, int argc, t_redirect **redirects, int redirect_count) {
     t_ast *node = alloc(sizeof(t_ast));
     node->type = NODE_COMMAND;
