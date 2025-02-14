@@ -1,1 +1,11 @@
-     1	
+ft_printf
+GRAMMAR
+include
+libft
+libzen.a
+Makefile
+minishell
+out
+OUT
+readline.supp
+src

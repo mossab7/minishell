@@ -63,7 +63,7 @@ int main(int ac, char **av, const char *envp[])
 					{
 						t_ast *root = build_ast(tokens);
 						print_ast(root,0);
-						execute_command_line(root);
+						execute_ast(root, env);
 					}
 				} break;
 			}

@@ -10,12 +10,10 @@ void print_ast(t_ast *node, int level) {
         return;
     }
 
-    // Print indentation
     for (int i = 0; i < level; i++) {
         printf("    ");
     }
 
-    // Print node type and content
     switch (node->type) {
         case NODE_COMMAND: {
             printf("├── COMMAND\n");
@@ -64,7 +62,6 @@ void print_ast(t_ast *node, int level) {
             break;
     }
 
-    // Recursively print left and right children
     if (node->left) {
         print_ast(node->left, level + 1);
     }
@@ -76,7 +73,6 @@ void print_ast(t_ast *node, int level) {
 
 t_ast *parse_and_or(t_token_array *tokens, size_t *index);
 
-// Utility functions
 void syntax_error(const char *message) {
     fprintf(stderr, "Syntax error: %s\n", message);
     exit(EXIT_FAILURE);
@@ -100,7 +96,6 @@ char *xstrdup(const char *str) {
     return dup;
 }
 
-// AST creation functions
 t_ast *create_command_node(char **args, int argc, t_redirect **redirects, int redirect_count) {
     t_ast *node = xalloc(sizeof(t_ast));
     node->type = NODE_COMMAND;
@@ -141,7 +136,6 @@ t_redirect *create_redirect(t_redirect_type type, char *target) {
     return redir;
 }
 
-// Parser helper functions
 t_token peek_token(t_token_array *tokens, size_t index) {
     if (index >= tokens->size) return (t_token){TOK_EOF, NULL};
     return tokens->items[index];
@@ -156,7 +150,6 @@ bool match_token(t_token_type type, t_token_array *tokens, size_t *index) {
     return false;
 }
 
-// Redirection parsing (replaced switch with if-else)
 t_redirect *parse_redirection(t_token_array *tokens, size_t *index) {
     t_redirect_type type;
     t_token token = peek_token(tokens, *index);
@@ -181,7 +174,6 @@ t_redirect *parse_redirection(t_token_array *tokens, size_t *index) {
     return create_redirect(type, xstrdup(token.lexeme->cstring));
 }
 
-// Command parsing with improved memory management
 t_ast *parse_command(t_token_array *tokens, size_t *index) {
     char **args = alloc((tokens->size + 1) * sizeof(char *));
     t_redirect **redirects = alloc(tokens->size * sizeof(t_redirect *));
@@ -200,7 +192,6 @@ t_ast *parse_command(t_token_array *tokens, size_t *index) {
         else break;
     }
 
-    // Shrink arrays to actual size
     args = realloc(args, (argc + 1) * sizeof(char *));
     redirects = realloc(redirects, redirect_count * sizeof(t_redirect *));
     return create_command_node(args, argc, redirects, redirect_count);
@@ -212,12 +203,11 @@ t_ast *parse_primary(t_token_array *tokens, size_t *index) {
     t_ast *node = NULL;
     
     if (peek_token(tokens, *index).type == TOK_OPAREN) {
-        (*index)++; // Consume opening parenthesis
+        (*index)++; 
         node = parse_and_or(tokens, index);
         if (!match_token(TOK_CPAREN, tokens, index)) {
             syntax_error("Expected closing parenthesis");
         }
-        // Wrap the parsed expression in a subshell node
         node = create_subshell_node(node);
     } else {
         node = parse_command(tokens, index);
@@ -246,19 +236,16 @@ t_ast *parse_and_or(t_token_array *tokens, size_t *index) {
     return left;
 }
 
-// Main parser with sequence support
 t_ast *build_ast(t_token_array *tokens) {
     size_t index = 0;
     t_ast *ast = parse_and_or(tokens, &index);
     
-    // Verify all tokens were consumed
     t_token token = peek_token(tokens, index);
     if (token.type != TOK_EOF) syntax_error("Unexpected input");
     
     return ast;
 }
 
-// Memory cleanup functions (added for completeness)
 void free_redirect(t_redirect *redir) {
     free(redir->filename);
     free(redir->delimiter);

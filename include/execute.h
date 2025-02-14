@@ -4,6 +4,6 @@
 #include <sys/wait.h>
 #include <zen.h>
 #include <fcntl.h>
-int execute_command_line(t_ast *ast);
+int execute_ast(t_ast *node, t_env *env);
 #endif // EXECUTE_H
 
