@@ -97,7 +97,7 @@ char *xstrdup(const char *str) {
 }
 
 t_ast *create_command_node(char **args, int argc, t_redirect **redirects, int redirect_count) {
-    t_ast *node = xalloc(sizeof(t_ast));
+    t_ast *node = alloc(sizeof(t_ast));
     node->type = NODE_COMMAND;
     node->value.command = (t_command){
         .args = args,
@@ -109,7 +109,7 @@ t_ast *create_command_node(char **args, int argc, t_redirect **redirects, int re
 }
 
 t_ast *create_binary_node(t_node_type type, t_ast *left, t_ast *right) {
-    t_ast *node = xalloc(sizeof(t_ast));
+    t_ast *node = alloc(sizeof(t_ast));
     node->type = type;
     node->left = left;
     node->right = right;
@@ -117,14 +117,14 @@ t_ast *create_binary_node(t_node_type type, t_ast *left, t_ast *right) {
 }
 
 t_ast *create_subshell_node(t_ast *child) {
-    t_ast *node = xalloc(sizeof(t_ast));
+    t_ast *node = alloc(sizeof(t_ast));
     node->type = NODE_SUBSHELL;
     node->left = child;
     node->right = NULL;
     return node;
 }
 t_redirect *create_redirect(t_redirect_type type, char *target) {
-    t_redirect *redir = xalloc(sizeof(t_redirect));
+    t_redirect *redir = alloc(sizeof(t_redirect));
     redir->type = type;
     if (type == REDIR_HEREDOC) {
         redir->delimiter = target;
@@ -150,10 +150,12 @@ bool match_token(t_token_type type, t_token_array *tokens, size_t *index) {
     return false;
 }
 
-t_redirect *parse_redirection(t_token_array *tokens, size_t *index) {
+t_redirect *parse_redirection(t_token_array *tokens, size_t *index)
+{
+	printf("hola\n");
     t_redirect_type type;
     t_token token = peek_token(tokens, *index);
-    
+
     if (token.type == TOK_INPUT_REDIRECT) {
         type = REDIR_INPUT;
     } else if (token.type == TOK_OUTPUT_REDIRECT) {
@@ -171,10 +173,11 @@ t_redirect *parse_redirection(t_token_array *tokens, size_t *index) {
     if (token.type != TOK_WORD) syntax_error("Expected filename/delimiter after redirection");
     (*index)++;
 
-    return create_redirect(type, xstrdup(token.lexeme->cstring));
+    return create_redirect(type, ft_strdup(token.lexeme->cstring));
 }
 
-t_ast *parse_command(t_token_array *tokens, size_t *index) {
+t_ast *parse_command(t_token_array *tokens, size_t *index)
+{
     char **args = alloc((tokens->size + 1) * sizeof(char *));
     t_redirect **redirects = alloc(tokens->size * sizeof(t_redirect *));
     int argc = 0, redirect_count = 0;
@@ -201,9 +204,9 @@ t_ast *parse_command(t_token_array *tokens, size_t *index) {
 
 t_ast *parse_primary(t_token_array *tokens, size_t *index) {
     t_ast *node = NULL;
-    
+
     if (peek_token(tokens, *index).type == TOK_OPAREN) {
-        (*index)++; 
+        (*index)++;
         node = parse_and_or(tokens, index);
         if (!match_token(TOK_CPAREN, tokens, index)) {
             syntax_error("Expected closing parenthesis");
@@ -212,7 +215,7 @@ t_ast *parse_primary(t_token_array *tokens, size_t *index) {
     } else {
         node = parse_command(tokens, index);
     }
-    
+
     return node;
 }
 
@@ -239,38 +242,12 @@ t_ast *parse_and_or(t_token_array *tokens, size_t *index) {
 t_ast *build_ast(t_token_array *tokens) {
     size_t index = 0;
     t_ast *ast = parse_and_or(tokens, &index);
-    
+
     t_token token = peek_token(tokens, index);
-    if (token.type != TOK_EOF) syntax_error("Unexpected input");
-    
+    if (token.type != TOK_EOF)
+	{
+		printf("%s\n",token.lexeme->cstring);
+		syntax_error("Unexpected input");
+	}
     return ast;
-}
-
-void free_redirect(t_redirect *redir) {
-    free(redir->filename);
-    free(redir->delimiter);
-    free(redir);
-}
-
-void free_command(t_command *cmd) {
-    int i = 0;
-    while (i < cmd->argc) {
-        free(cmd->args[i]);
-        i++;
-    }
-    i = 0;
-    while (i < cmd->redirect_count) {
-        free_redirect(cmd->redirects[i]);
-        i++;
-    }
-    free(cmd->args);
-    free(cmd->redirects);
-}
-
-void free_ast(t_ast *ast) {
-    if (!ast) return;
-    free_ast(ast->left);
-    free_ast(ast->right);
-    if (ast->type == NODE_COMMAND) free_command(&ast->value.command);
-    free(ast);
 }

@@ -52,7 +52,7 @@ int setup_redirections(t_command *cmd, int *saved_fds) {
                     perror("heredoc");
                     return -1;
                 }
-                unlink(template); 
+                unlink(template);
 
                 char *line;
                 while ((line = readline("> ")) != NULL) {
@@ -107,7 +107,6 @@ int execute_command(t_command *cmd, t_env *env) {
             if (parts && parts[0]) {
                 env_set(env, parts[0], parts[1] ? parts[1] : "");
             }
-            // Free parts array
             char **tmp = parts;
             while (*tmp) {
                 free(*tmp);
@@ -135,7 +134,7 @@ int execute_command(t_command *cmd, t_env *env) {
         return -1;
     }
 
-    if (g_current_pid == 0) {  
+    if (g_current_pid == 0) {
         if (setup_redirections(cmd, saved_fds) == -1)
             exit(EXIT_FAILURE);
 
@@ -152,13 +151,13 @@ int execute_command(t_command *cmd, t_env *env) {
 
     waitpid(g_current_pid, &status, 0);
     g_current_pid = 0;
-    
+
     if (WIFSIGNALED(status)) {
         env->last_command_status = 128 + WTERMSIG(status);
     } else {
         env->last_command_status = WEXITSTATUS(status);
     }
-    
+
     return env->last_command_status;
 }
 
@@ -180,7 +179,7 @@ int execute_pipe(t_ast *node, t_env *env) {
         return -1;
     }
 
-    if (pid1 == 0) {  
+    if (pid1 == 0) {
         close(pipefd[0]);
         dup2(pipefd[1], STDOUT_FILENO);
         close(pipefd[1]);
@@ -195,7 +194,7 @@ int execute_pipe(t_ast *node, t_env *env) {
         return -1;
     }
 
-    if (pid2 == 0) {  
+    if (pid2 == 0) {
         close(pipefd[1]);
         dup2(pipefd[0], STDIN_FILENO);
         close(pipefd[0]);
@@ -204,11 +203,11 @@ int execute_pipe(t_ast *node, t_env *env) {
 
     close(pipefd[0]);
     close(pipefd[1]);
-    
+
     waitpid(pid1, &status, 0);
     int pipe_status;
     waitpid(pid2, &pipe_status, 0);
-    
+
     env->last_command_status = WEXITSTATUS(pipe_status);
     return env->last_command_status;
 }
@@ -220,7 +219,7 @@ int execute_subshell(t_ast *node, t_env *env) {
         return -1;
     }
 
-    if (pid == 0) {  
+    if (pid == 0) {
         t_env *subshell_env = env_copy(env);
         int result = execute_ast(node->left, subshell_env);
         env_destroy(subshell_env);
