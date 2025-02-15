@@ -3,73 +3,131 @@
 #include <sys/wait.h>
 #include <termios.h>
 
+int ft_mkstemp(void)
+{
+    int i = 0;
+    char *tmp = NULL;
+    int fd = -1;
+
+    while(true)
+    {
+        tmp = ft_itoa(i);
+        if(access(tmp, F_OK) == -1)
+        {
+            fd = open(tmp, O_RDWR | O_CREAT | O_EXCL, 0600);
+            unlink(tmp);
+            ft_free(tmp);
+            break;
+        }
+        ft_free(tmp);
+        i++;
+    }
+    return (fd);
+}
+
+int setup_here_doc(t_redirect *redir)
+{
+    char *line;
+    int fd = ft_mkstemp();
+    if (fd == -1)
+    {
+        perror("heredoc");
+        return (-1);
+    }
+
+    while ((line = readline("> ")) != NULL)
+    {
+        if (strcmp(line, redir->delimiter) == 0)
+        {
+            free(line);
+            break;
+        }
+        write(fd, line, strlen(line));
+        write(fd, "\n", 1);
+        free(line);
+    }
+	lseek(fd,0,SEEK_SET);
+    dup2(fd, STDIN_FILENO);
+    close(fd);
+    return (0);
+}
+
+int inptu_redirection(t_redirect *redir)
+{
+	int fd;
+	fd = open(redir->filename, O_RDONLY);
+	if (fd == -1)
+	{
+		perror(redir->filename);
+		return (-1);
+	}
+	dup2(fd, STDIN_FILENO);
+	close(fd);
+	return (fd);
+}
+
+int output_redirection(t_redirect *redir)
+{
+	int fd;
+
+	fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd == -1)
+	{
+		perror(redir->filename);
+		return (-1);
+	}
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+	return (fd);
+}
+
+int append_redirection(t_redirect *redir)
+{
+	int fd;
+	fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fd == -1)
+	{
+		perror(redir->filename);
+		return (-1);
+	}
+	dup2(fd, STDOUT_FILENO);
+	close(fd);
+	return (fd);
+}
+
 int	setup_redirections(t_command *cmd, int *saved_fds)
 {
 	t_redirect	*redir;
-		int fd;
-			char template[] = "/tmp/heredoc_XXXXXX";
-			char *line;
-
+	int fd;
+	
 	saved_fds[0] = dup(STDIN_FILENO);
 	saved_fds[1] = dup(STDOUT_FILENO);
 	for (int i = 0; i < cmd->redirect_count; i++)
 	{
 		redir = cmd->redirects[i];
-		switch (redir->type)
+		if (redir->type == REDIR_INPUT)
 		{
-		case REDIR_INPUT:
-			fd = open(redir->filename, O_RDONLY);
-			if (fd == -1)
-			{
-				perror(redir->filename);
+			fd = inptu_redirection(redir);
+			if(fd == -1)
 				return (-1);
-			}
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-			break ;
-		case REDIR_OUTPUT:
-			fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			if (fd == -1)
-			{
-				perror(redir->filename);
+		}
+		else if(redir->type == REDIR_OUTPUT)
+		{
+			fd = output_redirection(redir);
+			if(fd == -1)
 				return (-1);
-			}
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
-			break ;
-		case REDIR_APPEND:
-			fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-			if (fd == -1)
-			{
-				perror(redir->filename);
+		}
+		else if(redir->type == REDIR_APPEND)
+		{
+			fd = append_redirection(redir);
+			if(fd == -1)
 				return (-1);
-			}
-			dup2(fd, STDOUT_FILENO);
-			close(fd);
-			break ;
-		case REDIR_HEREDOC:
-			fd = mkstemp(template);
-			if (fd == -1)
-			{
-				perror("heredoc");
+		}
+		else if(redir->type == REDIR_HEREDOC)
+		{
+			fd = setup_here_doc(redir);
+			if(fd == -1)
 				return (-1);
-			}
-			unlink(template);
-			while ((line = readline("> ")) != NULL)
-			{
-				if (strcmp(line, redir->delimiter) == 0)
-				{
-					free(line);
-					break ;
-				}
-				write(fd, line, strlen(line));
-				write(fd, "\n", 1);
-				free(line);
-			}
-			lseek(fd, 0, SEEK_SET);
-			dup2(fd, STDIN_FILENO);
-			close(fd);
-			break ;
 		}
 	}
 	return (0);
