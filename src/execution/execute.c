@@ -5,7 +5,7 @@
 
 int ft_mkstemp(void)
 {
-    int i = 0;
+    long i = 0;
     char *tmp = NULL;
     int fd = -1;
 
@@ -99,7 +99,7 @@ int	setup_redirections(t_command *cmd, int *saved_fds)
 {
 	t_redirect	*redir;
 	int fd;
-	
+
 	saved_fds[0] = dup(STDIN_FILENO);
 	saved_fds[1] = dup(STDOUT_FILENO);
 	for (int i = 0; i < cmd->redirect_count; i++)
@@ -279,29 +279,29 @@ int	execute_ast(t_ast *node, t_env *env)
 
 	if (!node)
 		return (0);
-	switch (node->type)
-	{
-	case NODE_COMMAND:
+
+	if  (node->type == NODE_COMMAND)
 		return (execute_command(&node->value.command, env));
-	case NODE_PIPE:
+	else if (node->type == NODE_PIPE)
 		return (execute_pipe(node, env));
-	case NODE_SUBSHELL:
+	else if (node->type == NODE_SUBSHELL)
 		return execute_subshell(node, env);
-	case NODE_LOGICAL_AND:
+	else if (node->type == NODE_LOGICAL_AND)
 	{
 		left_status = execute_ast(node->left, env);
 		if (left_status == 0)
 			return execute_ast(node->right, env);
 		return left_status;
 	}
-	case NODE_LOGICAL_OR:
+	else if (node->type == NODE_LOGICAL_OR)
 	{
 		left_status = execute_ast(node->left, env);
 		if (left_status != 0)
 			return execute_ast(node->right, env);
 		return left_status;
 	}
-	default:
+	else
+	{
 		ft_printf("Unknown node type\n");
 		return -1;
 	}
