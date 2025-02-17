@@ -95,13 +95,11 @@ int append_redirection(t_redirect *redir)
 	return (fd);
 }
 
-int	setup_redirections(t_command *cmd, int *saved_fds)
+int	setup_redirections(t_command *cmd)
 {
 	t_redirect	*redir;
 	int fd;
 
-	saved_fds[0] = dup(STDIN_FILENO);
-	saved_fds[1] = dup(STDOUT_FILENO);
 	for (int i = 0; i < cmd->redirect_count; i++)
 	{
 		redir = cmd->redirects[i];
@@ -157,7 +155,6 @@ int	execute_built_in_commands(char *command, t_env *env, char **args)
 
 int	execute_command(t_command *cmd, t_env *env)
 {
-	int			saved_fds[2];
 	int			status;
 	pid_t		current_pid;
 	t_string	*cmd_path;
@@ -175,7 +172,7 @@ int	execute_command(t_command *cmd, t_env *env)
 	}
 	if (current_pid == 0)
 	{
-		if (setup_redirections(cmd, saved_fds) == -1)
+		if (setup_redirections(cmd) == -1)
 			exit(EXIT_FAILURE);
 		cmd_path = search_path(env->path, cmd->args[0]);
 		if (cmd_path)
