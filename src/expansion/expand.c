@@ -4,8 +4,6 @@
 //       - Details:
 //       1 - for now just, expans $Variable to the value of that Variable..
 
-void noop(void)
-{}
 
 void	expand(t_env *env, t_token_array *tokens)
 {
@@ -16,9 +14,8 @@ void	expand(t_env *env, t_token_array *tokens)
 	iter = 0;
 	while (iter < tokens->size)
 	{
-		if (tokens->items[iter].type != TOK_EXPANSION_MARK)
-			noop();
-		else {
+		if(tokens->items[iter].type == TOK_EXPANSION_MARK)
+		{
 			if (ft_strcmp(tokens->items[iter].lexeme->cstring + 1, "?") == 0)
 				value = ft_itoa(env->last_command_status);
 			else

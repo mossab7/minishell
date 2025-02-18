@@ -1,6 +1,7 @@
 #ifndef TOKEN_H
 # define TOKEN_H
 # include <t_string.h>
+# include <t_string_vector.h>
 
 #define OPAREN '('
 #define CPAREN ')'

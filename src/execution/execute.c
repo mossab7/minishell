@@ -100,6 +100,7 @@ int	setup_redirections(t_command *cmd)
 	t_redirect	*redir;
 	int fd;
 
+	//printf("cmd->redirect_count-> %u\n",cmd->redirect_count);
 	for (int i = 0; i < cmd->redirect_count; i++)
 	{
 		redir = cmd->redirects[i];
@@ -132,7 +133,7 @@ int	setup_redirections(t_command *cmd)
 }
 
 typedef int	(*built_in_command)(t_env *, char **args);
-
+// TODO exit status of build in commands
 int	execute_built_in_commands(char *command, t_env *env, char **args)
 {
 	built_in_command	functions[] = {built_in_cd, built_in_echo, built_in_env,

@@ -171,7 +171,6 @@ t_redirect	*parse_redirection(t_token_array *tokens, size_t *index)
 	t_redirect_type	type;
 	t_token			token;
 
-	printf("hola\n");
 	token = peek_token(tokens, *index);
 	if (token.type == TOK_INPUT_REDIRECT)
 	{
