@@ -29,6 +29,14 @@ void	strv_push_back(t_string_vector *vec, char *item)
 	vec->cstrings[vec->size] = NULL;
 }
 
+void	strv_destruct(t_string_vector *vec)
+{
+	for(size_t i = 0;i < vec->size; i++)
+		ft_free(vec->cstrings[i]);
+	ft_free(vec->cstrings);
+	ft_free(vec);
+}
+
 t_string_vector	*strv_construct()
 {
 	t_string_vector	*vec;

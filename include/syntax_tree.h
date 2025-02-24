@@ -50,5 +50,5 @@ void		free_ast(t_ast *node);
 t_ast		*new_node(t_ast node);
 void		print_ast(t_ast *node, int level);
 t_ast *build_ast(t_token_array *tokens);
-t_string_vector *wildcard_expansion(char *left,char *right);
+t_string_vector *wildcardexpansion(char *pattern);
 #endif // AST_H

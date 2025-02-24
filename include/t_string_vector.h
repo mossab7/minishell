@@ -17,4 +17,5 @@ void			strv_expand(t_string_vector *vec);
 void			strv_push_back(t_string_vector *vec, char *item);
 void			strv_append(char *src,t_string_vector *vec);
 t_string_vector	*strv_construct();
+void	strv_destruct(t_string_vector *vec);
 #endif // !T_STRING_H

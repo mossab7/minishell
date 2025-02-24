@@ -227,6 +227,11 @@ t_ast	*parse_command(t_token_array *tokens, size_t *index)
 		else
 			break ;
 	}
+	//TODO use ft_realloc
+	/*
+		free(): invalid pointer
+		zsh: IOT instruction (core dumped)  ./minishell
+	*/
 	args = realloc(args, (argc + 1) * sizeof(char *));
 	redirects = realloc(redirects, redirect_count * sizeof(t_redirect *));
 	return (create_command_node(args, argc, redirects, redirect_count));

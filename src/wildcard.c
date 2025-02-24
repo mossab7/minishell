@@ -1,62 +1,70 @@
-#include <zen.h>
 #include <dirent.h>
 #include <errno.h>
+#include <limits.h>
+#include <stdbool.h>
+#include <string.h>
 #include <sys/types.h>
+#include <zen.h>
 
-
-bool _match(char *left,char *right,char *entry)
+bool	match_pattern(const char *pattern, const char *str)
 {
-	size_t right_len;
-	size_t left_len;
-	size_t entry_len = ft_strlen(entry);
-	if(right && !left)
+	if (*pattern == '\0')
+		return (*str == '\0');
+	if (*pattern != '*')
 	{
-		right_len = ft_strlen(right);
-		if(strstr(entry + (entry_len - right_len),right))
-			return (true);
+		if (*str == '\0')
+			return (false);
+		if (*pattern != *str)
+			return (false);
+		return (match_pattern(pattern + 1, str + 1));
 	}
-	else if(!right && left)
+	while (*(pattern + 1) == '*')
+		pattern++;
+	while (*str != '\0')
 	{
-		left_len = ft_strlen(left);
-		if(ft_strnstr(entry,left,left_len))
+		if (match_pattern(pattern + 1, str))
 			return (true);
+		str++;
 	}
-	else if(right && left)
-	{
-		left_len = ft_strlen(left);
-		right_len = ft_strlen(right);
-		if((strstr(entry + (entry_len - right_len),right)) &&
-					(ft_strnstr(entry,left,left_len)))
-			return (true);
-	}
-	return (false);
+	return (match_pattern(pattern + 1, str));
 }
 
-
-t_string_vector *wildcard_expansion(char *left,char *right)
+t_string_vector	*wildcardexpansion(char *pattern)
 {
-	DIR *dir;
-	struct dirent *entry;
-	char buffer[PATH_MAX];
-	t_string_vector *entries;
+	DIR				*dir;
+	struct dirent	*entry;
+	char			buffer[PATH_MAX];
+	t_string_vector	*entries;
 
+	printf("--->%s\n",pattern);
 	entries = strv_construct();
-	getcwd(buffer,PATH_MAX);
-	dir = opendir(buffer);
-	if(!dir)
+	if (!entries)
 		return (NULL);
-	while(true)
+	if (getcwd(buffer, PATH_MAX) == NULL)
 	{
-		entry = readdir(dir);
-		if(!entry)
-			break;
-		//printf("#_>%s\n",entry->d_name);
-		if(_match(left,right,entry->d_name))
+		strv_destruct(entries);
+		return (NULL);
+	}
+	dir = opendir(buffer);
+	if (!dir)
+	{
+		strv_destruct(entries);
+		return (NULL);
+	}
+	errno = 0;
+	while ((entry = readdir(dir)) != NULL)
+	{
+		if (match_pattern(pattern, entry->d_name))
 		{
-			strv_push_back(entries,entry->d_name);
+			strv_push_back(entries, entry->d_name);
 		}
+	}
+	if (errno != 0)
+	{
+		strv_destruct(entries);
+		closedir(dir);
+		return (NULL);
 	}
 	closedir(dir);
 	return (entries);
 }
-

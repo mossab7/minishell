@@ -59,10 +59,10 @@ static char	**xfree(char **v, size_t size)
 		e = 0;
 		while (e < size)
 		{
-			free(v[e]);
+			ft_free(v[e]);
 			e++;
 		}
-		free(v);
+		ft_free(v);
 	}
 	return (NULL);
 }
