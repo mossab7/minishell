@@ -50,7 +50,7 @@ void signal_handler()
 int main(int ac, char **av, const char *envp[])
 {
 	setbuf(stdout, NULL);
-	signal_handler();
+	//signal_handler();
 	t_token_array *tokens;
 	char *input;
 	t_lexer *lex;
