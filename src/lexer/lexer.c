@@ -137,7 +137,9 @@ t_error consume_word(t_token *tok, t_lexer *lex)
 	stacks[SINGLE_QUOTES_INDEX] = stack_construct();
 	stacks[DOUBLE_QUOTES_INDEX]	= stack_construct();
 	while (((ft_zen_isalnum(lex->source[lex->cursor])
-		|| is_quote(lex->source[lex->cursor]))) || is_inside_quotes(input_state))
+		|| is_quote(lex->source[lex->cursor]))) ||
+		(is_inside_quotes(input_state)
+		&& lex->source[lex->cursor]))
 	{
 		if (is_quote(lex->source[lex->cursor])) {
 			handle_quote(tok, &input_state, lex->source[lex->cursor], stacks);

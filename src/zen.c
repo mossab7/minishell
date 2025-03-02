@@ -44,13 +44,22 @@ void signal_handler()
 	sigemptyset(&set.sa_mask);
 	set.sa_flags = SA_SIGINFO;
 	set.sa_sigaction = handle_signal;
-	sigaction(SIGINT,&set,NULL);
+	sigaction(SIGINT, &set, NULL);
 }
+
+/*int main(int ac,char **av)*/
+/*{*/
+/*	(void)ac;*/
+/*	t_string_vector *entries = wildcardexpansion(av[1]);*/
+/*	for(size_t i = 0;i < entries->size;i++)*/
+/*		printf("%s\n",entries->cstrings[i]);*/
+/*	return 0;*/
+/*}*/
 
 int main(int ac, char **av, const char *envp[])
 {
 	setbuf(stdout, NULL);
-	//signal_handler();
+	signal_handler();
 	t_token_array *tokens;
 	char *input;
 	t_lexer *lex;
@@ -66,7 +75,8 @@ int main(int ac, char **av, const char *envp[])
 		add_history(input);
 		{
 			lex = lexer_init(input);
-			switch (lexer_tokenize(lex)) {
+			int e = lexer_tokenize(lex);
+			switch (e) {
 				case ERROR_SYNTAX: {} break;
 				case ERROR_PIPE_SYNTAX: {} break;
 				case ERROR_REDIRECT_SYNTAX: {} break;
@@ -74,21 +84,15 @@ int main(int ac, char **av, const char *envp[])
 				case ERROR_QUOTE_UNCLOSED: {
 					printf("[Error]: Quote unclosed\n");
 					printf("    %s\n", lex->source);
-					printf("   ");
-					for (size_t i = 0; i < lex->cursor; i++)
-						printf(" ");
-					printf("^\n");
+					printf("    %*s\n", ((int)lex->cursor), "^\n");
 				} break;
 				case OK: {
+
 					tokens = lex->tokens;
-					/*ft_printf("Before exps: \n");*/
-					/*tok_array_print(tokens);*/
+					// TODO: Expand the wildcard in the expand higher level function 
 					expand(env, tokens);
-					/*ft_printf("After exps: \n");*/
-					/*tok_array_print(tokens);*/
 					{
 						t_ast *root = build_ast(tokens);
-						//print_ast(root,0);
 						execute_ast(root, env);
 					}
 				} break;
@@ -103,11 +107,3 @@ int main(int ac, char **av, const char *envp[])
 }
 
 
-// int main(int ac,char **av)
-// {
-// 	(void)ac;
-// 	t_string_vector *entries = wildcardexpansion(av[1]);
-// 	for(size_t i = 0;i < entries->size;i++)
-// 		printf("->%s\n",entries->cstrings[i]);
-// 	return 0;
-// }

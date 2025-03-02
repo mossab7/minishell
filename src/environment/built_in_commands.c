@@ -80,6 +80,8 @@ int built_in_exit(t_env *env, char **args)
 	code = 0;
 	if (args[1])
 		code = ft_atoi(args[1]);
+	// BUG: The cleaner does not work properly.
+	// ERROR: free() invalid pointer
 	cleanup_memory_tracker(get_memory_tracker());
 	exit(code);
 	return (0);

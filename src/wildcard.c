@@ -33,6 +33,7 @@ t_string_vector	*wildcardexpansion(char *pattern)
 {
 	DIR				*dir;
 	struct dirent	*entry;
+	u8				hidden;
 	char			buffer[PATH_MAX];
 	t_string_vector	*entries;
 
@@ -54,10 +55,9 @@ t_string_vector	*wildcardexpansion(char *pattern)
 	errno = 0;
 	while ((entry = readdir(dir)) != NULL)
 	{
-		if (match_pattern(pattern, entry->d_name))
-		{
+		hidden = (*(entry->d_name) == '.');
+		if (match_pattern(pattern, entry->d_name) && (!hidden || *pattern == '.'))
 			strv_push_back(entries, entry->d_name);
-		}
 	}
 	if (errno != 0)
 	{
