@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <signal.h>
 
-
-
 char *zen_prompt(t_env *env)
 {
 	char *user;
@@ -24,7 +22,6 @@ char *zen_prompt(t_env *env)
 	str_destruct(zen_prompt_);
 	return (buff);
 }
-
 
 void	handle_signal(int signum, siginfo_t *info, void *context)
 {
@@ -89,11 +86,12 @@ int main(int ac, char **av, const char *envp[])
 				case OK: {
 
 					tokens = lex->tokens;
-					// TODO: Expand the wildcard in the expand higher level function 
+					// TODO: Expand the wildcard in the expand higher level function
 					expand(env, tokens);
 					{
 						t_ast *root = build_ast(tokens);
-						execute_ast(root, env);
+						print_ast(root,0);
+						//execute_ast(root, env);
 					}
 				} break;
 			}
