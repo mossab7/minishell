@@ -90,8 +90,8 @@ int main(int ac, char **av, const char *envp[])
 					expand(env, tokens);
 					{
 						t_ast *root = build_ast(tokens);
-						print_ast(root,0);
-						//execute_ast(root, env);
+						//print_ast(root,0);
+						execute_ast(root, env);
 					}
 				} break;
 			}
