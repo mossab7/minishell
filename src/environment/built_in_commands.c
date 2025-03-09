@@ -11,13 +11,13 @@ int built_in_cd(t_env *env, char **dst)
 	if (res != SUCCESS)
 	{
 		str_destruct(resolved_path);
-		return (1);
+		return (env->last_command_status = res);
 	}
     if (!getcwd(owd, PATH_MAX))
     {
 		zen_elog("cd: error getting current directory\n");
 		str_destruct(resolved_path);
-        return (1);
+        return (env->last_command_status = 1);
     }
     if (chdir(resolved_path->cstring) == 0)
     {
@@ -26,11 +26,11 @@ int built_in_cd(t_env *env, char **dst)
 		{
 			zen_elog("cd: error getting current directory\n");
 			str_destruct(resolved_path);
-			return (1);
+			return (env->last_command_status = 1);
 		}
         env_set(env, "PWD", owd);
 		str_destruct(resolved_path);
-		return (0);
+		return (env->last_command_status = 0);
     }
 	if (access(resolved_path->cstring, F_OK) == -1)
 		ft_printf("cd: %s: No such file or directory\n", dst[1]);
@@ -39,7 +39,7 @@ int built_in_cd(t_env *env, char **dst)
 	else
 		ft_printf("cd: %s: Not a directory\n", resolved_path->cstring);
 	str_destruct(resolved_path);
-	return (1);
+	return (env->last_command_status = 1);
 }
 
 int built_in_echo(t_env *env, char **args)
@@ -47,6 +47,7 @@ int built_in_echo(t_env *env, char **args)
 	(void)env;
 	bool new_line = true;
 	size_t i = 0;
+	int r;
 
 	args++;
 	if(args[i] && !ft_strcmp("-n", args[i]))
@@ -56,21 +57,31 @@ int built_in_echo(t_env *env, char **args)
 	}
 	while (args[i])
 	{
-		ft_printf("%s", args[i]);
+		r = ft_printf("%s", args[i]);
+		if(r < 0)
+			return (env->last_command_status = 1);
 		if (args[i + 1])
-			ft_printf(" ");
+		{
+			r = ft_printf(" ");
+			if(r < 0)
+				return (env->last_command_status = 1);
+		}
 		i++;
 	}
 	if(new_line)
+	{
 		ft_printf("\n");
-	return (0);
+		if(r < 0)
+			return (env->last_command_status = 1);
+	}
+	return (env->last_command_status = 0);
 }
 
 int built_in_env(t_env *env,char **args)
 {
 	(void)args;
 	env_print(env);
-	return (0);
+	return (env->last_command_status = 0);
 }
 
 int built_in_exit(t_env *env, char **args)

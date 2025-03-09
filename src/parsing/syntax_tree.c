@@ -208,7 +208,8 @@ t_ast	*parse_command(t_token_array *tokens, size_t *index)
 {
 	char		**args;
 	t_redirect	**redirects;
-	int			argc = 0, redirect_count;
+	int			argc = 0;
+	int			redirect_count;
 	t_token		token;
 	t_redirect	*redir;
 
@@ -231,9 +232,6 @@ t_ast	*parse_command(t_token_array *tokens, size_t *index)
 		else
 			break ;
 	}
-	/* THIS DOES NOT WORK PROPERLY*/
-	args = realloc(args, (argc) * sizeof(char *));
-	redirects = realloc(redirects, (redirect_count) * sizeof(t_redirect *));
 	return (create_command_node(args, argc, redirects, redirect_count));
 }
 

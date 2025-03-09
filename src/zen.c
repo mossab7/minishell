@@ -4,8 +4,6 @@
 #include <stdio.h>
 #include <signal.h>
 
-
-
 char *zen_prompt(t_env *env)
 {
 	char *user;
@@ -93,11 +91,11 @@ int main(int ac, char **av, const char *envp[])
 				case OK: {
 
 					tokens = lex->tokens;
-					// TODO: Expand the wildcard in the expand higher level function 
 					tok_array_print(tokens);
 					expand(env, tokens);
 					{
 						t_ast *root = build_ast(tokens);
+						//print_ast(root,0);
 						execute_ast(root, env);
 					}
 				} break;
