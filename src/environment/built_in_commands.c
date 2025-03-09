@@ -78,7 +78,7 @@ int built_in_exit(t_env *env, char **args)
 	int	code;
 	(void)env;
 	code = 0;
-	if (args[1])
+	if (args && args[1])
 		code = ft_atoi(args[1]);
 	// BUG: The cleaner does not work properly.
 	// ERROR: free() invalid pointer

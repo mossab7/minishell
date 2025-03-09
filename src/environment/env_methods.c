@@ -1,5 +1,5 @@
 #include <zen.h>
-
+#define SHLVL_MAX 1000
 void	increment_shell_level(t_env *env, int index)
 {
 	long	lvl;
@@ -9,7 +9,7 @@ void	increment_shell_level(t_env *env, int index)
 		return ;
 	res = ft_atol_base(env->cells[index].value, BASE_10, &lvl);
 	lvl++;
-	if (res == NON || res == OVER_FLOW_DETECTED || lvl < 0 || lvl > INT_MAX)
+	if (res == NON || res == OVER_FLOW_DETECTED || lvl < 0 || lvl > SHLVL_MAX)
 		lvl = 0;
 	ft_free(env->cells[index].value);
 	env->cells[index].value = ft_itoa(lvl);
@@ -101,6 +101,8 @@ void	env_set(t_env *env, char *key, char *new_value)
 
 	if (ft_strcmp(key, "PATH") == 0)
 		parse_path(env->path, new_value);
+	if (ft_strcmp(key, "SHLVL") == 0)
+		assert(0 && "SHLVL was not implemented to be set yet!");
 	index = env_search(env, key);
 	if (index < env->size)
 	{
@@ -117,8 +119,6 @@ char *env_get(t_env *env, char *key)
 {
 	size_t	index;
 
-	/*if (ft_strcmp(key, "?") == 0)*/
-	/*	return (ft_itoa())*/
 	index = env_search(env, key);
 	if (index < env->size)
 		return (env->cells[index].value);

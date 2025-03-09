@@ -101,8 +101,12 @@ t_ast	*create_command_node(char **args, int argc, t_redirect **redirects,
 
 	node = alloc(sizeof(t_ast));
 	node->type = NODE_COMMAND;
-	node->value.command = (t_command){.args = args, .argc = argc,
-		.redirects = redirects, .redirect_count = redirect_count};
+	node->value.command = (t_command){
+		.args = args,
+		.argc = argc,
+		.redirects = redirects,
+		.redirect_count = redirect_count
+	};
 	return (node);
 }
 
@@ -150,7 +154,7 @@ t_redirect	*create_redirect(t_redirect_type type, char *target)
 t_token	peek_token(t_token_array *tokens, size_t index)
 {
 	if (index >= tokens->size)
-		return ((t_token){TOK_EOF, NULL});
+		return ((t_token){TOK_EOF, NULL, NULL});
 	return (tokens->items[index]);
 }
 
@@ -227,8 +231,9 @@ t_ast	*parse_command(t_token_array *tokens, size_t *index)
 		else
 			break ;
 	}
-	args = ft_realloc(args, (argc + 1) * sizeof(char *), (tokens->size + 1) * sizeof(char *));
-	redirects = ft_realloc(redirects, (redirect_count + 1) * sizeof(t_redirect *), tokens->size * sizeof(t_redirect *));
+	/* THIS DOES NOT WORK PROPERLY*/
+	args = realloc(args, (argc) * sizeof(char *));
+	redirects = realloc(redirects, (redirect_count) * sizeof(t_redirect *));
 	return (create_command_node(args, argc, redirects, redirect_count));
 }
 

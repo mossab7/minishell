@@ -42,6 +42,8 @@ t_error lexer_tokenize(t_lexer *lex)
     {
         tok_array_expand(lex->tokens);
         tok = (lex->tokens->items + lex->tokens->size);
+		if (!tok->mask)
+			tok->mask = mask_construct();
         tok->lexeme = str_construct();
         while (ft_isspace(lex->source[lex->cursor]))
             lex->cursor++;
@@ -85,12 +87,13 @@ char *get_type_as_cstr(t_token_type type)
 	return (them[type]);
 }
 
+
 void	handle_quote(t_token *tok, u8 *state, char quote, t_stack *stacks[QUOTING_STACKS_SIZE])
 {
 	if (quote == QUOTE_SINGLE)
 	{
 		if (*state & DOUBLE_QUOTED)
-			str_push_back(tok->lexeme, quote);
+			token_push_back(tok, quote, *state);
 		if (stacks[SINGLE_QUOTES_INDEX]->size)
 		{
 			stack_pop(stacks[SINGLE_QUOTES_INDEX]);
@@ -105,7 +108,7 @@ void	handle_quote(t_token *tok, u8 *state, char quote, t_stack *stacks[QUOTING_S
 		}
 	} else {
 		if (*state & SINGLE_QUOTED)
-			str_push_back(tok->lexeme, quote);
+			token_push_back(tok, quote, *state);
 		if (stacks[DOUBLE_QUOTES_INDEX]->size)
 		{
 			stack_pop(stacks[DOUBLE_QUOTES_INDEX]);
@@ -137,8 +140,8 @@ t_error consume_word(t_token *tok, t_lexer *lex)
 	stacks[SINGLE_QUOTES_INDEX] = stack_construct();
 	stacks[DOUBLE_QUOTES_INDEX]	= stack_construct();
 	while (((ft_zen_isalnum(lex->source[lex->cursor])
-		|| is_quote(lex->source[lex->cursor]))) ||
-		(is_inside_quotes(input_state)
+		|| is_quote(lex->source[lex->cursor]))) || (lex->source[lex->cursor] == EXPANSION_MARK)
+		|| (is_inside_quotes(input_state)
 		&& lex->source[lex->cursor]))
 	{
 		if (is_quote(lex->source[lex->cursor])) {
@@ -146,7 +149,7 @@ t_error consume_word(t_token *tok, t_lexer *lex)
 			lex->cursor++;
 			continue ;
 		}
-		str_push_back(tok->lexeme, lex->source[lex->cursor++]);
+		token_push_back(tok, lex->source[lex->cursor++], input_state);
 	}
 	unmatched_exists = ((stacks[SINGLE_QUOTES_INDEX]->size > 0) || (stacks[DOUBLE_QUOTES_INDEX]->size > 0));
 	stack_destroy(stacks[DOUBLE_QUOTES_INDEX]);
@@ -162,7 +165,7 @@ t_error check_next(t_token *tok, t_lexer *lex, t_token_type pair_type)
 	if (lex->source[lex->cursor - 1] == lex->source[lex->cursor])
 	{
 		tok->type = pair_type;
-		str_push_back(tok->lexeme, lex->source[lex->cursor++]);
+		token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
 	}
 	return (OK);
 }
@@ -170,7 +173,7 @@ t_error check_next(t_token *tok, t_lexer *lex, t_token_type pair_type)
 t_error consume_sym_pair(t_token *tok, t_lexer *lex, t_token_type type,t_token_type pair_type)
 {
 	tok->type = type;
-	str_push_back(tok->lexeme, lex->source[lex->cursor++]);
+	token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
 	return (check_next(tok, lex, pair_type));
 }
 
@@ -189,25 +192,25 @@ t_error consume_symbol(t_token *tok, t_lexer *lex)
 	{
 		tok->type = TOK_EXPANSION_MARK;
 		{
-			str_push_back(tok->lexeme, lex->source[lex->cursor++]); // Push $
+			token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
 			while (ft_zen_isalnum(lex->source[lex->cursor]))
-				str_push_back(tok->lexeme, lex->source[lex->cursor++]); // push rest.
+				token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
 		}
 		return (OK);
 	}
 	if (lex->source[lex->cursor] == OPAREN)
 	{
 		tok->type = TOK_OPAREN;
-		str_push_back(tok->lexeme, lex->source[lex->cursor++]);
+		token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
 		return (OK);
 	}
 	if (lex->source[lex->cursor] == CPAREN)
 	{
 		tok->type = TOK_CPAREN;
-		str_push_back(tok->lexeme, lex->source[lex->cursor++]);
+		token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
 		return (OK);
 	}
 	tok->type = TOK_SYMBOL;
-	str_push_back(tok->lexeme, lex->source[lex->cursor++]);
+	token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
 	return (OK);
 }

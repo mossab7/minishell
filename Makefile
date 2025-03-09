@@ -4,7 +4,8 @@ LIB_FT=$(LIB_FT_DIR)libft.a
 LIB_FT_PRINTF=$(LIB_FT_PRINTF_DIR)libftprintf.a
 SRCS=./src/lexer/lexer.c ./src/data_structures/string.c ./src/data_structures/token_array.c ./src/data_structures/stack.c ./src/parsing/syntax_tree.c\
 	./src/environment/env.c ./src/environment/env_methods.c ./src/environment/built_in_commands.c ./src/pathname/path_resolver.c ./src/logger/zenlogger.c\
-	 ./src/execution/execute.c ./src/environment/path_methods.c ./src/data_structures/string_vector.c ./src/expansion/expand.c ./src/wildcard.c
+	 ./src/execution/execute.c ./src/environment/path_methods.c ./src/data_structures/string_vector.c ./src/expansion/expand.c ./src/wildcard.c\
+	./src/data_structures/string_mask.c ./src/data_structures/token_push_back.c
 OBJS=$(SRCS:%.c=%.o)
 ZEN_LIB=libzen.a
 NAME=minishell

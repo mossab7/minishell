@@ -13,6 +13,7 @@
 #include <execute.h>
 #include <t_string_vector.h>
 #include <context.h>
+#include <assert.h>
 #define VEC_INIT_CAP 16
 #define VEC_GROWTH_FAC 2
 typedef enum e_error_res

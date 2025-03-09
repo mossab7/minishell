@@ -13,18 +13,21 @@ char *zen_prompt(t_env *env)
 	char *buff;
 	t_string *zen_prompt_;
 
+	zen_prompt_ = str_construct();
 	pwd = env_get(env, "PWD");
 	if (!pwd)
 		pwd = "PWD_NOT_SET";
 	user = env_get(env, "USER");
 	if (!user)
 		user = "incognito";
-	zen_prompt_ = vstr_construct(4, user, "@", pwd, ": ");
+	if (isatty(STDIN_FILENO))
+		str_join(zen_prompt_, 4, user, "@", pwd, ": ");
+	else
+		zen_prompt_->cstring = NULL;
 	buff = readline(zen_prompt_->cstring);
 	str_destruct(zen_prompt_);
 	return (buff);
 }
-
 
 void	handle_signal(int signum, siginfo_t *info, void *context)
 {
@@ -38,6 +41,7 @@ void	handle_signal(int signum, siginfo_t *info, void *context)
 		rl_redisplay();
 	}
 }
+
 void signal_handler()
 {
 	struct sigaction	set;
@@ -90,6 +94,7 @@ int main(int ac, char **av, const char *envp[])
 
 					tokens = lex->tokens;
 					// TODO: Expand the wildcard in the expand higher level function 
+					tok_array_print(tokens);
 					expand(env, tokens);
 					{
 						t_ast *root = build_ast(tokens);
@@ -98,9 +103,9 @@ int main(int ac, char **av, const char *envp[])
 				} break;
 			}
 		}
-		ft_free(lex);
-		ft_free(tokens);
-		ft_free(input);
+		free(input);
+		if (!isatty(STDIN_FILENO))
+			break ;
 	}
 	cleanup_memory_tracker(get_memory_tracker());
 	return 0;
