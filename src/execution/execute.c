@@ -4,38 +4,33 @@
 #include <termios.h>
 #include "signals.h"
 
-int ft_mkstemp(void)
+char *ft_mkstemp(void)
 {
     long i = 0;
-    char *tmp = NULL;
-    int fd = -1;
+    char *filename = NULL;
 
     while(true)
     {
-        tmp = ft_itoa(i);
-        if(access(tmp, F_OK) == -1)
-        {
-            fd = open(tmp, O_RDWR | O_CREAT | O_EXCL, 0600);
-            unlink(tmp);
-            ft_free(tmp);
+        filename = ft_itoa(i);
+        if(access(filename, F_OK) == -1)
             break;
-        }
-        ft_free(tmp);
+        ft_free(filename);
         i++;
     }
-    return (fd);
+    return (filename);
 }
 
 int setup_here_doc(t_redirect *redir)
 {
     char *line;
-    int fd = ft_mkstemp();
+    char *filename = ft_mkstemp();
+	int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
+
     if (fd == -1)
     {
         perror("heredoc");
         return (-1);
     }
-
     while ((line = readline("> ")) != NULL)
     {
         if (strcmp(line, redir->delimiter) == 0)
@@ -43,13 +38,13 @@ int setup_here_doc(t_redirect *redir)
             free(line);
             break;
         }
+		// TODO: Expand
         write(fd, line, strlen(line));
         write(fd, "\n", 1);
         free(line);
     }
-	lseek(fd,0,SEEK_SET);
-    dup2(fd, STDIN_FILENO);
-    close(fd);
+	close(fd);
+	redir->filename = filename;
     return (0);
 }
 
@@ -134,6 +129,7 @@ int	setup_redirections(t_command *cmd)
 
 typedef int	(*built_in_command)(t_env *, char **args);
 // TODO exit status of build in commands
+// TODO add unset and set
 int	execute_built_in_commands(char *command, t_env *env, char **args)
 {
 	built_in_command	functions[] = {built_in_cd, built_in_echo, built_in_env,
@@ -191,6 +187,8 @@ int	execute_command(t_command *cmd, t_env *env)
 	if (WIFSIGNALED(status))
 	{
 		env->last_command_status = 128 + WTERMSIG(status);
+		if( WTERMSIG(status) == SIGQUIT)
+			ft_printf("Quit (core dumped)\n");
 	}
 	else
 	{

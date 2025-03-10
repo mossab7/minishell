@@ -141,7 +141,7 @@ t_redirect	*create_redirect(t_redirect_type type, char *target)
 	if (type == REDIR_HEREDOC)
 	{
 		redir->delimiter = target;
-		redir->filename = NULL;
+		redir->filename = setup_here_doc(redir);
 	}
 	else
 	{

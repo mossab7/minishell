@@ -129,7 +129,7 @@ void	env_set(t_env *env, char *key, char *new_value)
 		env->cells->items[index].value = ft_strdup(new_value);
 	}
 	else
-		cells_push_back(env->cells, key, new_value);
+		env_append_both(env, key, new_value);
 	env_join(env);
 }
 
