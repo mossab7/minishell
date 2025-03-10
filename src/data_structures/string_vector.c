@@ -31,8 +31,11 @@ void	strv_push_back(t_string_vector *vec, char *item)
 
 void	strv_destruct(t_string_vector *vec)
 {
-	for(size_t i = 0;i < vec->size; i++)
-		ft_free(vec->cstrings[i]);
+	size_t	index;
+
+	index = 0;
+	while (index < vec->size)
+		ft_free(vec->cstrings[index++]);
 	ft_free(vec->cstrings);
 	ft_free(vec);
 }

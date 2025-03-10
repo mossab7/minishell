@@ -1,3 +1,7 @@
+/*
+ 1. test fails to redirect output.
+	| builtin_command > somewhere
+ */
 #include <zen.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -91,7 +95,7 @@ int main(int ac, char **av, const char *envp[])
 				case OK: {
 
 					tokens = lex->tokens;
-					tok_array_print(tokens);
+					/*tok_array_print(tokens);*/
 					expand(env, tokens);
 					{
 						t_ast *root = build_ast(tokens);

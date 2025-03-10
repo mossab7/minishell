@@ -61,9 +61,9 @@ int	__resolve_path(t_string *path, t_env *env, char *dst)
 	char		*home;
 	char		buffer[PATH_MAX];
 
-	if (!dst || !*dst)
+	if (!dst || !*dst || ft_strcmp(dst, "~") == 0)
 	{
-		if (dst == NULL)
+		if (dst == NULL || ft_strcmp(dst, "~") == 0)
 		{
 			home = env_get(env, "HOME");
 			if (!home)

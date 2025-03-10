@@ -12,13 +12,19 @@ typedef struct s_cell
 	char	*value;
 }	t_cell;
 
+typedef struct s_cells
+{
+	t_cell	*items;
+	size_t	size;
+	size_t	cap;
+}	t_cells;
+
 typedef struct s_env
 {
-	t_cell			*cells;
+	t_cells			*cells;
+	t_cells			*export_cells;
 	char			**envp;
 	t_string_vector	*path;
-	size_t			size;
-	size_t			cap;
 	int				last_command_status;
 }	t_env;
 
@@ -36,4 +42,10 @@ char	*env_get(t_env *env, char *key);
 void	env_print(t_env *env);
 void	parse_path(t_string_vector *path, char *src);
 t_string	*search_path(t_string_vector *path, char *command);
+size_t	cells_search(t_cells *cells, char *key);
+void	cells_destroy(t_cells *cells);
+t_cells	*cells_construct(void);
+void	cells_push_back(t_cells *cells, char *key, char *value);
+void	cells_expand(t_cells *cells);
+void	cells_sort(t_cells *cells);
 #endif // !ENV_H

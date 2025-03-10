@@ -97,24 +97,3 @@ int built_in_exit(t_env *env, char **args)
 	exit(code);
 	return (0);
 }
-
-int built_in_export(t_env *env, char **args)
-{
-	char **entry;
-	size_t i;
-
-	if(!args)
-		return (1);
-	i = 1;
-	while (args[i])
-	{
-		if (*args[i])
-		{
-			entry = ft_split(args[i], '=');
-			if (entry[VALUE_INDEX])
-				env_set(env, entry[KEY_INDEX], entry[VALUE_INDEX]);
-		}
-		i++;
-	}
-	return (0);
-}
