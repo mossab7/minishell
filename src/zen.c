@@ -3,7 +3,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <signal.h>
-
+#include <signals.h>
 char *zen_prompt(t_env *env)
 {
 	char *user;
@@ -27,41 +27,10 @@ char *zen_prompt(t_env *env)
 	return (buff);
 }
 
-void	handle_signal(int signum, siginfo_t *info, void *context)
-{
-	(void)info;
-	(void)context;
-	if(signum == SIGINT)
-	{
-		write(1,"\n",1);
-		rl_on_new_line();
-		rl_replace_line("",0);
-		rl_redisplay();
-	}
-}
-
-void signal_handler()
-{
-	struct sigaction	set;
-	sigemptyset(&set.sa_mask);
-	set.sa_flags = SA_SIGINFO;
-	set.sa_sigaction = handle_signal;
-	sigaction(SIGINT, &set, NULL);
-}
-
-/*int main(int ac,char **av)*/
-/*{*/
-/*	(void)ac;*/
-/*	t_string_vector *entries = wildcardexpansion(av[1]);*/
-/*	for(size_t i = 0;i < entries->size;i++)*/
-/*		printf("%s\n",entries->cstrings[i]);*/
-/*	return 0;*/
-/*}*/
-
 int main(int ac, char **av, const char *envp[])
 {
 	setbuf(stdout, NULL);
-	signal_handler();
+	setup_signal_handlers();
 	t_token_array *tokens;
 	char *input;
 	t_lexer *lex;
