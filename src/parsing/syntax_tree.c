@@ -131,7 +131,50 @@ t_ast	*create_subshell_node(t_ast *child)
 	node->right = NULL;
 	return (node);
 }
+/*utils for heredoc*/
+char *ft_mkstemp(void)
+{
+    long i = 0;
+    char *filename = NULL;
 
+    while(true)
+    {
+        filename = ft_itoa(i);
+        if(access(filename, F_OK) == -1)
+            break;
+        ft_free(filename);
+        i++;
+    }
+    return (filename);
+}
+
+int setup_here_doc(t_redirect *redir)
+{
+    char *line;
+    char *filename = ft_mkstemp();
+	int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
+    if (fd == -1)
+    {
+        perror("heredoc");
+        return (-1);
+    }
+    while ((line = readline("> ")) != NULL)
+    {
+        if (strcmp(line, redir->delimiter) == 0)
+        {
+            free(line);
+            break;
+        }
+		// TODO: Expand variables in line
+        write(fd, line, ft_strlen(line));
+        write(fd, "\n", 1);
+        free(line);
+    }
+	close(fd);
+	redir->filename = filename;
+    return (0);
+}
+/*end*/
 t_redirect	*create_redirect(t_redirect_type type, char *target)
 {
 	t_redirect	*redir;
@@ -141,7 +184,9 @@ t_redirect	*create_redirect(t_redirect_type type, char *target)
 	if (type == REDIR_HEREDOC)
 	{
 		redir->delimiter = target;
-		redir->filename = setup_here_doc(redir);
+		setup_here_doc(redir);
+		if(redir->filename == NULL)
+			return (NULL);
 	}
 	else
 	{

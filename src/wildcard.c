@@ -37,7 +37,7 @@ t_string_vector	*wildcardexpansion(char *pattern)
 	char			buffer[PATH_MAX];
 	t_string_vector	*entries;
 
-	printf("--->%s\n",pattern);
+	// printf("--->%s\n",pattern);
 	entries = strv_construct();
 	if (!entries)
 		return (NULL);

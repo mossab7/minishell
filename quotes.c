@@ -13,7 +13,7 @@ Example:
 		Hello world
 		00000000000
 		Because the content is neither double qouted nor single qouted
-	
+
 	./program "'Hello' world"
 	out:
 		Hello world
@@ -68,9 +68,9 @@ int main(int ac, char **av)
 {
 	if (ac < 2)
 		return (1);
-	
+
 	char *content = av[1];
-	printf("content: |%s|\n", content);
+	//printf("content: |%s|\n", content);
 	char *final = malloc(strlen(content));
 	range r = {0};
 	stack dstack = {0};
@@ -87,7 +87,7 @@ int main(int ac, char **av)
 			array_push(&mask, 0);
 			continue ;
 		}
-		printf("Stopped at %zu -> %c\n", r.start, content[r.start]);
+		//printf("Stopped at %zu -> %c\n", r.start, content[r.start]);
 		break ;
 	}
 	final[r.start] = 0;
@@ -134,11 +134,11 @@ int main(int ac, char **av)
 			}
 		}
 	}
-	printf("# %s\n", final);
-	printf("  ");
-	for (size_t i = 0; i < mask.size; i++)
-		printf("%u", mask.items[i]);
-	printf("\n");
-	puts("");
+	// printf("# %s\n", final);
+	// printf("  ");
+	// for (size_t i = 0; i < mask.size; i++)
+	// 	printf("%u", mask.items[i]);
+	// printf("\n");
+	// puts("");
 	return (0);
 }

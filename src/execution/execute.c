@@ -4,48 +4,20 @@
 #include <termios.h>
 #include "signals.h"
 
-char *ft_mkstemp(void)
+int execute_here_doc(t_redirect *redir)
 {
-    long i = 0;
-    char *filename = NULL;
+	int fd;
 
-    while(true)
-    {
-        filename = ft_itoa(i);
-        if(access(filename, F_OK) == -1)
-            break;
-        ft_free(filename);
-        i++;
-    }
-    return (filename);
-}
-
-int setup_here_doc(t_redirect *redir)
-{
-    char *line;
-    char *filename = ft_mkstemp();
-	int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
-
-    if (fd == -1)
-    {
-        perror("heredoc");
-        return (-1);
-    }
-    while ((line = readline("> ")) != NULL)
-    {
-        if (strcmp(line, redir->delimiter) == 0)
-        {
-            free(line);
-            break;
-        }
-		// TODO: Expand
-        write(fd, line, strlen(line));
-        write(fd, "\n", 1);
-        free(line);
-    }
+	fd = open(redir->filename, O_RDONLY);
+	unlink(redir->filename);
+	if (fd == -1)
+	{
+		perror(redir->filename);
+		return (-1);
+	}
+	dup2(fd, STDIN_FILENO);
 	close(fd);
-	redir->filename = filename;
-    return (0);
+	return (0);
 }
 
 int inptu_redirection(t_redirect *redir)
@@ -119,7 +91,7 @@ int	setup_redirections(t_command *cmd)
 		}
 		else if(redir->type == REDIR_HEREDOC)
 		{
-			fd = setup_here_doc(redir);
+			fd = execute_here_doc(redir);
 			if(fd == -1)
 				return (-1);
 		}
