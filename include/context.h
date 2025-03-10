@@ -3,9 +3,9 @@
 
 typedef struct s_context
 {
-	int state;
-}t_context;
-
+    int state;
+    int readline_active;
+} t_context;
 
 t_context **get_context();
 

@@ -2,6 +2,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <termios.h>
+#include "signals.h"
 
 int ft_mkstemp(void)
 {
@@ -100,7 +101,6 @@ int	setup_redirections(t_command *cmd)
 	t_redirect	*redir;
 	int fd;
 
-	//printf("cmd->redirect_count-> %u\n",cmd->redirect_count);
 	for (int i = 0; i < cmd->redirect_count; i++)
 	{
 		redir = cmd->redirects[i];
@@ -161,6 +161,9 @@ int	execute_command(t_command *cmd, t_env *env)
 	t_string	*cmd_path;
 
 	status = 0;
+	setup_signal_handlers();
+	t_context *context = *get_context();
+	context->readline_active = 0;
 	if (cmd->argc == 0)
 		return (0);
 	if (!execute_built_in_commands(cmd->args[0], env, cmd->args))
@@ -193,6 +196,7 @@ int	execute_command(t_command *cmd, t_env *env)
 	{
 		env->last_command_status = WEXITSTATUS(status);
 	}
+	context->readline_active = 1;
 	return (env->last_command_status);
 }
 

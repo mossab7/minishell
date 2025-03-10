@@ -30,7 +30,7 @@ typedef struct s_env
 
 t_env	*env_parse(const char *envp[]);
 void    env_join(t_env *env);
-void	env_append(t_env *env, char *key, char *value);
+void	env_append_both(t_env *env, char *key, char *value);
 void	env_del(t_env *env, char *key);
 void	env_destroy(t_env *env);
 void	env_expand(t_env *env);

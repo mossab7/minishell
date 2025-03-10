@@ -1,6 +1,5 @@
 #include <zen.h>
 #define SHLVL_MAX 1000
-void	handle_default
 
 void	increment_shell_level(t_env *env, int index)
 {
@@ -44,7 +43,7 @@ t_env	*env_parse(const char *envp[])
 	while (envp[iter])
 	{
 		entry = ft_split((char const *)envp[iter], '=');
-		env_append_both(env, char entry[KEY_INDEX], entry[VALUE_INDEX]);
+		env_append_both(env, entry[KEY_INDEX], entry[VALUE_INDEX]);
 		if (ft_strcmp(entry[KEY_INDEX], "PATH") == 0)
 			parse_path(env->path, entry[VALUE_INDEX]);
 		if (ft_strcmp(entry[KEY_INDEX], "SHLVL") == 0)
