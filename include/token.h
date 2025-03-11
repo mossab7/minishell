@@ -92,6 +92,8 @@ typedef  struct s_token_array
 	t_token		*items;
 	size_t		size;
 	size_t		cap;
+	bool		syntax_error;
+	char		*input;
 }	t_token_array;
 
 t_token_array	*tok_array_construct(void);

@@ -127,11 +127,10 @@ int	execute_command(t_command *cmd, t_env *env)
 	int			status;
 	pid_t		current_pid;
 	t_string	*cmd_path;
+	t_context	*context;
 
+	context = *get_context();
 	status = 0;
-	setup_signal_handlers();
-	t_context *context = *get_context();
-	context->readline_active = 0;
 	if (cmd->argc == 0)
 		return (0);
 	if (!execute_built_in_commands(cmd->args[0], env, cmd->args))
@@ -159,14 +158,15 @@ int	execute_command(t_command *cmd, t_env *env)
 	if (WIFSIGNALED(status))
 	{
 		env->last_command_status = 128 + WTERMSIG(status);
-		if( WTERMSIG(status) == SIGQUIT)
+		if(WTERMSIG(status) == SIGQUIT)
 			ft_printf("Quit (core dumped)\n");
+		else if(WTERMSIG(status) == SIGINT)
+			context->siginit_received = true;
 	}
 	else
 	{
 		env->last_command_status = WEXITSTATUS(status);
 	}
-	context->readline_active = 1;
 	return (env->last_command_status);
 }
 

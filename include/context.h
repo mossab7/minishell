@@ -3,7 +3,7 @@
 
 typedef struct s_context
 {
-    int state;
+    bool siginit_received;
     int readline_active;
 } t_context;
 

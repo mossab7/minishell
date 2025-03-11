@@ -12,15 +12,11 @@ void handle_sigint(int signum)
 
     if (context->readline_active == 1)
     {
-		printf("\n");
+		ft_putchar_fd('\n', STDOUT_FILENO);
         rl_on_new_line();
         rl_replace_line("", 0);
         rl_redisplay();
 	}
-    else
-    {
-        printf("\n");
-    }
 }
 
 void handle_sigquit(int signum)
