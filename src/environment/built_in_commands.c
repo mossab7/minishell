@@ -97,3 +97,39 @@ int built_in_exit(t_env *env, char **args)
 	exit(code);
 	return (0);
 }
+
+int built_in_set(t_env *env, char **args)
+{
+	size_t i = 1;
+
+	if (!args[i])
+	{
+		env_print(env);
+		return (env->last_command_status = 0);
+	}
+	while (args[i])
+	{
+		char *eq = ft_strchr(args[i], '=');
+		if (eq)
+		{
+			*eq = '\0';
+			env_set(env, args[i], eq + 1);
+		}
+		i++;
+	}
+	return (env->last_command_status = 0);
+}
+
+int built_in_unset(t_env *env, char **args)
+{
+	size_t i = 1;
+
+	if (!args[i])
+		return (env->last_command_status = 0);
+	while (args[i])
+	{
+		env_del(env, args[i]);
+		i++;
+	}
+	return (env->last_command_status = 0);
+}

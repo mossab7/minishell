@@ -43,7 +43,7 @@ void setup_signal_handlers()
         exit(1);
     }
 
-    sa_quit.sa_handler = handle_sigquit;
+    sa_quit.sa_handler = SIG_IGN;
     sigemptyset(&sa_quit.sa_mask);
     sa_quit.sa_flags = SA_RESTART | SA_NOCLDSTOP;
     if (sigaction(SIGQUIT, &sa_quit, 0) == -1)
