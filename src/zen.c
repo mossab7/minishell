@@ -67,27 +67,32 @@ int main(int ac, char **av, const char *envp[])
             {
             case ERROR_SYNTAX:
             {
+				free(input);
+                break;
             }
-            break;
             case ERROR_PIPE_SYNTAX:
             {
+				free(input);
+                break;
             }
-            break;
             case ERROR_REDIRECT_SYNTAX:
             {
+				free(input);
+                break;
             }
-            break;
             case ERROR_INVALID_OPERATOR:
             {
+				free(input);
+                break;
             }
-            break;
             case ERROR_QUOTE_UNCLOSED:
             {
                 // printf("[Error]: Quote unclosed\n");
                 // printf("    %s\n", lex->source);
                 // printf("    %*s\n", ((int)lex->cursor), "^\n");
+				free(input);
+                break;
             }
-            break;
             case OK:
             {
                 tokens = lex->tokens;
@@ -97,7 +102,10 @@ int main(int ac, char **av, const char *envp[])
 					tokens->syntax_error = false;
                     t_ast *root = build_ast(tokens);
 					if(!root)
-						printf("hona\n");
+					{
+						free(input);
+						continue;
+					}
 					if(tokens->syntax_error == true)
 					{
 						free(input);
@@ -109,6 +117,11 @@ int main(int ac, char **av, const char *envp[])
                 }
             }
             break;
+			default:
+			{
+				free(input);
+				break;
+			}
             }
         }
         //free(input);
