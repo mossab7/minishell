@@ -34,74 +34,87 @@ char *zen_prompt(t_env *env)
     str_destruct(zen_prompt_);
     return (buff);
 }
-
-int main(int ac, char **av, const char *envp[])
-{
-    setbuf(stdout, NULL);
-    setup_signal_handlers();
-    t_token_array *tokens;
-    char *input;
-    t_lexer *lex;
-    t_env *env;
-    (void)ac;
-    (void)av;
-    env = env_parse(envp);
-    while (1)
-    {
-        input = zen_prompt(env);
-        if (!input)
-        {
-            break;
-        }
-        add_history(input);
-        {
-            lex = lexer_init(input);
-            int e = lexer_tokenize(lex);
-            switch (e)
-            {
-            case ERROR_SYNTAX:
-            {
-            }
-            break;
-            case ERROR_PIPE_SYNTAX:
-            {
-            }
-            break;
-            case ERROR_REDIRECT_SYNTAX:
-            {
-            }
-            break;
-            case ERROR_INVALID_OPERATOR:
-            {
-            }
-            break;
-            case ERROR_QUOTE_UNCLOSED:
-            {
-                printf("[Error]: Quote unclosed\n");
-                printf("    %s\n", lex->source);
-                printf("    %*s\n", ((int)lex->cursor), "^\n");
-            }
-            break;
-            case OK:
-            {
-                tokens = lex->tokens;
-                tok_array_print(tokens);
-                expand(env, tokens);
-                {
-                    t_ast *root = build_ast(tokens);
-                    //print_ast(root,0);
-                    execute_ast(root, env);
-                }
-            }
-            break;
-            }
-        }
-        free(input);
-        if (!isatty(STDIN_FILENO))
-            break;
-    }
-    cleanup_memory_tracker(get_memory_tracker());
-    return 0;
-}
-
+#if 1
+	int main(int ac, char **av, const char *envp[])
+	{
+		setbuf(stdout, NULL);
+		setup_signal_handlers();
+		t_token_array *tokens;
+		char *input;
+		t_lexer *lex;
+		t_env *env;
+		(void)ac;
+		(void)av;
+		env = env_parse(envp);
+		while (1)
+		{
+			input = zen_prompt(env);
+			if (!input)
+			{
+				break;
+			}
+			add_history(input);
+			{
+				lex = lexer_init(input);
+				int e = lexer_tokenize(lex);
+				switch (e)
+				{
+				case ERROR_SYNTAX:
+				{
+				}
+				break;
+				case ERROR_PIPE_SYNTAX:
+				{
+				}
+				break;
+				case ERROR_REDIRECT_SYNTAX:
+				{
+				}
+				break;
+				case ERROR_INVALID_OPERATOR:
+				{
+				}
+				break;
+				case ERROR_QUOTE_UNCLOSED:
+				{
+					printf("[Error]: Quote unclosed\n");
+					printf("    %s\n", lex->source);
+					printf("    %*s\n", ((int)lex->cursor), "^\n");
+				}
+				break;
+				case OK:
+				{
+					tokens = lex->tokens;
+					// tok_array_print(tokens);
+					expand(env, tokens);
+					printf("A: \n");
+					// tok_array_print(tokens);
+					{
+						t_ast *root = build_ast(tokens);
+						//print_ast(root,0);
+						execute_ast(root, env);
+					}
+				}
+				break;
+				}
+			}
+			free(input);
+			if (!isatty(STDIN_FILENO))
+				break;
+		}
+		cleanup_memory_tracker(get_memory_tracker());
+		return 0;
+	}
+#else
+	int main(int ac, char **av)
+	{
+		if (ac < 3)
+			return (1);
+		t_string	*v = vstr_construct(1, av[1]);
+		printf("Before repl %s\n", v->cstring);
+		str_substitute(v, av[2], "x");
+		printf("After repl %s\n", v->cstring);
+		return (0);
+	}
+#endif /* if 0 */
 

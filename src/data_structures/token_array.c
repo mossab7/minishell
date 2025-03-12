@@ -33,9 +33,7 @@ t_token_array copy_tokens(t_token_array tokens)
     while (i < tokens.size)
     {
         tokens_copy.items[i].type = tokens.items[i].type;
-        tokens_copy.items[i].lexeme = alloc(sizeof(t_string)); // mask
-        tokens_copy.items[i].lexeme->cstring = ft_strdup(tokens.items[i].lexeme->cstring);
-		tokens_copy.items[i].mask = mask_construct();
+        tokens_copy.items[i].lexeme = vstr_construct(1, tokens.items[i].lexeme->cstring);
         i++;
     }
     return (tokens_copy);
@@ -54,8 +52,8 @@ void	tok_array_print(t_token_array *array)
 			break ;
 		ft_printf("# %s\n", tok->lexeme->cstring);
 		ft_printf("  ");
-		for (size_t i = 0; i < tok->mask->size; i++)
-			ft_printf("%u", tok->mask->items[i]);
+		for (size_t i = 0; i < tok->lexeme->mask->size; i++)
+			ft_printf("%u", tok->lexeme->mask->items[i]);
 		ft_printf("\n");
 		j++;
 	}

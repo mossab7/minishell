@@ -7,8 +7,7 @@ int	ft_is_operator(int c)
 		|| (c == INPUT_REDIRECT)
 		|| (c == OUTPUT_REDIRECT)
 		|| (c == OPAREN)
-		|| (c == CPAREN)
-		|| (c == EXPANSION_MARK));
+		|| (c == CPAREN));
 }
 
 int	ft_zen_isalnum(int c)
@@ -42,8 +41,8 @@ t_error lexer_tokenize(t_lexer *lex)
     {
         tok_array_expand(lex->tokens);
         tok = (lex->tokens->items + lex->tokens->size);
-		if (!tok->mask)
-			tok->mask = mask_construct();
+		if (!tok->lexeme->mask)
+			tok->lexeme->mask = mask_construct();
         tok->lexeme = str_construct();
         while (ft_isspace(lex->source[lex->cursor]))
             lex->cursor++;
@@ -188,16 +187,6 @@ t_error consume_symbol(t_token *tok, t_lexer *lex)
 		return (consume_sym_pair(tok, lex, TOK_INPUT_REDIRECT, TOK_HEREDOC));
 	if (lex->source[lex->cursor] == OUTPUT_REDIRECT) // >
 		return (consume_sym_pair(tok, lex, TOK_OUTPUT_REDIRECT, TOK_APPEND));
-	if(lex->source[lex->cursor] == EXPANSION_MARK) // $
-	{
-		tok->type = TOK_EXPANSION_MARK;
-		{
-			token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
-			while (ft_zen_isalnum(lex->source[lex->cursor]))
-				token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
-		}
-		return (OK);
-	}
 	if (lex->source[lex->cursor] == OPAREN)
 	{
 		tok->type = TOK_OPAREN;
