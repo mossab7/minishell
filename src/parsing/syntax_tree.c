@@ -284,9 +284,9 @@ t_redirect	*create_redirect(t_redirect_type type, char *target,t_token_array *to
 
 t_token	peek_token(t_token_array *tokens, size_t index)
 {
-    if (index >= tokens->size)
-        return ((t_token){TOK_EOF, NULL, NULL});
-    return (tokens->items[index]);
+	if (index >= tokens->size)
+		return ((t_token){TOK_EOF, NULL});
+	return (tokens->items[index]);
 }
 
 bool	match_token(t_token_type type, t_token_array *tokens, size_t *index)

@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> dad1497ce50430249985109053dc6ad11e47006e
 #include <zen.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -130,5 +133,3 @@ int main(int ac, char **av, const char *envp[])
     cleanup_memory_tracker(get_memory_tracker());
     return 0;
 }
-
-

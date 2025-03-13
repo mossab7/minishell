@@ -15,7 +15,7 @@
 #include <context.h>
 #include <assert.h>
 #include <signals.h>
-
+#include <sys/stat.h> 
 #define VEC_INIT_CAP 16
 #define VEC_GROWTH_FAC 2
 typedef enum e_error_res
@@ -26,6 +26,7 @@ typedef enum e_error_res
 	NOT_HANDLED,
 } t_error_res;
 
+void	string_expand(t_env *env, t_token *tok, t_token_array *tokens);
 void	expand(t_env *env, t_token_array *tokens);
-int zen_elog(const char *fmt, ...);
+int		zen_elog(const char *fmt, ...);
 #endif // ZEN_H

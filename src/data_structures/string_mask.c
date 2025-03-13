@@ -11,15 +11,18 @@
 /* ************************************************************************** */
 #include <zen.h>
 
+void	mask_expand_anyhow(t_mask *mask)
+{
+	mask->cap *= VEC_GROWTH_FAC;
+	mask->items = ft_realloc(mask->items,
+				mask->cap * sizeof(*(mask->items)),
+				mask->size * sizeof(*(mask->items)));
+}
+
 void	mask_expand(t_mask *mask)
 {
 	if(mask->size >= mask->cap)
-	{
-		mask->cap *= VEC_GROWTH_FAC;
-		mask->items = ft_realloc(mask->items,
-					mask->cap * sizeof(*(mask->items)),
-					mask->size * sizeof(*(mask->items)));
-	}
+		mask_expand_anyhow(mask);
 }
 
 void	mask_push_back(t_mask *mask, u8 item)
@@ -33,7 +36,7 @@ t_mask	*mask_construct(void)
 	t_mask	*mask;
 
 	mask = alloc(sizeof(*mask));
-	mask->items = alloc(VAC_INIT_CAP * sizeof(*(mask->items)));
+	mask->items = alloc(VAC_INIT_CAP * sizeof(*mask->items));
 	mask->cap = VEC_INIT_CAP;
 	mask->size = 0;
 	return (mask);

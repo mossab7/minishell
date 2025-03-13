@@ -16,6 +16,7 @@ typedef struct s_lexer
 	t_token_array	*tokens;
 }	t_lexer;
 
+t_token_array	*tokenize_source(const char *source);
 t_lexer *lexer_init(const char *source);
 t_error	lexer_tokenize(t_lexer *lex);
 char	*get_type_as_cstr(t_token_type type);
