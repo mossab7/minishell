@@ -94,7 +94,7 @@ typedef  struct s_token_array
 	size_t		cap;
 	bool		syntax_error;
 	bool		here_doc_active;
-	char		*input;
+	t_string		*input;
 }	t_token_array;
 
 t_token_array	*tok_array_construct(void);

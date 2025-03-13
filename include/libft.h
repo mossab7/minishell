@@ -14,6 +14,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdint.h>
+# include <t_string.h>
+#include <readline/readline.h>
+#include <readline/history.h>
 # define MAX_LONG 9223372036854775807
 # define NON -2
 # define OVER_FLOW_DETECTED -1
@@ -106,4 +109,5 @@ void	ft_free(void *addr);
 void	*alloc(size_t cap);
 void	ft_close(void *fd);
 int		is_quote(int c);
+t_string *ft_readline(const char *prompt);
 #endif // LIBFT_H
