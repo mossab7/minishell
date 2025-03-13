@@ -6,7 +6,7 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 #include <zen.h>
-
+#include <libft.h>
 void	print_ast(t_ast *node, int level)
 {
     t_redirect	*redir;
@@ -197,7 +197,13 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
     int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
     pid_t pid;
     int status;
+	int pipefd[2];
 
+	if(pipe(pipefd) == -1)
+	{
+		perror("pipe");
+		return (-1);
+	}
     if (fd == -1)
     {
         perror("heredoc");
@@ -217,31 +223,33 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
     {
         setup_heredoc_signals();
 
-        char *line;
-        char *tmp = NULL;
-
-        while ((line = readline("> ")) != NULL)
+        t_string *line;
+		close(pipefd[1]);
+        while ((line = ft_readline("> ")) != NULL)
         {
-            if (strcmp(line, redir->delimiter) == 0)
+            if (strcmp(line->cstring, redir->delimiter) == 0)
             {
-                free(line);
+                str_destruct(line);
                 break;
             }
-            write(fd, line, ft_strlen(line));
-            tmp = ft_strjoin(tokens->input, "\n");
-            tokens->input = tmp;
+            write(fd, line->cstring, line->size);
             write(fd, "\n", 1);
-            tmp = ft_strjoin(tokens->input, line);
-            tokens->input = tmp;
-            free(line);
+			str_join(tokens->input, 2, line->cstring,"\n");
+			str_destruct(line);
         }
+		write(pipefd[0],tokens->input->cstring,tokens->input->size);
+		close(pipefd[0]);
         close(fd);
         exit(0);
     }
 
     waitpid(pid, &status, 0);
     close(fd);
-
+	close(pipefd[0]);
+	//read input
+	close(pipefd[1]);
+	printf("%s\n",tokens->input->cstring);
+	printf("here\n");
     if (WIFSIGNALED(status))
     {
         unlink(filename);

@@ -7,11 +7,11 @@
 #include <signal.h>
 #include <signals.h>
 
-char *zen_prompt(t_env *env)
+t_string *zen_prompt(t_env *env)
 {
     char *user;
     char *pwd;
-    char *buff;
+    t_string *buff;
     t_string *zen_prompt_;
     t_context *context;
 
@@ -30,7 +30,7 @@ char *zen_prompt(t_env *env)
     context->readline_active = 1;
 	if (context->siginit_received == true)
 		printf("\n");
-    buff = readline(zen_prompt_->cstring);
+    buff = ft_readline(zen_prompt_->cstring);
     str_destruct(zen_prompt_);
     return (buff);
 }
@@ -41,7 +41,7 @@ int main(int ac, char **av, const char *envp[])
     setup_signal_handlers();
     t_token_array *tokens;
 	t_context *context;
-    char *input;
+    t_string *input;
     t_lexer *lex;
     t_env *env;
     (void)ac;
@@ -50,38 +50,37 @@ int main(int ac, char **av, const char *envp[])
     while (1)
     {
         input = zen_prompt(env);
-		register_memory_allocation(get_memory_tracker(),create_memory_record(input,free));
         if (!input)
             break;
-		if(!*input)
+		if(!*input->cstring)
 			continue;
         {
 			context = *get_context();
 			context->readline_active = 0;
 			context->siginit_received = false;
-            lex = lexer_init(input);
+            lex = lexer_init(input->cstring);
 			lex->tokens->input = input;
             int e = lexer_tokenize(lex);
             switch (e)
             {
             case ERROR_SYNTAX:
             {
-				ft_free(input);
+				str_destruct(input);
                 break;
             }
             case ERROR_PIPE_SYNTAX:
             {
-				ft_free(input);
+				str_destruct(input);
                 break;
             }
             case ERROR_REDIRECT_SYNTAX:
             {
-				ft_free(input);
+				str_destruct(input);
                 break;
             }
             case ERROR_INVALID_OPERATOR:
             {
-				ft_free(input);
+				str_destruct(input);
                 break;
             }
             case ERROR_QUOTE_UNCLOSED:
@@ -89,7 +88,7 @@ int main(int ac, char **av, const char *envp[])
                 // printf("[Error]: Quote unclosed\n");
                 // printf("    %s\n", lex->source);
                 // printf("    %*s\n", ((int)lex->cursor), "^\n");
-				ft_free(input);
+				str_destruct(input);
                 break;
             }
             case OK:
@@ -102,23 +101,25 @@ int main(int ac, char **av, const char *envp[])
                     t_ast *root = build_ast(tokens);
 					if(!root)
 					{
-						ft_free(input);
+						add_history(tokens->input->cstring);
+						str_destruct(input);
 						continue;
 					}
 					if(tokens->syntax_error == true)
 					{
-						ft_free(input);
+						add_history(tokens->input->cstring);
+						str_destruct(input);
 						continue;
 					}
                     //print_ast(root,0);
                     execute_ast(root, env);
-					add_history(tokens->input);
+					add_history(tokens->input->cstring);
                 }
             }
             break;
 			default:
 			{
-				free(input);
+				str_destruct(input);
 				break;
 			}
             }
