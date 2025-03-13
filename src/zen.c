@@ -1,3 +1,5 @@
+// ADD INTO THE PROJECCT: 
+//		git@vogsphere-v2-bg.1337.ma:vogsphere/intra-uuid-fde9219e-75d2-42fa-a2c6-634c008f5a19-6159724-lazmoud
 #include <zen.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -26,7 +28,7 @@ char *zen_prompt(t_env *env)
     else
         zen_prompt_->cstring = NULL;
     context->readline_active = 1;
-	if(context->siginit_received == true)
+	if (context->siginit_received == true)
 		printf("\n");
     buff = readline(zen_prompt_->cstring);
     str_destruct(zen_prompt_);
