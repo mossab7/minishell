@@ -12,15 +12,11 @@ void handle_sigint(int signum)
 
     if (context->readline_active == 1)
     {
-		printf("\n");
+		ft_putchar_fd('\n', STDOUT_FILENO);
         rl_on_new_line();
         rl_replace_line("", 0);
         rl_redisplay();
 	}
-    else
-    {
-        printf("\n");
-    }
 }
 
 void handle_sigquit(int signum)
@@ -47,7 +43,7 @@ void setup_signal_handlers()
         exit(1);
     }
 
-    sa_quit.sa_handler = handle_sigquit;
+    sa_quit.sa_handler = SIG_IGN;
     sigemptyset(&sa_quit.sa_mask);
     sa_quit.sa_flags = SA_RESTART | SA_NOCLDSTOP;
     if (sigaction(SIGQUIT, &sa_quit, 0) == -1)

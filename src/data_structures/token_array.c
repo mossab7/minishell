@@ -1,14 +1,19 @@
 #include <zen.h>
 
+void	tok_array_expand_anyhow(t_token_array *vec)
+{
+	vec->cap *= VEC_GROWTH_FAC;
+	vec->items = ft_realloc(vec->items, vec->cap * sizeof(t_token),vec->size * sizeof(t_token));
+	for (size_t i = vec->size; i < vec->cap; ++i)
+		vec->items[i].lexeme = str_construct();
+}
+
 void	tok_array_expand(t_token_array *vec)
 {
 	if (!vec->size)
 		return ;
 	if(vec->size >= vec->cap)
-	{
-		vec->cap *= VEC_GROWTH_FAC;
-		vec->items = ft_realloc(vec->items, vec->cap * sizeof(t_token),vec->size * sizeof(t_token));
-	}
+		tok_array_expand_anyhow(vec);
 }
 
 t_token_array	*tok_array_construct(void)
@@ -16,9 +21,11 @@ t_token_array	*tok_array_construct(void)
 	t_token_array	*vec;
 
 	vec = alloc(sizeof(*vec));
-	vec->items = alloc(1 * sizeof(t_token));
-	vec->cap = 1;
+	vec->items = alloc(VEC_INIT_CAP * sizeof(t_token));
+	vec->cap = VEC_INIT_CAP;
 	vec->size = 0;
+	for (size_t i = vec->size; i < vec->cap; ++i)
+		vec->items[i].lexeme = str_construct();
 	return (vec);
 }
 
@@ -50,11 +57,7 @@ void	tok_array_print(t_token_array *array)
 		tok = &array->items[j];
 		if (tok->type == TOK_EOF)
 			break ;
-		ft_printf("# %s\n", tok->lexeme->cstring);
-		ft_printf("  ");
-		for (size_t i = 0; i < tok->lexeme->mask->size; i++)
-			ft_printf("%u", tok->lexeme->mask->items[i]);
-		ft_printf("\n");
+		str_print(tok->lexeme);
 		j++;
 	}
 }

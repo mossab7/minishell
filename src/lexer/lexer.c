@@ -17,6 +17,14 @@ int	ft_zen_isalnum(int c)
 	return (!ft_isspace(c) && (ft_isalnum(c) || !ft_is_operator(c)));
 }
 
+t_token_array	*tokenize_source(const char *source)
+{
+	t_lexer	*lex = lexer_init(source);
+	lexer_tokenize(lex);
+	ft_free(lex);
+	return (lex->tokens);
+}
+
 t_lexer *lexer_init(const char *source)
 {
 	t_lexer	*lex;
@@ -29,8 +37,6 @@ t_lexer *lexer_init(const char *source)
 	return (lex);
 }
 
-// TODO: Get anything as a word, except already knows operators in bash. yes: kss^423@ is just a word but kss^|skks is 3 words because it has a known
-// bash symbol
 t_error lexer_tokenize(t_lexer *lex)
 {
     t_error err;
@@ -41,9 +47,6 @@ t_error lexer_tokenize(t_lexer *lex)
     {
         tok_array_expand(lex->tokens);
         tok = (lex->tokens->items + lex->tokens->size);
-		if (!tok->lexeme->mask)
-			tok->lexeme->mask = mask_construct();
-        tok->lexeme = str_construct();
         while (ft_isspace(lex->source[lex->cursor]))
             lex->cursor++;
         if (ft_zen_isalnum(lex->source[lex->cursor]) || is_quote(lex->source[lex->cursor]))
@@ -57,8 +60,9 @@ t_error lexer_tokenize(t_lexer *lex)
     }
 	tok_array_expand(lex->tokens);
 	tok = (lex->tokens->items + lex->tokens->size);
+	printf("tok = %p\n", tok);
+	printf("tok->type = %i\n", tok->type);
 	tok->type = TOK_EOF;
-	tok->lexeme = str_construct();
 	return (err);
 }
 

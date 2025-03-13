@@ -29,17 +29,32 @@ char *zen_prompt(t_env *env)
         str_join(zen_prompt_, 4, user, "@", pwd, ": ");
     else
         zen_prompt_->cstring = NULL;
-    buff = readline(zen_prompt_->cstring);
     context->readline_active = 1;
+	if(context->siginit_received == true)
+		printf("\n");
+    buff = readline(zen_prompt_->cstring);
     str_destruct(zen_prompt_);
     return (buff);
 }
-#if 1
+
+#if 0
+	int main(int ac, char **av)
+	{
+		if (ac < 4)
+			return (1);
+		t_string	*v = vstr_construct(1, av[1]);
+		printf("Before repl %s\n", v->cstring);
+		str_substitute(v, av[2], av[3]);
+		printf("After repl %s\n", v->cstring);
+		return (0);
+	}
+#else
 	int main(int ac, char **av, const char *envp[])
 	{
 		setbuf(stdout, NULL);
 		setup_signal_handlers();
 		t_token_array *tokens;
+		t_context *context;
 		char *input;
 		t_lexer *lex;
 		t_env *env;
@@ -50,12 +65,15 @@ char *zen_prompt(t_env *env)
 		{
 			input = zen_prompt(env);
 			if (!input)
-			{
 				break;
-			}
-			add_history(input);
+			if(!*input)
+				continue;
 			{
+				context = *get_context();
+				context->readline_active = 0;
+				context->siginit_received = false;
 				lex = lexer_init(input);
+				lex->tokens->input = input;
 				int e = lexer_tokenize(lex);
 				switch (e)
 				{
@@ -77,44 +95,38 @@ char *zen_prompt(t_env *env)
 				break;
 				case ERROR_QUOTE_UNCLOSED:
 				{
-					printf("[Error]: Quote unclosed\n");
-					printf("    %s\n", lex->source);
-					printf("    %*s\n", ((int)lex->cursor), "^\n");
+					// printf("[Error]: Quote unclosed\n");
+					// printf("    %s\n", lex->source);
+					// printf("    %*s\n", ((int)lex->cursor), "^\n");
 				}
 				break;
 				case OK:
 				{
 					tokens = lex->tokens;
-					// tok_array_print(tokens);
 					expand(env, tokens);
-					printf("A: \n");
-					// tok_array_print(tokens);
 					{
+						tokens->syntax_error = false;
 						t_ast *root = build_ast(tokens);
+						if(!root)
+							printf("hona\n");
+						if(tokens->syntax_error == true)
+						{
+							free(input);
+							continue;
+						}
 						//print_ast(root,0);
 						execute_ast(root, env);
+						add_history(tokens->input);
 					}
 				}
 				break;
 				}
 			}
-			free(input);
+			//free(input);
 			if (!isatty(STDIN_FILENO))
 				break;
 		}
 		cleanup_memory_tracker(get_memory_tracker());
 		return 0;
 	}
-#else
-	int main(int ac, char **av)
-	{
-		if (ac < 3)
-			return (1);
-		t_string	*v = vstr_construct(1, av[1]);
-		printf("Before repl %s\n", v->cstring);
-		str_substitute(v, av[2], "x");
-		printf("After repl %s\n", v->cstring);
-		return (0);
-	}
 #endif /* if 0 */
-

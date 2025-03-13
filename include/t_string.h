@@ -7,6 +7,7 @@
 #define VAC_GROWTH_FACTOR 2
 
 typedef struct s_mask {
+	u8		context;
 	u8		*items;
 	size_t	cap;
 	size_t	size;
@@ -14,13 +15,14 @@ typedef struct s_mask {
 
 typedef struct s_string
 {
-	t_mask			*mask;
+	t_mask	*mask;
 	char	*cstring;
 	size_t	size;
 	size_t	cap;
 }	t_string;
 
 t_string	*str_construct(void);
+int			str_search(t_string *vec, const char *text);
 t_string	*vstr_construct(size_t count, ...);
 void		str_expand(t_string *vec);
 void		str_push_back(t_string *vec, uintptr_t item);
@@ -33,4 +35,6 @@ void		mask_expand(t_mask *mask);
 void		mask_push_back(t_mask *mask, u8 item);
 t_mask		*mask_construct(void);
 void		mask_destroy(t_mask *mask);
+void		mask_expand_anyhow(t_mask *mask);
+void		str_print(t_string *str);
 #endif // !T_STING_H

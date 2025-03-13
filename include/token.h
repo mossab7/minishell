@@ -85,11 +85,14 @@ typedef  struct s_token_array
 	t_token		*items;
 	size_t		size;
 	size_t		cap;
+	bool		syntax_error;
+	char		*input;
 }	t_token_array;
 
 t_token_array	*tok_array_construct(void);
 t_token_array	copy_tokens(t_token_array tokens);
 void			tok_array_expand(t_token_array *vec);
+void			tok_array_expand_anyhow(t_token_array *vec);
 void			tok_array_print(t_token_array *array);
 void			token_push_back(t_token	*tok, char c, u8 state);
 #endif // !TOKEN_H

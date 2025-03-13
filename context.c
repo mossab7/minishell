@@ -7,7 +7,7 @@ t_context **get_context()
     if (context == NULL)
     {
         context = malloc(sizeof(t_context));
-        context->state = 0;
+        context->siginit_received = false;
         context->readline_active = 1;
     }
     return &context;
