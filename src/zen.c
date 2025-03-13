@@ -1,7 +1,3 @@
-/*
- 1. test fails to redirect output.
-	| builtin_command > somewhere
- */
 #include <zen.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -37,96 +33,98 @@ char *zen_prompt(t_env *env)
     return (buff);
 }
 
-#if 0
-	int main(int ac, char **av)
-	{
-		if (ac < 4)
-			return (1);
-		t_string	*v = vstr_construct(1, av[1]);
-		printf("Before repl %s\n", v->cstring);
-		str_substitute(v, av[2], av[3]);
-		printf("After repl %s\n", v->cstring);
-		return (0);
-	}
-#else
-	int main(int ac, char **av, const char *envp[])
-	{
-		setbuf(stdout, NULL);
-		setup_signal_handlers();
-		t_token_array *tokens;
-		t_context *context;
-		char *input;
-		t_lexer *lex;
-		t_env *env;
-		(void)ac;
-		(void)av;
-		env = env_parse(envp);
-		while (1)
-		{
-			input = zen_prompt(env);
-			if (!input)
-				break;
-			if(!*input)
-				continue;
-			{
-				context = *get_context();
-				context->readline_active = 0;
-				context->siginit_received = false;
-				lex = lexer_init(input);
-				lex->tokens->input = input;
-				int e = lexer_tokenize(lex);
-				switch (e)
-				{
-				case ERROR_SYNTAX:
-				{
-				}
-				break;
-				case ERROR_PIPE_SYNTAX:
-				{
-				}
-				break;
-				case ERROR_REDIRECT_SYNTAX:
-				{
-				}
-				break;
-				case ERROR_INVALID_OPERATOR:
-				{
-				}
-				break;
-				case ERROR_QUOTE_UNCLOSED:
-				{
-					// printf("[Error]: Quote unclosed\n");
-					// printf("    %s\n", lex->source);
-					// printf("    %*s\n", ((int)lex->cursor), "^\n");
-				}
-				break;
-				case OK:
-				{
-					tokens = lex->tokens;
-					expand(env, tokens);
+int main(int ac, char **av, const char *envp[])
+{
+    setbuf(stdout, NULL);
+    setup_signal_handlers();
+    t_token_array *tokens;
+	t_context *context;
+    char *input;
+    t_lexer *lex;
+    t_env *env;
+    (void)ac;
+    (void)av;
+    env = env_parse(envp);
+    while (1)
+    {
+        input = zen_prompt(env);
+		register_memory_allocation(get_memory_tracker(),create_memory_record(input,free));
+        if (!input)
+            break;
+		if(!*input)
+			continue;
+        {
+			context = *get_context();
+			context->readline_active = 0;
+			context->siginit_received = false;
+            lex = lexer_init(input);
+			lex->tokens->input = input;
+            int e = lexer_tokenize(lex);
+            switch (e)
+            {
+            case ERROR_SYNTAX:
+            {
+				ft_free(input);
+                break;
+            }
+            case ERROR_PIPE_SYNTAX:
+            {
+				ft_free(input);
+                break;
+            }
+            case ERROR_REDIRECT_SYNTAX:
+            {
+				ft_free(input);
+                break;
+            }
+            case ERROR_INVALID_OPERATOR:
+            {
+				ft_free(input);
+                break;
+            }
+            case ERROR_QUOTE_UNCLOSED:
+            {
+                // printf("[Error]: Quote unclosed\n");
+                // printf("    %s\n", lex->source);
+                // printf("    %*s\n", ((int)lex->cursor), "^\n");
+				ft_free(input);
+                break;
+            }
+            case OK:
+            {
+                tokens = lex->tokens;
+                //tok_array_print(tokens);
+                expand(env, tokens);
+                {
+					tokens->syntax_error = false;
+                    t_ast *root = build_ast(tokens);
+					if(!root)
 					{
-						tokens->syntax_error = false;
-						t_ast *root = build_ast(tokens);
-						if(!root)
-							printf("hona\n");
-						if(tokens->syntax_error == true)
-						{
-							free(input);
-							continue;
-						}
-						//print_ast(root,0);
-						execute_ast(root, env);
-						add_history(tokens->input);
+						ft_free(input);
+						continue;
 					}
-				}
+					if(tokens->syntax_error == true)
+					{
+						ft_free(input);
+						continue;
+					}
+                    //print_ast(root,0);
+                    execute_ast(root, env);
+					add_history(tokens->input);
+                }
+            }
+            break;
+			default:
+			{
+				free(input);
 				break;
-				}
 			}
-			//free(input);
-			if (!isatty(STDIN_FILENO))
-				break;
-		}
-		cleanup_memory_tracker(get_memory_tracker());
-		return 0;
-	}
-#endif /* if 0 */
+            }
+        }
+        //free(input);
+        if (!isatty(STDIN_FILENO))
+            break;
+    }
+    cleanup_memory_tracker(get_memory_tracker());
+    return 0;
+}

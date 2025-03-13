@@ -63,6 +63,28 @@ int append_redirection(t_redirect *redir)
 	return (fd);
 }
 
+bool is_ambiguous_redirect(const char *filename) 
+{
+    struct stat file_stat;
+    
+    if (!filename || filename[0] == '\0')
+        return true;
+    
+    if (stat(filename, &file_stat) == 0) 
+	{
+        if (S_ISDIR(file_stat.st_mode)) 
+		{
+            zen_elog("bash: %s/: Is a directory\n", filename);
+            return true;
+        }
+    }
+    
+    if (strchr(filename, '$') || strchr(filename, '*') || strchr(filename, '?'))
+        return true;
+    
+    return false;
+}
+
 int	setup_redirections(t_command *cmd)
 {
 	t_redirect	*redir;
@@ -71,6 +93,14 @@ int	setup_redirections(t_command *cmd)
 	for (int i = 0; i < cmd->redirect_count; i++)
 	{
 		redir = cmd->redirects[i];
+		if (redir->type != REDIR_HEREDOC) 
+		{
+            if (is_ambiguous_redirect(redir->filename)) 
+			{
+                zen_elog("ambiguous redirect\n");
+                return (-1);
+            }
+        }
 		if (redir->type == REDIR_INPUT)
 		{
 			fd = inptu_redirection(redir);

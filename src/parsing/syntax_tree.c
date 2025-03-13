@@ -92,10 +92,13 @@ t_ast		*parse_and_or(t_token_array *tokens, size_t *index);
 
 void	*syntax_error(const char *message,t_token_array *tokens)
 {
+	if(tokens->syntax_error == false && tokens->here_doc_active == false)
+	{
+    	fprintf(stderr, "Syntax error: %s\n", message);
+    	rl_replace_line("", 0);
+    	rl_on_new_line();
+	}
 	tokens->syntax_error = true;
-    fprintf(stderr, "Syntax error: %s\n", message);
-    rl_on_new_line();
-    rl_replace_line("", 0);
 	return (NULL);
 }
 
@@ -158,34 +161,94 @@ char *ft_mkstemp(void)
     return (filename);
 }
 
-int setup_here_doc(t_redirect *redir,t_token_array *tokens)
+void setup_heredoc_signals(void)
 {
-    char *line;
+    struct sigaction sa;
+    int signals[] = {
+        SIGABRT, SIGALRM, SIGBUS, SIGCHLD, SIGCONT,
+        SIGFPE, SIGHUP, SIGILL, SIGPIPE, SIGPROF,
+        SIGSEGV, SIGTERM, SIGTRAP, SIGTSTP, SIGTTIN,
+        SIGTTOU, SIGUSR1, SIGUSR2, SIGVTALRM, SIGXCPU,
+        SIGXFSZ
+    };
+    int i;
+
+    sigemptyset(&sa.sa_mask);
+    sa.sa_handler = SIG_IGN;
+    sa.sa_flags = 0;
+
+    i = 0;
+    while (i < (int)(sizeof(signals) / sizeof(signals[0])))
+    {
+        sigaction(signals[i], &sa, NULL);
+        i++;
+    }
+
+    sa.sa_handler = SIG_DFL;
+    sigaction(SIGINT, &sa, NULL);
+    sa.sa_handler = SIG_IGN;
+    sigaction(SIGQUIT, &sa, NULL);
+}
+
+int setup_here_doc(t_redirect *redir, t_token_array *tokens)
+{
+	tokens->here_doc_active = true;
     char *filename = ft_mkstemp();
-    char *tmp = NULL;
-	int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
+    int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
+    pid_t pid;
+    int status;
+
     if (fd == -1)
     {
         perror("heredoc");
         return (-1);
     }
-    while ((line = readline("> ")) != NULL)
+
+    pid = fork();
+    if (pid == -1)
     {
-        if (strcmp(line, redir->delimiter) == 0)
-        {
-            free(line);
-            break;
-        }
-        // TODO: Expand variables in line
-        write(fd, line, ft_strlen(line));
-		tmp = ft_strjoin(tokens->input,"\n");
-		tokens->input = tmp;
-        write(fd, "\n", 1);
-        tmp = ft_strjoin(tokens->input,line);
-		tokens->input = tmp;
-		free(line);
+        close(fd);
+        unlink(filename);
+        perror("fork");
+        return (-1);
     }
+
+    if (pid == 0)
+    {
+        setup_heredoc_signals();
+
+        char *line;
+        char *tmp = NULL;
+
+        while ((line = readline("> ")) != NULL)
+        {
+            if (strcmp(line, redir->delimiter) == 0)
+            {
+                free(line);
+                break;
+            }
+            write(fd, line, ft_strlen(line));
+            tmp = ft_strjoin(tokens->input, "\n");
+            tokens->input = tmp;
+            write(fd, "\n", 1);
+            tmp = ft_strjoin(tokens->input, line);
+            tokens->input = tmp;
+            free(line);
+        }
+        close(fd);
+        exit(0);
+    }
+
+    waitpid(pid, &status, 0);
     close(fd);
+
+    if (WIFSIGNALED(status))
+    {
+        unlink(filename);
+        ft_free(filename);
+        return (-1);
+    }
+
     redir->filename = filename;
     return (0);
 }
@@ -200,8 +263,8 @@ t_redirect	*create_redirect(t_redirect_type type, char *target,t_token_array *to
     {
         redir->delimiter = target;
         setup_here_doc(redir,tokens);
-        if(redir->filename == NULL)
-            return (NULL);
+        // if(redir->filename == NULL)
+        //     return (NULL);
     }
     else
     {
@@ -287,11 +350,25 @@ t_ast	*parse_command(t_token_array *tokens, size_t *index)
         else if (token.type >= TOK_INPUT_REDIRECT && token.type <= TOK_HEREDOC)
         {
             redir = parse_redirection(tokens, index);
+			if(!redir)
+			{
+				while(argc > 0)
+					ft_free(args[--argc]);
+				ft_free(args);
+				ft_free(redirects);
+				return (NULL);
+			}
             redirects[redirect_count++] = redir;
         }
         else
             break ;
     }
+	if(argc == 0 && redirect_count == 0)
+	{
+		ft_free(args);
+		ft_free(redirects);
+		return (NULL);
+	}
     return (create_command_node(args, argc, redirects, redirect_count));
 }
 
@@ -314,8 +391,8 @@ t_ast	*parse_primary(t_token_array *tokens, size_t *index)
     else
     {
         node = parse_command(tokens, index);
-		// if(!node)
-		// 	return (syntax_error("",tokens));
+		if(!node && !tokens->syntax_error)
+			return (syntax_error("Unexpected token",tokens));
     }
     return (node);
 }
@@ -325,10 +402,14 @@ t_ast	*parse_pipe(t_token_array *tokens, size_t *index)
     t_ast	*left;
 
     left = parse_primary(tokens, index);
+	if(!left)
+		return (NULL);
     while (match_token(TOK_PIPE, tokens, index))
     {
         left = create_binary_node(NODE_PIPE, left, parse_primary(tokens,
                     index));
+		if(!left->right)
+			return (syntax_error("Invalid null command",tokens));
     }
     return (left);
 }
@@ -375,8 +456,10 @@ t_ast	*build_ast(t_token_array *tokens)
     token = peek_token(tokens, index);
     if (token.type != TOK_EOF)
     {
-        printf("%s\n", token.lexeme->cstring);
         syntax_error("Unexpected input",tokens);
+		return (NULL);
     }
+	if(tokens->syntax_error == true)
+		return (NULL);
     return (ast);
 }

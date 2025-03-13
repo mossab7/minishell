@@ -86,6 +86,7 @@ typedef  struct s_token_array
 	size_t		size;
 	size_t		cap;
 	bool		syntax_error;
+	bool		here_doc_active;
 	char		*input;
 }	t_token_array;
 
