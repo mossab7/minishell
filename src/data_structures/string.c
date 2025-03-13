@@ -110,7 +110,7 @@ int	str_search(t_string *vec, const char *text)
 
 void	str_print(t_string *str)
 {
-	ft_printf("# %s\n", str->cstring);
+	ft_printf("[%u]# %s\n", str->size, str->cstring);
 	ft_printf("  ");
 	for (size_t i = 0; i < str->mask->size; i++)
 		ft_printf("%u", str->mask->items[i]);

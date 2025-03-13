@@ -38,7 +38,6 @@ void	expand_value(t_token *tok, t_env *env, t_token_array *tokens)
 		tokens->size--;
 		return ;
 	}
-	tok->type = TOK_WORD;
 }
 
 void	expand(t_env *env, t_token_array *tokens)
@@ -50,7 +49,8 @@ void	expand(t_env *env, t_token_array *tokens)
 	while (iter < tokens->size)
 	{
 		tok = &tokens->items[iter];
-		expand_value(tok, env, tokens);
+		if (tok->type == TOK_WORD)
+			expand_value(tok, env, tokens);
 		iter++;
 	}
 }

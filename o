@@ -1,0 +1,13 @@
+context.c
+context.o
+ft_printf
+GRAMMAR
+include
+libft
+libzen.a
+main.c
+Makefile
+minishell
+o
+readline.supp
+src

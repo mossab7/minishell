@@ -85,17 +85,17 @@ int main(int ac, char **av, const char *envp[])
             }
             case ERROR_QUOTE_UNCLOSED:
             {
-                // printf("[Error]: Quote unclosed\n");
-                // printf("    %s\n", lex->source);
-                // printf("    %*s\n", ((int)lex->cursor), "^\n");
 				str_destruct(input);
                 break;
             }
             case OK:
             {
                 tokens = lex->tokens;
-                //tok_array_print(tokens);
-                expand(env, tokens);
+				printf("Before: \n");
+                tok_array_print(tokens);
+					expand(env, tokens);
+				printf("After: \n");
+                tok_array_print(tokens);
                 {
 					tokens->syntax_error = false;
                     t_ast *root = build_ast(tokens);

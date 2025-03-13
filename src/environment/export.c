@@ -1,18 +1,18 @@
 #include <zen.h>
 
-// static void		print_export(t_env *env)
-// {
-// 	// TODO: Sort before printing
-// 	cells_sort(env->export_cells);
-// 	printf("Export sorted\n");
-// 	for (size_t i = 0; i < env->export_cells->size; i++)
-// 	{
-// 		printf("declare -x %s", env->export_cells->items[i].key);
-// 		if (env->export_cells->items[i].value)
-// 			printf("=\"%s\"", env->export_cells->items[i].value);
-// 		printf("\n");
-// 	}
-// }
+static void		print_export(t_env *env)
+{
+	// TODO: Sort before printing
+	cells_sort(env->export_cells);
+	printf("Export sorted\n");
+	for (size_t i = 0; i < env->export_cells->size; i++)
+	{
+		printf("declare -x %s", env->export_cells->items[i].key);
+		if (env->export_cells->items[i].value)
+			printf("=\"%s\"", env->export_cells->items[i].value);
+		printf("\n");
+	}
+}
 
 int built_in_export(t_env *env, char **args)
 {
@@ -24,7 +24,7 @@ int built_in_export(t_env *env, char **args)
 	i = 1;
 	if (!args[i])
 	{
-		// print_export(env);
+		print_export(env);
 		return (0);
 	}
 	while (args[i])
