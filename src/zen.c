@@ -52,6 +52,7 @@ int main(int ac, char **av, const char *envp[])
     while (1)
     {
         input = zen_prompt(env);
+		register_memory_allocation(get_memory_tracker(),create_memory_record(input,free));
         if (!input)
             break;
 		if(!*input)
@@ -67,22 +68,22 @@ int main(int ac, char **av, const char *envp[])
             {
             case ERROR_SYNTAX:
             {
-				free(input);
+				ft_free(input);
                 break;
             }
             case ERROR_PIPE_SYNTAX:
             {
-				free(input);
+				ft_free(input);
                 break;
             }
             case ERROR_REDIRECT_SYNTAX:
             {
-				free(input);
+				ft_free(input);
                 break;
             }
             case ERROR_INVALID_OPERATOR:
             {
-				free(input);
+				ft_free(input);
                 break;
             }
             case ERROR_QUOTE_UNCLOSED:
@@ -90,7 +91,7 @@ int main(int ac, char **av, const char *envp[])
                 // printf("[Error]: Quote unclosed\n");
                 // printf("    %s\n", lex->source);
                 // printf("    %*s\n", ((int)lex->cursor), "^\n");
-				free(input);
+				ft_free(input);
                 break;
             }
             case OK:
@@ -103,12 +104,12 @@ int main(int ac, char **av, const char *envp[])
                     t_ast *root = build_ast(tokens);
 					if(!root)
 					{
-						free(input);
+						ft_free(input);
 						continue;
 					}
 					if(tokens->syntax_error == true)
 					{
-						free(input);
+						ft_free(input);
 						continue;
 					}
                     //print_ast(root,0);

@@ -92,10 +92,13 @@ t_ast		*parse_and_or(t_token_array *tokens, size_t *index);
 
 void	*syntax_error(const char *message,t_token_array *tokens)
 {
+	if(tokens->syntax_error == false && tokens->here_doc_active == false)
+	{
+    	fprintf(stderr, "Syntax error: %s\n", message);
+    	rl_replace_line("", 0);
+    	rl_on_new_line();
+	}
 	tokens->syntax_error = true;
-    fprintf(stderr, "Syntax error: %s\n", message);
-    rl_on_new_line();
-    rl_replace_line("", 0);
 	return (NULL);
 }
 
@@ -162,10 +165,10 @@ void setup_heredoc_signals(void)
 {
     struct sigaction sa;
     int signals[] = {
-        SIGABRT, SIGALRM, SIGBUS, SIGCHLD, SIGCONT, 
-        SIGFPE, SIGHUP, SIGILL, SIGPIPE, SIGPROF, 
-        SIGSEGV, SIGTERM, SIGTRAP, SIGTSTP, SIGTTIN, 
-        SIGTTOU, SIGUSR1, SIGUSR2, SIGVTALRM, SIGXCPU, 
+        SIGABRT, SIGALRM, SIGBUS, SIGCHLD, SIGCONT,
+        SIGFPE, SIGHUP, SIGILL, SIGPIPE, SIGPROF,
+        SIGSEGV, SIGTERM, SIGTRAP, SIGTSTP, SIGTTIN,
+        SIGTTOU, SIGUSR1, SIGUSR2, SIGVTALRM, SIGXCPU,
         SIGXFSZ
     };
     int i;
@@ -189,11 +192,12 @@ void setup_heredoc_signals(void)
 
 int setup_here_doc(t_redirect *redir, t_token_array *tokens)
 {
+	tokens->here_doc_active = true;
     char *filename = ft_mkstemp();
     int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
     pid_t pid;
     int status;
-    
+
     if (fd == -1)
     {
         perror("heredoc");
@@ -212,10 +216,10 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
     if (pid == 0)
     {
         setup_heredoc_signals();
-        
+
         char *line;
         char *tmp = NULL;
-        
+
         while ((line = readline("> ")) != NULL)
         {
             if (strcmp(line, redir->delimiter) == 0)
@@ -241,7 +245,7 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
     if (WIFSIGNALED(status))
     {
         unlink(filename);
-        free(filename);
+        ft_free(filename);
         return (-1);
     }
 
@@ -259,8 +263,8 @@ t_redirect	*create_redirect(t_redirect_type type, char *target,t_token_array *to
     {
         redir->delimiter = target;
         setup_here_doc(redir,tokens);
-        if(redir->filename == NULL)
-            return (NULL);
+        // if(redir->filename == NULL)
+        //     return (NULL);
     }
     else
     {
@@ -349,9 +353,9 @@ t_ast	*parse_command(t_token_array *tokens, size_t *index)
 			if(!redir)
 			{
 				while(argc > 0)
-					free(args[--argc]);
-				free(args);
-				free(redirects);
+					ft_free(args[--argc]);
+				ft_free(args);
+				ft_free(redirects);
 				return (NULL);
 			}
             redirects[redirect_count++] = redir;
@@ -361,8 +365,8 @@ t_ast	*parse_command(t_token_array *tokens, size_t *index)
     }
 	if(argc == 0 && redirect_count == 0)
 	{
-		free(args);
-		free(redirects);
+		ft_free(args);
+		ft_free(redirects);
 		return (NULL);
 	}
     return (create_command_node(args, argc, redirects, redirect_count));
@@ -452,7 +456,6 @@ t_ast	*build_ast(t_token_array *tokens)
     token = peek_token(tokens, index);
     if (token.type != TOK_EOF)
     {
-        printf("%s\n", token.lexeme->cstring);
         syntax_error("Unexpected input",tokens);
 		return (NULL);
     }

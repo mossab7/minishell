@@ -17,8 +17,11 @@ t_token_array	*tok_array_construct(void)
 
 	vec = alloc(sizeof(*vec));
 	vec->items = alloc(1 * sizeof(t_token));
+	vec->input = NULL;
 	vec->cap = 1;
 	vec->size = 0;
+	vec->here_doc_active = false;
+	vec->syntax_error = false;
 	return (vec);
 }
 
