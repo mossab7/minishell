@@ -9,7 +9,7 @@
 /*   Updated: 2024/11/02 11:31:47 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line.h"
+#include <libft.h>
 
 char		*ft_strdup_heap(const char *s1, char *heap)
 {
@@ -21,28 +21,28 @@ char		*ft_strdup_heap(const char *s1, char *heap)
 	size = 0;
 	while (s1[size])
 		size++;
-	dup = ft_realloc(NULL, size + 1, 0);
+	dup = ft_realloc_gnl(NULL, size + 1, 0);
 	if (!dup)
 	{
 		if (heap)
-			free(heap);
+			ft_free(heap);
 		return (NULL);
 	}
 	dup = ft_strcpy_until(dup, s1, 0);
 	if (heap)
-		free(heap);
+		ft_free(heap);
 	return (dup);
 }
 
-void	*ft_realloc(void *ptr, size_t new_sz, size_t old_sz)
+void	*ft_realloc_gnl(void *ptr, size_t new_sz, size_t old_sz)
 {
 	char	*new;
 	size_t	index;
 
-	new = malloc(new_sz);
+	new = alloc(new_sz);
 	if (new == NULL)
 	{
-		free(ptr);
+		ft_free(ptr);
 		return (NULL);
 	}
 	index = 0;
@@ -56,11 +56,11 @@ void	*ft_realloc(void *ptr, size_t new_sz, size_t old_sz)
 		new[index] = ((char *)ptr)[index];
 		index++;
 	}
-	free(ptr);
+	ft_free(ptr);
 	return (new);
 }
 
-char	*ft_strchr(char *s, int c)
+char	*ft_strchr_gnl(char *s, int c)
 {
 	int	i;
 
@@ -99,11 +99,11 @@ char	*ft_strcpy_until(char *dst, const char *src, char c)
 	return (dst);
 }
 
-ssize_t	line_read(int fd, t_line *line, char **nl_loc, ssize_t *nread)
+ssize_t	line_read(int fd, t_line_gnl *line, char **nl_loc, ssize_t *nread)
 {
 	if (line->size + BUFFER_SIZE >= line->cap)
 	{
-		line->content = ft_realloc(line->content, (line->cap * 2), line->size);
+		line->content = ft_realloc_gnl(line->content, (line->cap * 2), line->size);
 		if (!line->content)
 			return (-1);
 		line->cap *= 2;
@@ -111,7 +111,7 @@ ssize_t	line_read(int fd, t_line *line, char **nl_loc, ssize_t *nread)
 	*nread = (read(fd, (line->content + line->size), BUFFER_SIZE));
 	if (*nread <= 0)
 		return (*nread);
-	*nl_loc = ft_strchr(line->content + line->size, '\n');
+	*nl_loc = ft_strchr_gnl(line->content + line->size, '\n');
 	line->size += *nread;
 	return (*nread);
 }

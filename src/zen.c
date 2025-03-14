@@ -1,4 +1,4 @@
-// ADD INTO THE PROJECCT: 
+// ADD INTO THE PROJECCT:
 //		git@vogsphere-v2-bg.1337.ma:vogsphere/intra-uuid-fde9219e-75d2-42fa-a2c6-634c008f5a19-6159724-lazmoud
 #include <zen.h>
 #include <fcntl.h>
@@ -91,10 +91,10 @@ int main(int ac, char **av, const char *envp[])
             case OK:
             {
                 tokens = lex->tokens;
-				printf("Before: \n");
-                tok_array_print(tokens);
-					expand(env, tokens);
-				printf("After: \n");
+				// printf("Before: \n");
+                // tok_array_print(tokens);
+				expand(env, tokens);
+				//printf("After: \n");
                 tok_array_print(tokens);
                 {
 					tokens->syntax_error = false;

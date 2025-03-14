@@ -192,18 +192,18 @@ void setup_heredoc_signals(void)
 
 int setup_here_doc(t_redirect *redir, t_token_array *tokens)
 {
-	tokens->here_doc_active = true;
+    tokens->here_doc_active = true;
     char *filename = ft_mkstemp();
     int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
     pid_t pid;
     int status;
-	int pipefd[2];
+    int pipefd[2];
 
-	if(pipe(pipefd) == -1)
-	{
-		perror("pipe");
-		return (-1);
-	}
+    if (pipe(pipefd) == -1)
+    {
+        perror("pipe");
+        return (-1);
+    }
     if (fd == -1)
     {
         perror("heredoc");
@@ -224,7 +224,8 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
         setup_heredoc_signals();
 
         t_string *line;
-		close(pipefd[1]);
+		t_string *input = str_construct();
+        close(pipefd[0]);
         while ((line = ft_readline("> ")) != NULL)
         {
             if (strcmp(line->cstring, redir->delimiter) == 0)
@@ -234,29 +235,36 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
             }
             write(fd, line->cstring, line->size);
             write(fd, "\n", 1);
-			str_join(tokens->input, 2, line->cstring,"\n");
-			str_destruct(line);
+			str_join(input,2,line->cstring,"\n");
+            str_destruct(line);
         }
-		write(pipefd[0],tokens->input->cstring,tokens->input->size);
-		close(pipefd[0]);
+		write(pipefd[1], input->cstring,input->size);
+        close(pipefd[1]);
         close(fd);
         exit(0);
     }
 
-    waitpid(pid, &status, 0);
     close(fd);
-	close(pipefd[0]);
-	//read input
-	close(pipefd[1]);
-	printf("%s\n",tokens->input->cstring);
-	printf("here\n");
+    close(pipefd[1]);
+	char *heredoc_content;
+	str_append("\n",tokens->input);
+	while(true)
+	{
+		heredoc_content = get_next_line(pipefd[0]);
+		if(!heredoc_content)
+			break;
+		str_append(heredoc_content,tokens->input);
+		ft_free(heredoc_content);
+	}
+    close(pipefd[0]);
+
+    waitpid(pid, &status, 0);
     if (WIFSIGNALED(status))
     {
         unlink(filename);
         ft_free(filename);
         return (-1);
     }
-
     redir->filename = filename;
     return (0);
 }

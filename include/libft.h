@@ -17,13 +17,17 @@
 # include <t_string.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-#include <get_next_line.h>
 
 # define MAX_LONG 9223372036854775807
 # define NON -2
 # define OVER_FLOW_DETECTED -1
 # define SUCCESS 1
 # define DONE 0
+
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1024
+# endif // !BUFFER_SIZE
+# define FD_MAX 10240
 
 typedef struct s_num
 {
@@ -44,6 +48,13 @@ typedef struct s_alloc_record
 	void					(*free_func)(void *);
 	struct s_alloc_record	*next;
 }							t_alloc_record;
+
+typedef struct s_line_gnl
+{
+	size_t	cap;
+	size_t	size;
+	char	*content;
+}			t_line_gnl;
 
 int		ft_atoi(const char *str);
 int		ft_atol_base(const char *str, const char *base, long *where);
@@ -111,4 +122,11 @@ void	*alloc(size_t cap);
 void	ft_close(void *fd);
 int		is_quote(int c);
 t_string *ft_readline(const char *prompt);
+ssize_t		line_read(int fd, t_line_gnl *line, char **nl_loc, ssize_t *nread);
+char		*get_next_line(int fd);
+void		*ft_realloc_gnl(void *ptr, size_t new_sz, size_t old_sz);
+char		*ft_strchr_gnl(char *s, int c);
+char		*ft_strdup_heap(const char *s1, char *heap);
+char		*ft_strcpy_until(char *dst, const char *src, char c);
+char	*ft_strchr(char *s, int c);
 #endif // LIBFT_H
