@@ -1,5 +1,15 @@
 #include <zen.h>
 
+int	is_no_nlarg(char *arg)
+{
+	if (!arg || !*arg || *arg != '-')
+		return (0);
+	arg++;
+	while (*arg == 'n')
+		arg++;
+	return (*arg == 0);
+}
+
 int built_in_cd(t_env *env, char **dst)
 {
 	t_string	*resolved_path;
@@ -46,11 +56,12 @@ int built_in_echo(t_env *env, char **args)
 {
 	(void)env;
 	bool new_line = true;
-	size_t i = 0;
+	size_t i;
 	int r;
 
-	args++;
-	if(args[i] && !ft_strcmp("-n", args[i]))
+	i = 1;
+
+	if (is_no_nlarg(args[i]))
 	{
 		new_line = false;
 		i++;
@@ -60,7 +71,7 @@ int built_in_echo(t_env *env, char **args)
 		r = ft_printf("%s", args[i]);
 		if(r < 0)
 			return (env->last_command_status = 1);
-		if (args[i + 1])
+		if (args[i])
 		{
 			r = ft_printf(" ");
 			if(r < 0)
