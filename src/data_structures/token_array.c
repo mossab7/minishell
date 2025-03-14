@@ -59,7 +59,7 @@ void	tok_array_print(t_token_array *array)
 		tok = &array->items[j];
 		if (tok->type == TOK_EOF)
 			break ;
-		str_print(tok->lexeme);
+		//str_print(tok->lexeme);
 		j++;
 	}
 }

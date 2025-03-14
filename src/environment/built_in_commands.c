@@ -1,4 +1,5 @@
 #include <zen.h>
+#include <libft.h>
 
 int built_in_cd(t_env *env, char **dst)
 {

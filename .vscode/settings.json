@@ -2,6 +2,7 @@
 	"files.associations": {
 		"termios.h": "c",
 		"zenint.h": "c",
-		"t_string.h": "c"
+		"t_string.h": "c",
+		"libft.h": "c"
 	}
 }

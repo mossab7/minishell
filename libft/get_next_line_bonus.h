@@ -14,6 +14,7 @@
 
 # include <stdlib.h>
 # include <unistd.h>
+# include <libft.h>
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 512
 # endif // !BUFFER_SIZE
@@ -28,9 +29,9 @@ typedef struct s_line
 
 ssize_t		line_read(int fd, t_line *line, char **nl_loc, ssize_t *nread);
 char		*get_next_line(int fd);
-void		*ft_realloc(void *ptr, size_t new_sz, size_t old_sz);
-char		*ft_strchr(char *s, int c);
-char		*ft_strdup(const char *s1, char *heap);
+void		*ft_realloc_gnl(void *ptr, size_t new_sz, size_t old_sz);
+char		*ft_strchr_gnl(char *s, int c);
+char		*ft_strdup_heap(const char *s1, char *heap);
 char		*ft_strcpy_until(char *dst, const char *src, char c);
 
 #endif // !GET_NEXT_LINE_BONUS_H

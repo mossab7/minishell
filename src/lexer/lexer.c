@@ -60,8 +60,8 @@ t_error lexer_tokenize(t_lexer *lex)
     }
 	tok_array_expand(lex->tokens);
 	tok = (lex->tokens->items + lex->tokens->size);
-	printf("tok = %p\n", tok);
-	printf("tok->type = %i\n", tok->type);
+	// printf("tok = %p\n", tok);
+	// printf("tok->type = %i\n", tok->type);
 	tok->type = TOK_EOF;
 	return (err);
 }

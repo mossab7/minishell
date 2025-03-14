@@ -99,7 +99,7 @@ char	*ft_strcpy_until(char *dst, const char *src, char c)
 	return (dst);
 }
 
-ssize_t	line_read(int fd, t_line *line, char **nl_loc, ssize_t *nread)
+ssize_t	line_read(int fd, t_line_gnl *line, char **nl_loc, ssize_t *nread)
 {
 	if (line->size + BUFFER_SIZE >= line->cap)
 	{

@@ -9,13 +9,13 @@
 /*   Updated: 2024/11/02 12:38:30 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "get_next_line.h"
+#include <libft.h>
 
-static void	*release_gnl_resources(t_line *line, char **rest)
+static void	*release_gnl_resources(t_line_gnl *line, char **rest)
 {
 	if (rest)
 	{
-		free(*rest);
+		ft_free(*rest);
 		*rest = NULL;
 	}
 	if (!line)
@@ -24,7 +24,7 @@ static void	*release_gnl_resources(t_line *line, char **rest)
 		return (NULL);
 	if (line->size == 0)
 	{
-		free(line->content);
+		ft_free(line->content);
 		line->content = NULL;
 	}
 	return (NULL);
@@ -38,14 +38,14 @@ static int	stash_line(char **line, char **rest)
 	if (!*rest || !*line)
 		return (0);
 	*line = ft_strcpy_until(*line, *rest, '\n');
-	nl_location = ft_strchr(*rest, '\n');
+	nl_location = ft_strchr_gnl(*rest, '\n');
 	if (nl_location)
 	{
 		if (*(nl_location + 1))
 		{
 			*rest = ft_strdup_heap(nl_location + 1, *rest);
 			if (rest == NULL)
-				free(*line);
+				ft_free(*line);
 			return (-1);
 		}
 		release_gnl_resources(NULL, rest);
@@ -58,7 +58,7 @@ static int	stash_line(char **line, char **rest)
 	return (ln);
 }
 
-static int	read_next_chunk(int fd, t_line *line, char **rest)
+static int	read_next_chunk(int fd, t_line_gnl *line, char **rest)
 {
 	ssize_t	nread;
 	char	*nl_location;
@@ -87,7 +87,7 @@ static int	read_next_chunk(int fd, t_line *line, char **rest)
 	return (1);
 }
 
-static char	*string_create(t_line *line, char **rest)
+static char	*string_create(t_line_gnl *line, char **rest)
 {
 	char	*buff;
 
@@ -108,7 +108,7 @@ char	*get_next_line(int fd)
 {
 	static char	*rest;
 	int			nstashed;
-	t_line		line;
+	t_line_gnl		line;
 	size_t		sz;
 
 	sz = 0;
@@ -116,7 +116,7 @@ char	*get_next_line(int fd)
 		sz++;
 	line.cap = BUFFER_SIZE + sz + 1;
 	line.size = 0;
-	line.content = ft_realloc(NULL, line.cap, line.size);
+	line.content = ft_realloc_gnl(NULL, line.cap, line.size);
 	if (fd < 0 || BUFFER_SIZE <= 0 || (read(fd, 0, 0) < 0) || !line.content)
 		return (release_gnl_resources(&line, &rest));
 	nstashed = stash_line(&(line.content), &rest);
