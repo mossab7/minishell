@@ -26,18 +26,13 @@ static void set_export(t_env *env, char *new, int *code)
 		if (!toks)
 		{
 			zen_elog("export: `%s': not a valid identifier\n", new);
-			*code = EXIT_SUCCESS;
+			*code = EXIT_FAILURE;
 			toks_destroy(toks);
 			return ;
 		}
 		if (toks->size == 1)
 			cells_push_back(env->export_cells, ((*toks->items).lexeme->cstring), NULL);
-		else
-		{
-			// TODO: Check if toks->items[1] is either `=` || `+=` to handle bboth..
-			// NOTE: Now it is actually ignored
-			env_set(env, (toks->items[0].lexeme->cstring), (toks->items[2].lexeme->cstring));
-		}
+		// TODO: Check for += and join. 
 		tok_array_print(toks);
 		toks_destroy(toks);
 	}

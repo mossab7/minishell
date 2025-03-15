@@ -153,7 +153,7 @@ int	execute_built_in_commands(t_command *cmd,char *command, t_env *env, char **a
 		i++;
 	}
 	if (!functions[i])
-		return (1);
+		return (-1);
 	original_stdin = dup(STDIN_FILENO);
 	original_stdout = dup(STDOUT_FILENO);
 	if (original_stdin == -1 || original_stdout == -1)
@@ -189,8 +189,9 @@ int	execute_command(t_command *cmd, t_env *env)
 	status = 0;
 	if (cmd->argc == 0)
 		return (0);
-	if (!execute_built_in_commands(cmd,cmd->args[0], env, cmd->args))
-		return (0);
+	env->last_command_status = execute_built_in_commands(cmd,cmd->args[0], env, cmd->args);
+	if (env->last_command_status != -1)
+		return (env->last_command_status);
 	current_pid = fork();
 	if (current_pid == -1)
 	{
@@ -206,6 +207,7 @@ int	execute_command(t_command *cmd, t_env *env)
 		cmd_path = search_path(env->path, cmd->args[0]);
 		if (cmd_path)
 		{
+			env_join(env);
 			execve(cmd_path->cstring, cmd->args, env->envp);
 			str_destruct(cmd_path);
 		}
