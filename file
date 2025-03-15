@@ -1,0 +1,15 @@
+setup_redirections :0x564c2dc004c8
+setup_redirections :0x564c2dc00338$
+GRAMMAR$
+Makefile$
+context.c$
+context.o$
+file$
+ft_printf$
+include$
+libft$
+libzen.a$
+minishell$
+output.txt$
+readline.supp$
+src$
