@@ -1,5 +1,38 @@
 #include <zen.h>
 
+#define EMPTY_VALUE ""
+
+static void	process_export_args(t_env *env, t_token_array *toks)
+{
+	t_token		*key;
+	size_t		index;
+	t_string	*new_value;
+	t_token		*assign_op;
+	t_token		*value;
+
+	key = (toks->items + 0);
+	if (toks->size == 1)
+	{
+		// TODO: if a key already exists in the exports, ignore
+		cells_push_back(env->export_cells, (key->lexeme->cstring), EMPTY_VALUE);
+	}
+	assign_op = (toks->items + 1);
+	value = (toks->items + 2);
+	if (assign_op->type == TOK_EQ)
+		env_set(env, key->lexeme->cstring, value->lexeme->cstring);
+	else if (assign_op->type == TOK_PEQ)
+	{
+		index = cells_search(env->export_cells, key->lexeme->cstring);
+		if (index < env->cells->size)
+		{
+			new_value = vstr_construct(2, env->export_cells->items[index].value, value->lexeme->cstring);
+			env_set(env, key->lexeme->cstring, new_value->cstring);
+			str_destruct(new_value);
+		} else
+			env_set(env, key->lexeme->cstring, value->lexeme->cstring);
+	}
+}
+
 static void		print_export(t_env *env)
 {
 	size_t	i;
@@ -30,9 +63,7 @@ static void set_export(t_env *env, char *new, int *code)
 			toks_destroy(toks);
 			return ;
 		}
-		if (toks->size == 1)
-			cells_push_back(env->export_cells, ((*toks->items).lexeme->cstring), NULL);
-		// TODO: Check for += and join. 
+		process_export_args(env, toks);
 		tok_array_print(toks);
 		toks_destroy(toks);
 	}

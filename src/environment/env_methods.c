@@ -55,10 +55,8 @@ t_env	*env_parse(const char *envp[])
 	env_join(env);
 	if (shell_level_index == -1)
 		env_append_both(env, "SHLVL", "1");
-	else {
-		// was set, gotta increment it. somehow idk
+	else
 		increment_shell_level(env, shell_level_index);
-	}
 	if (!pwd_set)
 	{
 		getcwd(pwd, PATH_MAX);
@@ -117,19 +115,9 @@ void	env_del(t_env *env, char *key)
 
 void	env_set(t_env *env, char *key, char *new_value)
 {
-	size_t	index;
-
 	if (ft_strcmp(key, "PATH") == 0)
 		parse_path(env->path, new_value);
-	index = env_search(env, key);
-	if (index < env->cells->size)
-	{
-		if (env->cells->items[index].value)
-			ft_free(env->cells->items[index].value);
-		env->cells->items[index].value = ft_strdup(new_value);
-	}
-	else
-		env_append_both(env, key, new_value);
+	env_append_both(env, key, new_value);
 	env_join(env);
 }
 

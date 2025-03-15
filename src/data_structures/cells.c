@@ -14,6 +14,17 @@ void	cells_expand(t_cells *cells)
 
 void	cells_push_back(t_cells *cells, char *key, char *value)
 {
+	// No duplicates are allowed. so gott look for it first then if it exists then just replace it wsf?
+	size_t	index;
+
+	index = cells_search(cells, key);
+	if (index < cells->size)
+	{
+		if (cells->items[index].value)
+			ft_free(cells->items[index].value);
+		cells->items[index].value = ft_strdup(value);
+		return ;
+	}
 	cells_expand(cells);
 	cells->items[cells->size].key = ft_strdup(key);
 	if (value == NULL)

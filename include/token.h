@@ -55,6 +55,8 @@ typedef enum e_error
 typedef enum s_token_type
 {
 	TOK_NONE = 0x0,
+	TOK_EQ,
+	TOK_PEQ,
     TOK_PIPE,
 	TOK_SYMBOL,
 	TOK_AND,

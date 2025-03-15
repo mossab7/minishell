@@ -69,6 +69,8 @@ char *get_type_as_cstr(t_token_type type)
 {
 	char *them[TOK_SIZE] = {
 		"TOK_NONE",
+		"TOK_EQ",
+		"TOK_PEQ",
 		"PIPE",
 		"SYMBOL",
 		"AND",

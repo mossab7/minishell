@@ -42,12 +42,12 @@ t_token_array *simple_export_tokenizer(char *segment)
 	{
 		if (ft_strncmp(lex->source + lex->cursor, "=", 1) == 0)
 		{
-			token_array->current->type = TOK_SYMBOL;
+			token_array->current->type = TOK_EQ;
 			str_push_back(token_array->current->lexeme, lex->source[lex->cursor++]);
 		}
 		else if (ft_strncmp(lex->source + lex->cursor, "+=", 2) == 0)
 		{
-			token_array->current->type = TOK_SYMBOL;
+			token_array->current->type = TOK_PEQ;
 			str_push_back(token_array->current->lexeme, lex->source[lex->cursor++]); // ADD +
 			str_push_back(token_array->current->lexeme, lex->source[lex->cursor++]); // ADD =
 		} else {
