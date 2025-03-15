@@ -131,16 +131,6 @@ t_ast	*create_binary_node(t_node_type type, t_ast *left, t_ast *right)
     return (node);
 }
 
-t_ast	*create_subshell_node(t_ast *child)
-{
-    t_ast	*node;
-
-    node = alloc(sizeof(t_ast));
-    node->type = NODE_SUBSHELL;
-    node->left = child;
-    node->right = NULL;
-    return (node);
-}
 /*utils for heredoc*/
 char *ft_mkstemp(void)
 {
@@ -388,27 +378,84 @@ t_ast	*parse_command(t_token_array *tokens, size_t *index)
     return (create_command_node(args, argc, redirects, redirect_count));
 }
 
-t_ast	*parse_primary(t_token_array *tokens, size_t *index)
+t_ast	*create_subshell_node(t_ast *child)
 {
     t_ast	*node;
+
+    node = alloc(sizeof(t_ast));
+    node->type = NODE_SUBSHELL;
+    if(child)
+    {
+        node->value.command = (t_command){
+            .args = NULL,
+            .argc = 0,
+            .redirects = child->value.command.redirects,
+            .redirect_count = child->value.command.redirect_count
+        };
+    }
+    node->left = child;
+    node->right = NULL;
+    return (node);
+}
+
+t_ast *parse_subshell_redirections(t_token_array *tokens, size_t *index, t_ast *node)
+{
+    t_redirect	*redir;
+    t_token		token;
+    t_ast       *subshell_node;
+    
+    subshell_node = alloc(sizeof(t_ast));
+    subshell_node->type = NODE_SUBSHELL;
+    subshell_node->left = node;
+    subshell_node->right = NULL;
+    
+    subshell_node->value.command.args = NULL;
+    subshell_node->value.command.argc = 0;
+    subshell_node->value.command.redirects = alloc(tokens->size * sizeof(t_redirect *));
+    subshell_node->value.command.redirect_count = 0;
+
+    while (true)
+    {
+        token = peek_token(tokens, *index);
+        if (token.type >= TOK_INPUT_REDIRECT && token.type <= TOK_HEREDOC)
+        {
+            redir = parse_redirection(tokens, index);
+            if (!redir)
+            {
+                ft_free(subshell_node->value.command.redirects);
+                ft_free(subshell_node);
+                return (NULL);
+            }
+            subshell_node->value.command.redirects[subshell_node->value.command.redirect_count++] = redir;
+        }
+        else
+            break;
+    }
+    
+    return subshell_node;
+}
+
+t_ast *parse_primary(t_token_array *tokens, size_t *index)
+{
+    t_ast *node;
 
     node = NULL;
     if (match_token(TOK_OPAREN, tokens, index))
     {
-		node = parse_and_or(tokens, index);
-		if(node == NULL)
-            return (syntax_error("near unexpected token `()'",tokens));
+        node = parse_and_or(tokens, index);
+        if (node == NULL)
+            return (syntax_error("near unexpected token `()'", tokens));
         if (!match_token(TOK_CPAREN, tokens, index))
         {
-            return (syntax_error("Expected closing parenthesis",tokens));
-        }
-        node = create_subshell_node(node);
+            return (syntax_error("Expected closing parenthesis", tokens));
+        }        
+        node = parse_subshell_redirections(tokens, index, node);
     }
     else
     {
         node = parse_command(tokens, index);
-		if(!node && !tokens->syntax_error)
-			return (syntax_error("Unexpected token",tokens));
+        if (!node && !tokens->syntax_error)
+            return (syntax_error("Unexpected token", tokens));
     }
     return (node);
 }

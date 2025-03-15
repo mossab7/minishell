@@ -90,6 +90,7 @@ int	setup_redirections(t_command *cmd)
 	t_redirect	*redir;
 	int fd;
 
+	printf("setup_redirections :%p\n", cmd);
 	for (int i = 0; i < cmd->redirect_count; i++)
 	{
 		redir = cmd->redirects[i];
@@ -293,6 +294,12 @@ int	execute_subshell(t_ast *node, t_env *env)
 	if (pid == 0)
 	{
 		subshell_env = env_copy(env);
+		printf("execute_subshell: %p\n",&node->value.command);
+		if(setup_redirections(&node->value.command) == -1)
+		{
+			env_destroy(subshell_env);
+			exit(EXIT_FAILURE);
+		}
 		result = execute_ast(node->left, subshell_env);
 		env_destroy(subshell_env);
 		exit(result);
