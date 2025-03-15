@@ -42,8 +42,9 @@ t_error lexer_tokenize(t_lexer *lex)
     t_error err;
     t_token *tok;
 
+// void	token_next(t_token_array *vec)
     err = OK;
-    while (lex->source[lex->cursor] != '\0')
+    while (lex->source[lex->cursor] != 0)
     {
         tok_array_expand(lex->tokens);
         tok = (lex->tokens->items + lex->tokens->size);
@@ -60,8 +61,6 @@ t_error lexer_tokenize(t_lexer *lex)
     }
 	tok_array_expand(lex->tokens);
 	tok = (lex->tokens->items + lex->tokens->size);
-	// printf("tok = %p\n", tok);
-	// printf("tok->type = %i\n", tok->type);
 	tok->type = TOK_EOF;
 	return (err);
 }
@@ -69,13 +68,14 @@ t_error lexer_tokenize(t_lexer *lex)
 char *get_type_as_cstr(t_token_type type)
 {
 	char *them[TOK_SIZE] = {
+		"TOK_NONE",
 		"PIPE",
 		"SYMBOL",
 		"AND",
 		"INPUT_REDIRECT",
 		"OUTPUT_REDIRECT",
-		"HEREDOC",
 		"APPEND",
+		"HEREDOC",
 		"EXPANSION_MARK",
 		"LOGICAL_OR",
 		"LOGICAL_AND",
@@ -83,9 +83,10 @@ char *get_type_as_cstr(t_token_type type)
 		"ESCAPE",
 		"COMMENT",
 		"WORD",
+		"NUM",
 		"OPAREN",
 		"CPAREN",
-		"OEF"
+		"EOF",
 	};
 	return (them[type]);
 }
@@ -206,4 +207,13 @@ t_error consume_symbol(t_token *tok, t_lexer *lex)
 	tok->type = TOK_SYMBOL;
 	token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
 	return (OK);
+}
+
+void	lexer_destroy(t_lexer *lex)
+{
+	if (lex)
+	{
+		toks_destroy(lex->tokens);
+		ft_free(lex);
+	}
 }

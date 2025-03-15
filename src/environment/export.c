@@ -1,78 +1,45 @@
 #include <zen.h>
 
-static	t_token_array *simple_export_tokenizer(char *segment)
-{
-	// TODO: tokenizer for the input of export
-	t_lexer	*lex = lexer_init(segment);
-	t_token *tok;
-	// lexer_tokenize(lex);
-	// lex->cursor: for current character
-	ft_free(lex);
-	while (lex->source[lex->cursor])
-	{
-        tok_array_expand(lex->tokens);
-        tok = (lex->tokens->items + lex->tokens->size);
-		while (ft_isspace(lex->source[lex->cursor]))
-			str_push_back(tok->lexeme, lex->source[lex->cursor++]);
-		if (ft_isalpha(lex->source[lex->cursor]))
-		{
-			// TODO: Gather alpha
-			str_push_back(tok->lexeme, lex->source[lex->cursor++]);
-			while (ft_isalnum(lex->source[lex->cursor]))
-				str_push_back(tok->lexeme, lex->source[lex->cursor++]);
-			tok->type = TOK_WORD;
-		}
-		if (ft_isdigit(lex->source[lex->cursor]))
-		{
-			// TODO: Gather numeric
-			str_push_back(tok->lexeme, lex->source[lex->cursor++]);
-			while (ft_isalnum(lex->source[lex->cursor]))
-				str_push_back(tok->lexeme, lex->source[lex->cursor++]);
-			tok->type = TOK_NUM;
-		}
-		if (ft_ispunct(lex->source[lex->cursor]))
-		{
-			// TODO: Gather a punct
-			tok->type = TOK_SYMBOL;
-			str_push_back(tok->lexeme, lex->source[lex->cursor++]);
-		}
-		lex->tokens->size++;
-	}
-	return (lex->tokens);
-}
-
 static void		print_export(t_env *env)
 {
-	// TODO: Sort before printing
+	size_t	i;
+
+	i = 0;
 	cells_sort(env->export_cells);
-	for (size_t i = 0; i < env->export_cells->size; i++)
+	while (i < env->export_cells->size)
 	{
 		printf("declare -x %s", env->export_cells->items[i].key);
 		if (env->export_cells->items[i].value)
 			printf("=\"%s\"", env->export_cells->items[i].value);
 		printf("\n");
+		i++;
 	}
 }
 
 static void set_export(t_env *env, char *new, int *code)
 {
-	char **entry;
 	t_token_array *toks;
 
 	if (new)
 	{
-		// TODO: Make a simple tokenizer instead of the split
 		toks = simple_export_tokenizer(new);
-		if (!entry[KEY_INDEX])
+		if (!toks)
 		{
-			zen_elog("bash: export: `%s': not a valid identifier", new);
+			zen_elog("export: `%s': not a valid identifier\n", new);
 			*code = EXIT_SUCCESS;
+			toks_destroy(toks);
 			return ;
 		}
-		else if (entry[VALUE_INDEX])
-			env_set(env, entry[KEY_INDEX], entry[VALUE_INDEX]);
+		if (toks->size == 1)
+			cells_push_back(env->export_cells, ((*toks->items).lexeme->cstring), NULL);
 		else
-			cells_push_back(env->export_cells, entry[KEY_INDEX], NULL);
+		{
+			// TODO: Check if toks->items[1] is either `=` || `+=` to handle bboth..
+			// NOTE: Now it is actually ignored
+			env_set(env, (toks->items[0].lexeme->cstring), (toks->items[2].lexeme->cstring));
+		}
+		tok_array_print(toks);
+		toks_destroy(toks);
 	}
 }
 

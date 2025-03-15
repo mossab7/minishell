@@ -479,3 +479,10 @@ t_ast	*build_ast(t_token_array *tokens)
 		return (NULL);
     return (ast);
 }
+
+// void	ast_destroy(t_ast *root)
+// {
+// 	ast_destroy(root->left);
+// 	ast_destroy(root->right);
+// 	// TODO: Free the root's dangled pointed
+// }

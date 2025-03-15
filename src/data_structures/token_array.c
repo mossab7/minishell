@@ -27,7 +27,11 @@ t_token_array	*tok_array_construct(void)
 	vec->here_doc_active = false;
 	vec->syntax_error = false;
 	for (size_t i = vec->size; i < vec->cap; ++i)
+	{
+		vec->items[i].type = TOK_NONE;
 		vec->items[i].lexeme = str_construct();
+	}
+	vec->current = (vec->items + vec->size);
 	return (vec);
 }
 
@@ -54,12 +58,37 @@ void	tok_array_print(t_token_array *array)
 	t_token	*tok;
 
 	j = 0;
+	printf("============================size : %zu ===================================\n", array->size);
 	while (j < array->size)
 	{
 		tok = &array->items[j];
 		if (tok->type == TOK_EOF)
 			break ;
-		//str_print(tok->lexeme);
+		printf("tok->type = %s\n", get_type_as_cstr(tok->type));
+		str_print(tok->lexeme);
 		j++;
 	}
+	printf("==========================================================================\n");
+}
+
+void	toks_destroy(t_token_array	*vec)
+{
+	if (vec)
+	{
+		if (vec->items)
+		{
+			for (size_t i = vec->size; i < vec->cap; ++i)	
+				str_destruct(vec->items[i].lexeme);
+			str_destruct(vec->input);
+			ft_free(vec->items);
+		}
+		ft_free(vec);
+	}
+}
+
+void	token_next(t_token_array *vec)
+{
+	vec->size++;
+	tok_array_expand(vec);
+	vec->current = (vec->items + vec->size);
 }

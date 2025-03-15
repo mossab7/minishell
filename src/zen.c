@@ -1,11 +1,4 @@
-// ADD INTO THE PROJECCT:
-//		git@vogsphere-v2-bg.1337.ma:vogsphere/intra-uuid-fde9219e-75d2-42fa-a2c6-634c008f5a19-6159724-lazmoud
 #include <zen.h>
-#include <fcntl.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <signal.h>
-#include <signals.h>
 
 t_string *zen_prompt(t_env *env)
 {
@@ -37,15 +30,17 @@ t_string *zen_prompt(t_env *env)
 
 int main(int ac, char **av, const char *envp[])
 {
-    setbuf(stdout, NULL);
-    setup_signal_handlers();
     t_token_array *tokens;
+	t_error lexer_status;
 	t_context *context;
     t_string *input;
     t_lexer *lex;
     t_env *env;
     (void)ac;
     (void)av;
+
+    setbuf(stdout, NULL);
+    setup_signal_handlers();
     env = env_parse(envp);
     while (1)
     {
@@ -54,77 +49,30 @@ int main(int ac, char **av, const char *envp[])
             break;
 		if(!*input->cstring)
 			continue;
-        {
-			context = *get_context();
-			context->readline_active = 0;
-			context->siginit_received = false;
-            lex = lexer_init(input->cstring);
-			lex->tokens->input = input;
-            int e = lexer_tokenize(lex);
-            switch (e)
-            {
-            case ERROR_SYNTAX:
-            {
-				str_destruct(input);
-                break;
-            }
-            case ERROR_PIPE_SYNTAX:
-            {
-				str_destruct(input);
-                break;
-            }
-            case ERROR_REDIRECT_SYNTAX:
-            {
-				str_destruct(input);
-                break;
-            }
-            case ERROR_INVALID_OPERATOR:
-            {
-				str_destruct(input);
-                break;
-            }
-            case ERROR_QUOTE_UNCLOSED:
-            {
-				str_destruct(input);
-                break;
-            }
-            case OK:
-            {
-                tokens = lex->tokens;
-				// printf("Before: \n");
-                // tok_array_print(tokens);
-				expand(env, tokens);
-				//printf("After: \n");
-                tok_array_print(tokens);
-                {
-					tokens->syntax_error = false;
-                    t_ast *root = build_ast(tokens);
-					if(!root)
-					{
-						add_history(tokens->input->cstring);
-						str_destruct(input);
-						continue;
-					}
-					if(tokens->syntax_error == true)
-					{
-						add_history(tokens->input->cstring);
-						str_destruct(input);
-						continue;
-					}
-                    //print_ast(root,0);
-                    execute_ast(root, env);
-					add_history(tokens->input->cstring);
-                }
-            }
-            break;
-			default:
+		context = *get_context();
+		context->readline_active = 0;
+		context->siginit_received = false;
+		lex = lexer_init(input->cstring);
+		lex->tokens->input = input;
+		lexer_status = lexer_tokenize(lex);
+		if (lexer_status == OK)
+		{
+			tokens = lex->tokens;
+			expand(env, tokens);
+			// tok_array_print(tokens);
+			tokens->syntax_error = false;
+			t_ast *root = build_ast(tokens);
+			if(!root)
+				add_history(tokens->input->cstring);
+			else if(tokens->syntax_error == true)
+				add_history(tokens->input->cstring);
+			else
 			{
-				str_destruct(input);
-				break;
+				execute_ast(root, env);
+				add_history(tokens->input->cstring);
 			}
-            }
-        }
-        //free(input);
+		}
+		lexer_destroy(lex);
         if (!isatty(STDIN_FILENO))
             break;
     }

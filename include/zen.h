@@ -1,5 +1,11 @@
 #ifndef ZEN_H
 #define ZEN_H
+
+#include <fcntl.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <signal.h>
+#include <signals.h>
 #include <syntax_tree.h>
 #include <limits.h>
 #include <env.h>
@@ -14,7 +20,6 @@
 #include <t_string_vector.h>
 #include <context.h>
 #include <assert.h>
-#include <signals.h>
 #include <sys/stat.h> 
 #define VEC_INIT_CAP 16
 #define VEC_GROWTH_FAC 2

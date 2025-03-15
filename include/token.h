@@ -54,7 +54,8 @@ typedef enum e_error
 
 typedef enum s_token_type
 {
-    TOK_PIPE = 0x0,
+	TOK_NONE = 0x0,
+    TOK_PIPE,
 	TOK_SYMBOL,
 	TOK_AND,
     TOK_INPUT_REDIRECT,
@@ -68,6 +69,7 @@ typedef enum s_token_type
     TOK_ESCAPE,
     TOK_COMMENT,
 	TOK_WORD,
+	TOK_NUM,
 	TOK_OPAREN,
 	TOK_CPAREN,
 	TOK_EOF,
@@ -83,6 +85,7 @@ typedef struct s_token
 typedef  struct s_token_array
 {
 	t_token		*items;
+	t_token		*current;
 	size_t		size;
 	size_t		cap;
 	bool		syntax_error;
@@ -90,7 +93,9 @@ typedef  struct s_token_array
 	t_string		*input;
 }	t_token_array;
 
+void			toks_destroy(t_token_array	*vec);
 t_token_array	*tok_array_construct(void);
+void			token_next(t_token_array *vec);
 t_token_array	copy_tokens(t_token_array tokens);
 void			tok_array_expand(t_token_array *vec);
 void			tok_array_expand_anyhow(t_token_array *vec);

@@ -68,7 +68,7 @@ t_string	*vstr_construct(size_t count, ...)
 void	str_destruct(t_string *vec)
 {
 	if(vec)
-	{
+	{	
 		ft_free(vec->cstring);
 		if (vec->mask)
 			mask_destroy(vec->mask);
