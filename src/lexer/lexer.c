@@ -1,4 +1,5 @@
 #include <zen.h>
+// TODO: Use the token_next function to operate on a new token in the lexer
 
 int	ft_is_operator(int c)
 {
