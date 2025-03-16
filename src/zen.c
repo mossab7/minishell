@@ -32,7 +32,10 @@ int main(int ac, char **av, const char *envp[])
         if (!input)
             break;
 		if(!*input->cstring)
+		{
+			str_destruct(input);
 			continue;
+		}
 		context = *get_context();
 		context->readline_active = 0;
 		context->siginit_received = false;

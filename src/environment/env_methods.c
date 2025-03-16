@@ -52,6 +52,7 @@ t_env	*env_parse(const char *envp[])
 	pwd_set = 0;
 	while (envp[iter])
 	{
+		// LEAK: entry leaks, free it
 		entry = ft_split((char const *)envp[iter], '=');
 		env_append_both(env, entry[KEY_INDEX], entry[VALUE_INDEX]);
 		if (ft_strcmp(entry[KEY_INDEX], "PATH") == 0)

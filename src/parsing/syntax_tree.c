@@ -528,7 +528,6 @@ t_ast	*build_ast(t_token_array *tokens)
 
 void	ast_destroy(t_ast *root)
 {
-	printf("DESTROTYING\n");
 	if (!root)
 		return ;
 	ast_destroy(root->left);
