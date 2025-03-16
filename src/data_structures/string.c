@@ -37,7 +37,6 @@ t_string	*str_construct()
 
 	vec = alloc(sizeof(*vec));
 	vec->cstring = alloc(VEC_INIT_CAP);
-	ft_memset(vec->cstring, 0, VEC_INIT_CAP);
 	vec->cap = VEC_INIT_CAP;
 	vec->mask = mask_construct();
 	vec->size = 0;

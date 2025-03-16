@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:39:58 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:40:06 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/16 14:31:31 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -112,4 +112,9 @@ void	cells_sort(t_cells *cells)
 		}
 		i++;
 	}
+}
+
+int	cells_key_exists(t_cells *cells, char *key)
+{
+	return (cells_search(cells, key) < cells->size);
 }

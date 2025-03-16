@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 05:40:31 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 05:41:46 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/16 14:49:11 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -41,10 +41,7 @@ t_error consume_word(t_lexer *lex)
 	input_state = 0;
 	stacks[SINGLE_QUOTES_INDEX] = stack_construct();
 	stacks[DOUBLE_QUOTES_INDEX]	= stack_construct();
-	while (((ft_zen_isalnum(lex->source[lex->cursor])
-		|| is_quote(lex->source[lex->cursor]))) || (lex->source[lex->cursor] == EXPANSION_MARK)
-		|| (is_inside_quotes(input_state)
-		&& lex->source[lex->cursor]))
+	while (is_valid_word_character(lex->source[lex->cursor], input_state))
 	{
 		if (is_quote(lex->source[lex->cursor])) {
 			lex_quote(tok, &input_state, lex->source[lex->cursor], stacks);

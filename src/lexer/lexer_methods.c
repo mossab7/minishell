@@ -58,7 +58,7 @@ void	lexer_destroy(t_lexer *lex)
 {
 	if (lex)
 	{
-		printf("lex = %p\n", lex);
+		// printf("lex = %p\n", lex);
 		toks_destroy(lex->tokens);
 		ft_free(lex);
 	}

@@ -277,7 +277,7 @@ t_redirect	*create_redirect(t_redirect_type type, char *target,t_token_array *to
     if (type == REDIR_HEREDOC)
     {
         redir->delimiter = target;
-        setup_here_doc(redir,tokens);
+        setup_here_doc(redir, tokens);
         // if(redir->filename == NULL)
         //     return (NULL);
     }
@@ -315,31 +315,21 @@ t_redirect	*parse_redirection(t_token_array *tokens, size_t *index)
 
     token = peek_token(tokens, *index);
     if (token.type == TOK_INPUT_REDIRECT)
-    {
         type = REDIR_INPUT;
-    }
     else if (token.type == TOK_OUTPUT_REDIRECT)
-    {
         type = REDIR_OUTPUT;
-    }
     else if (token.type == TOK_APPEND)
-    {
         type = REDIR_APPEND;
-    }
     else if (token.type == TOK_HEREDOC)
-    {
         type = REDIR_HEREDOC;
-    }
     else
-    {
         return (NULL);
-    }
     (*index)++;
     token = peek_token(tokens, *index);
     if (token.type != TOK_WORD)
         return(syntax_error("Expected filename/delimiter after redirection",tokens));
     (*index)++;
-    return (create_redirect(type, ft_strdup(token.lexeme->cstring),tokens));
+    return (create_redirect(type, ft_strdup(token.lexeme->cstring), tokens));
 }
 
 t_ast	*parse_command(t_token_array *tokens, size_t *index)
@@ -528,7 +518,7 @@ t_ast	*build_ast(t_token_array *tokens)
     token = peek_token(tokens, index);
     if (token.type != TOK_EOF)
     {
-        syntax_error("Unexpected input",tokens);
+        syntax_error("Unexpected input", tokens);
 		return (NULL);
     }
 	if(tokens->syntax_error == true)
@@ -536,9 +526,22 @@ t_ast	*build_ast(t_token_array *tokens)
     return (ast);
 }
 
-// void	ast_destroy(t_ast *root)
-// {
-// 	ast_destroy(root->left);
-// 	ast_destroy(root->right);
-// 	// TODO: Free the root's dangled pointed
-// }
+void	ast_destroy(t_ast *root)
+{
+	printf("DESTROTYING\n");
+	if (!root)
+		return ;
+	ast_destroy(root->left);
+	ast_destroy(root->right);
+	for (int i = 0; i < root->value.command.argc; i++)
+		ft_free(root->value.command.args[i]);
+	ft_free(root->value.command.args);
+	for (int i = 0; i < root->value.command.redirect_count; i++)
+	{
+		ft_free(root->value.command.redirects[i]->delimiter);
+		ft_free(root->value.command.redirects[i]->filename);
+		ft_free(root->value.command.redirects[i]);
+	}
+	ft_free(root->value.command.redirects);
+	ft_free(root);
+}

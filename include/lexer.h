@@ -30,4 +30,5 @@ void			lexer_destroy(t_lexer *lex);
 int				ft_is_operator(int c);
 int				ft_zen_isalnum(int c);
 int				is_inside_quotes(u8 state);
+int				is_valid_word_character(int c, u8 state);
 #endif // !LEXER_H

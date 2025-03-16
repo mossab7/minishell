@@ -7,7 +7,7 @@ SRCS=./src/data_structures/string.c ./src/data_structures/token_array.c ./src/da
 	./src/execution/execute.c ./src/environment/path_methods.c ./src/data_structures/string_vector.c ./src/expansion/expand.c ./src/wildcard.c\
 	./src/data_structures/string_mask.c ./src/data_structures/token_push_back.c ./src/signals/signals.c context.c ./src/environment/export.c ./src/data_structures/cells.c\
 	./src/expansion/string_expand.c ./src/environment/simple_export_tokenizer.c ./src/lexer/lex_quotes.c ./src/lexer/lexer_consumers.c ./src/lexer/lexer_helpers.c\
-	./src/lexer/lexer_methods.c
+	./src/lexer/lexer_methods.c ./src/environment/zen_prompt.c
 OBJS=$(SRCS:%.c=%.o)
 ZEN_LIB=libzen.a
 NAME=minishell

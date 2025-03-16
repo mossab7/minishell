@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:41:30 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:41:50 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/16 14:34:22 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -22,8 +22,8 @@ static void	process_export_args(t_env *env, t_token_array *toks)
 	key = (toks->items + 0);
 	if (toks->size == 1)
 	{
-		// TODO: if a key already exists in the exports, ignore
-		cells_push_back(env->export_cells, (key->lexeme->cstring), EMPTY_VALUE);
+		if (!cells_key_exists(env->export_cells, key->lexeme->cstring))
+			cells_push_back(env->export_cells, (key->lexeme->cstring), EMPTY_VALUE);
 	}
 	assign_op = (toks->items + 1);
 	value = (toks->items + 2);

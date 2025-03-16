@@ -49,6 +49,7 @@ typedef struct s_ast
 void		free_ast(t_ast *node);
 t_ast		*new_node(t_ast node);
 void		print_ast(t_ast *node, int level);
+void		ast_destroy(t_ast *root);
 t_ast *build_ast(t_token_array *tokens);
 t_string_vector *wildcardexpansion(char *pattern);
 #endif // AST_H
