@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   zen.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/16 06:38:43 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/03/16 06:38:45 by lazmoud          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include <zen.h>
 
 t_string *zen_prompt(t_env *env)
@@ -59,7 +70,7 @@ int main(int ac, char **av, const char *envp[])
 		{
 			tokens = lex->tokens;
 			expand(env, tokens);
-			// tok_array_print(tokens);
+			tok_array_print(tokens);
 			tokens->syntax_error = false;
 			t_ast *root = build_ast(tokens);
 			if(!root)

@@ -26,6 +26,7 @@ t_string	*str_construct()
 
 	vec = alloc(sizeof(*vec));
 	vec->cstring = alloc(VEC_INIT_CAP);
+	ft_memset(vec->cstring, 0, VEC_INIT_CAP);
 	vec->cap = VEC_INIT_CAP;
 	vec->mask = mask_construct();
 	vec->size = 0;
@@ -68,8 +69,9 @@ t_string	*vstr_construct(size_t count, ...)
 void	str_destruct(t_string *vec)
 {
 	if(vec)
-	{	
-		ft_free(vec->cstring);
+	{
+		if (vec->cstring)
+			ft_free(vec->cstring);
 		if (vec->mask)
 			mask_destroy(vec->mask);
 		ft_free(vec);
