@@ -6,14 +6,11 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:29:42 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/12 17:46:24 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/16 06:43:18 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
 
-#define NOT_QUOTED      0
-#define SINGLE_QUOTED   1
-#define DOUBLE_QUOTED   2
 static t_string	*extract_key(t_string *string)
 {
 	int			cursor;

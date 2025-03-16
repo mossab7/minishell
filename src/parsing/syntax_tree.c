@@ -1,12 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax_tree.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/16 06:44:28 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/03/16 06:44:32 by lazmoud          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include <fcntl.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <readline/readline.h>
-#include <readline/history.h>
 #include <zen.h>
-#include <libft.h>
+
 void	print_ast(t_ast *node, int level)
 {
     t_redirect	*redir;

@@ -1,30 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/16 06:43:05 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/03/16 06:43:08 by lazmoud          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #include <zen.h>
-
-/*
-lazmoud@e2r7p5:[~/Desktop/programming/projects/Minishell]  export fields="-0 -1 -2                          -111"
-lazmoud@e2r7p5:[~/Desktop/programming/projects/Minishell]  ./a.out $fields 
-av[0] = ./a.out
-av[1] = -0
-av[2] = -1
-av[3] = -2
-av[4] = -111
-lazmoud@e2r7p5:[~/Desktop/programming/projects/Minishell]  ./a.out "$fields" 
-av[0] = ./a.out
-av[1] = -0 -1 -2                          -111
-lazmoud@e2r7p5:[~/Desktop/programming/projects/Minishell]  ./a.out '$fields'
-av[0] = ./a.out
-av[1] = $fields
-lazmoud@e2r7p5:[~/Desktop/programming/projects/Minishell]  ./a.out "$fields"
-av[0] = ./a.out
-av[1] = -0 -1 -2                          -111
-lazmoud@e2r7p5:[~/Desktop/programming/projects/Minishell]  ./a.out $fields
-av[0] = ./a.out
-av[1] = -0
-av[2] = -1
-av[3] = -2
-av[4] = -111
-lazmoud@e2r7p5:[~/Desktop/programming/projects/Minishell]  ./a.out "$fields"
-*/
 
 void	expand_value(t_token *tok, t_env *env, t_token_array *tokens)
 {

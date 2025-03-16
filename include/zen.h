@@ -21,8 +21,13 @@
 #include <context.h>
 #include <assert.h>
 #include <sys/stat.h> 
+#include <sys/wait.h>
+#include <termios.h>
+
 #define VEC_INIT_CAP 16
+#define EMPTY_VALUE ""
 #define VEC_GROWTH_FAC 2
+
 typedef enum e_error_res
 {
 	FAILURE,

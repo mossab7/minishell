@@ -1,8 +1,16 @@
-#include "zen.h"
-#include <signal.h>
-#include <sys/wait.h>
-#include <termios.h>
-#include "signals.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/16 06:42:01 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/03/16 06:42:18 by lazmoud          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+#include <zen.h>
+
 
 int execute_here_doc(t_redirect *redir)
 {

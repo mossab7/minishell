@@ -8,6 +8,9 @@
 # define QUOTING_STACKS_SIZE 2
 # define SINGLE_QUOTES_INDEX 0
 # define DOUBLE_QUOTES_INDEX 1
+# define NOT_QUOTED      0
+# define SINGLE_QUOTED   1
+# define DOUBLE_QUOTED   2
 
 typedef struct s_lexer
 {
