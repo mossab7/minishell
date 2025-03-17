@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:29:42 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:43:18 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/17 17:10:35 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -20,7 +20,7 @@ static t_string	*extract_key(t_string *string)
 
 	if (!string->size)
 		return (NULL);
-	cursor = str_search(string, "$");
+	cursor = str_search(string + cursor, "$");
 	if (cursor < 0)
 		return (NULL);
 	context = string->mask->items[cursor];
@@ -31,11 +31,40 @@ static t_string	*extract_key(t_string *string)
 	{
 		str_push_back(key, string->cstring[cursor]);
 		cursor++;
-		if (string->cstring[cursor] == '$' || context != string->mask->items[cursor])
+		if (context != string->mask->items[cursor])
+			break ;
+		if (string->cstring[cursor] == '$')
 			break ;
 	}
 	key->mask->context = context;
 	return (key);
+}
+
+void	_string_expand(t_env *env, t_string *string)
+{
+	int			cursor;
+	t_string	*key;
+	char		*value;
+
+	cursor = 0;
+	key = extract_key(string);
+	while (key)
+	{
+		if (key->size == 1)
+		{
+			str_destruct(key);
+			key = extract_key(string);
+			continue ;
+		}
+		if (ft_strcmp(((key->cstring) + 1), "?") == 0)
+			value = ft_itoa(env->last_command_status);
+		else
+			value = ft_strdup(env_get(env, ((key->cstring) + 1)));
+		str_substitute(string, value, key->cstring);
+		ft_free(value);
+		str_destruct(key);
+		key = extract_key(string);
+	}
 }
 
 void	string_expand(t_env *env, t_token *tok, t_token_array *tokens)
@@ -59,16 +88,10 @@ void	string_expand(t_env *env, t_token *tok, t_token_array *tokens)
 		else
 			value = ft_strdup(env_get(env, ((key->cstring) + 1)));
 		str_substitute(tok->lexeme, value, key->cstring);
-		// TODO: Check the key's context, if it is double qourted, no splitting must be done.
-		// if it is a normal key which is not wrapped between quotations then just split the fields as new tokens.
-		// Use the lexer to do so..
 		if (key->mask->context == NOT_QUOTED)
 		{
-			// ... "1 2 3" ...
-			// ... ...
-			// ... 1 2 3 ...
+			// BUG HERE IF THE VALUE IS EMPTY
 			t_token_array *fields = tokenize_source((const char *)tok->lexeme->cstring);
-
 			printf("SPLIT\n");
 			printf("======================================================\n");
 			tok_array_print(fields);

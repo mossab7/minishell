@@ -45,6 +45,8 @@ typedef enum e_parsing_state
 typedef enum e_error
 {
 	OK = 0x0,
+	FAILURE_,
+	CATA_FAILURE_,
 	ERROR_SYNTAX,
 	ERROR_QUOTE_UNCLOSED,
 	ERROR_PIPE_SYNTAX,
@@ -92,7 +94,6 @@ typedef  struct s_token_array
 	size_t		cap;
 	bool		syntax_error;
 	bool		here_doc_active;
-	t_string		*input;
 }	t_token_array;
 
 void			toks_destroy(t_token_array	*vec);

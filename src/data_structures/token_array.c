@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:40:42 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:40:46 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/17 16:10:19 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -41,6 +41,7 @@ t_token_array	*tok_array_construct(void)
 		vec->items[i].type = TOK_NONE;
 	}
 	vec->current = (vec->items + vec->size);
+	vec->syntax_error = false;
 	return (vec);
 }
 
@@ -88,7 +89,6 @@ void	toks_destroy(t_token_array	*vec)
 		{
 			for (size_t i = 0; i < vec->cap; ++i)
 				str_destruct(vec->items[i].lexeme);
-			str_destruct(vec->input);
 			ft_free(vec->items);
 		}
 		ft_free(vec);

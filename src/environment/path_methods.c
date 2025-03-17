@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 21:09:13 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/02/07 21:29:30 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/17 17:01:32 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -22,6 +22,7 @@ void	parse_path(t_string_vector *path, char *src)
 	paths = ft_split(src, ':');
 	while (paths[path->size])
 		strv_push_back(path, paths[path->size]);
+	ft_free(paths);
 }
 
 t_string	*search_path(t_string_vector *path, char *command)

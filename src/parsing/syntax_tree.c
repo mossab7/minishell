@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:44:28 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:44:32 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/17 17:21:50 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <fcntl.h>
@@ -191,12 +191,14 @@ void setup_heredoc_signals(void)
 
 int setup_here_doc(t_redirect *redir, t_token_array *tokens)
 {
+	t_string	*iinput;
     tokens->here_doc_active = true;
     char *filename = ft_mkstemp();
     int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
     pid_t pid;
     int status;
     int pipefd[2];
+	iinput =  get_context_input();
 
     if (pipe(pipefd) == -1)
     {
@@ -232,12 +234,15 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
                 str_destruct(line);
                 break;
             }
+			// printf(" get_context_env() %p\n", get_context_env());
+			// _string_expand(get_context_env(), line);
+			// printf(" line->cstring %s\n", line->cstring);
             write(fd, line->cstring, line->size);
             write(fd, "\n", 1);
-			str_join(input,2,line->cstring,"\n");
+			str_join(input, 2, line->cstring, "\n");
             str_destruct(line);
         }
-		write(pipefd[1], input->cstring,input->size);
+		write(pipefd[1], input->cstring, input->size);
         close(pipefd[1]);
         close(fd);
         exit(0);
@@ -246,13 +251,13 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
     close(fd);
     close(pipefd[1]);
 	char *heredoc_content;
-	str_append("\n",tokens->input);
+	str_append("\n", iinput);
 	while(true)
 	{
 		heredoc_content = get_next_line(pipefd[0]);
 		if(!heredoc_content)
 			break;
-		str_append(heredoc_content,tokens->input);
+		str_append(heredoc_content, iinput);
 		ft_free(heredoc_content);
 	}
     close(pipefd[0]);

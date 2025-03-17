@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:41:14 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:41:17 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/17 16:56:36 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -34,9 +34,9 @@ void	increment_shell_level(t_env *env, int index)
 // Today's run:
 // If these were not parsed they should exist.
 // [*] - PWD
-// [] - SHLVL
-// [] - _
-// [] - OLDPWD Empty in export_env
+// [*] - SHLVL
+// [*] - _
+// [*] - OLDPWD Empty in export_env
 t_env	*env_parse(const char *envp[])
 {
 	size_t	iter;
@@ -61,6 +61,9 @@ t_env	*env_parse(const char *envp[])
 			shell_level_index = iter;
 		if (ft_strcmp(entry[KEY_INDEX], "PWD") == 0)
 			pwd_set = 1;
+		ft_free(entry[KEY_INDEX]);
+		ft_free(entry[VALUE_INDEX]);
+		ft_free(entry);
 		iter++;
 	}
 	env_join(env);

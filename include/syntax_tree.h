@@ -2,6 +2,7 @@
 #define AST_H
 
 #include <lexer.h>
+#include <env.h>
 
 typedef enum {
     NODE_COMMAND,
@@ -46,10 +47,23 @@ typedef struct s_ast
 	int				status;
 }	t_ast;
 
+typedef struct s_parser
+{
+	t_ast		*tree;
+	t_lexer		*lexer;
+	t_env		*env;
+	t_error		lexer_status;
+	t_string	*input;
+}	t_parser;
+
 void		free_ast(t_ast *node);
 t_ast		*new_node(t_ast node);
 void		print_ast(t_ast *node, int level);
 void		ast_destroy(t_ast *root);
 t_ast *build_ast(t_token_array *tokens);
 t_string_vector *wildcardexpansion(char *pattern);
+void	parser_destroy(t_parser *parser);
+t_error	parser_prepare_input(t_parser *parser);
+void	parser_lex(t_parser *parser);
+void	parser_procced_to_exec(t_parser *parser);
 #endif // AST_H

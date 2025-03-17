@@ -29,6 +29,7 @@ void str_push_back(t_string *vec, uintptr_t item)
 	str_expand(vec);
 	vec->cstring[vec->size++] = item;
 	vec->cstring[vec->size] = 0;
+	// mask_push_back(vec->mask, 0);
 }
 
 t_string	*str_construct()
