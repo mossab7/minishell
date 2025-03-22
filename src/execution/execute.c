@@ -98,7 +98,7 @@ int	setup_redirections(t_command *cmd)
 	t_redirect	*redir;
 	int fd;
 
-	printf("setup_redirections :%p\n", cmd);
+	// printf("setup_redirections :%p\n", cmd);
 	for (int i = 0; i < cmd->redirect_count; i++)
 	{
 		redir = cmd->redirects[i];

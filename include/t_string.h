@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   t_string.h                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/21 15:15:46 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/03/21 17:42:08 by lazmoud          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 #ifndef T_STING_H
 # define T_STING_H
 #include <stdlib.h>
@@ -19,10 +30,12 @@ typedef struct s_string
 	char	*cstring;
 	size_t	size;
 	size_t	cap;
+	int		cursor;
 }	t_string;
 
 t_string	*str_construct(void);
 int			str_search(t_string *vec, const char *text);
+int			str_search_using_cursor(t_string *vec, const char *text);
 t_string	*vstr_construct(size_t count, ...);
 void		str_expand(t_string *vec);
 void		str_push_back(t_string *vec, uintptr_t item);
@@ -30,11 +43,15 @@ void		str_append(char *src,t_string *vec);
 void		str_overwrite(char *src,t_string *vec);
 void		str_destruct(t_string *vec);
 void		str_join(t_string	*vec, size_t count, ...);
-void		str_substitute(t_string *vec, char *repl, char *which);
+void		str_substitute(t_string *string, char *repl, t_string *which);
 void		mask_expand(t_mask *mask);
 void		mask_push_back(t_mask *mask, u8 item);
 t_mask		*mask_construct(void);
 void		mask_destroy(t_mask *mask);
 void		mask_expand_anyhow(t_mask *mask);
 void		str_print(t_string *str);
+void		mask_fill(t_mask *mask, u8 item, size_t size);
+void		mask_copy(t_mask *dst, t_mask *src, size_t start);
+void		mask_print(t_mask *mask);
+void		mask_copy_ignore_spaces(t_mask *dst, t_string *src, size_t start);
 #endif // !T_STING_H

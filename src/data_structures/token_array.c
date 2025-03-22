@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:40:42 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/17 16:10:19 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/18 17:54:03 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -45,21 +45,26 @@ t_token_array	*tok_array_construct(void)
 	return (vec);
 }
 
-t_token_array copy_tokens(t_token_array tokens)
+t_token_array	*tokens_copy(t_token_array *other)
 {
-    t_token_array tokens_copy;
-    size_t i;
+	t_token_array	*copy;
+	size_t			i;
+	size_t			j;
 
-    i = 0;
-    tokens_copy.size = tokens.size;
-    tokens_copy.items = alloc(sizeof(t_token) * tokens.size);
-    while (i < tokens.size)
-    {
-        tokens_copy.items[i].type = tokens.items[i].type;
-        tokens_copy.items[i].lexeme = vstr_construct(1, tokens.items[i].lexeme->cstring);
-        i++;
-    }
-    return (tokens_copy);
+	copy =  alloc(sizeof(*copy));
+	ft_memcpy(copy, other, sizeof(*copy));
+	copy->items = alloc(copy->cap * sizeof(t_token));
+	i = 0;
+	while (i < other->size)
+	{
+		copy->items[i].lexeme = vstr_construct(1, other->items[i].lexeme->cstring);
+		copy->items[i].type = other->items[i].type;
+		j = 0;
+		while (j < other->items[i].lexeme->mask->size)
+			mask_push_back(copy->items[i].lexeme->mask, other->items[i].lexeme->mask->items[j++]);
+		i++;
+	}
+	return (copy);
 }
 
 void	tok_array_print(t_token_array *array)
@@ -83,12 +88,18 @@ void	tok_array_print(t_token_array *array)
 
 void	toks_destroy(t_token_array	*vec)
 {
+	size_t	i;
+
+	i = 0;
 	if (vec)
 	{
 		if (vec->items)
 		{
-			for (size_t i = 0; i < vec->cap; ++i)
+			while (i < vec->size)
+			{
 				str_destruct(vec->items[i].lexeme);
+				vec->items[i++].lexeme = NULL;
+			}
 			ft_free(vec->items);
 		}
 		ft_free(vec);

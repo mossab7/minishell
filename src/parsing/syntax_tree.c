@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:44:28 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/17 17:21:50 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/18 16:44:57 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <fcntl.h>
@@ -234,9 +234,7 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
                 str_destruct(line);
                 break;
             }
-			// printf(" get_context_env() %p\n", get_context_env());
-			// _string_expand(get_context_env(), line);
-			// printf(" line->cstring %s\n", line->cstring);
+			_string_expand(get_context_env(), line);
             write(fd, line->cstring, line->size);
             write(fd, "\n", 1);
 			str_join(input, 2, line->cstring, "\n");
@@ -533,7 +531,7 @@ t_ast	*build_ast(t_token_array *tokens)
 
 void	ast_destroy(t_ast *root)
 {
-	if (!root)
+	if (root == NULL)
 		return ;
 	ast_destroy(root->left);
 	ast_destroy(root->right);

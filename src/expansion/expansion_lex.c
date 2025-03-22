@@ -1,25 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   expansion_lex.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/16 06:43:05 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:43:08 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/03/18 16:35:34 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/03/18 17:46:18 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
 
-void	expand(t_env *env, t_token_array *tokens)
+static void	regulate_tok_types(t_token_array *tokens)
 {
-	size_t			iter;
+	size_t	i;
 
-	iter = 0;
-	while (iter < tokens->size)
-	{
-		if (tokens->items[iter].type == TOK_WORD)
-			string_expand(env, tokens, &iter);
-		iter++;
-	}
+	i = 0;
+	while (i < tokens->size)
+		tokens->items[i++].type = TOK_WORD;
+}
+
+t_token_array	*tokenize_source(const char *source)
+{
+	t_lexer			*lex;
+	t_token_array	*copy;
+
+	lex = lexer_init(source);
+	lexer_tokenize(lex);
+	copy = tokens_copy(lex->tokens);
+	lexer_destroy(lex);
+	regulate_tok_types(copy);
+	return (copy);
 }
