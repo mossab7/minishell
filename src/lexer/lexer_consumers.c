@@ -57,6 +57,8 @@ t_error consume_word(t_lexer *lex)
 		return (ERROR_QUOTE_UNCLOSED);
 	if (!tok->lexeme->size)
 		token_push_back(tok, 0, 0);
+	if (ft_strchr(tok->lexeme->cstring, '*'))
+		tok->type = TOK_WILD_CARD;
 	return (OK);
 }
 

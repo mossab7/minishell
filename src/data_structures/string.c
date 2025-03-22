@@ -178,6 +178,7 @@ void	str_substitute(t_string *string, char *repl, t_string *which)
 	{
 		while (string->size - which->size + repl_size >= string->cap)
 			str_expand_anyhow(string);
+
 		str_shift_left(string, cursor, which->size);
 		str_shift_right(string, cursor, repl_size);
 		ft_memcpy((string->cstring + cursor), (const char *)repl, repl_size);

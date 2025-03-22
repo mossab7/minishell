@@ -26,6 +26,7 @@ void	parser_lex(t_parser *parser)
 {
 	parser->lexer = lexer_init(parser->input->cstring);
 	parser->lexer_status = lexer_tokenize(parser->lexer);
+	tok_array_print(parser->lexer->tokens);
 }
 
 t_error	parser_prepare_input(t_parser *parser)

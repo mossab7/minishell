@@ -6,10 +6,17 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:29:42 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/21 17:45:01 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/22 20:54:35 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
+
+static	void	find_next_expansion(t_token_array *tokens, size_t *cursor)
+{
+	*cursor = 0;
+	while (!ft_strchr(tokens->items[*cursor].lexeme->cstring, '$') && *cursor < tokens->size)
+		(*cursor)++;
+}
 
 static t_string	*extract_key(t_string *string)
 {
@@ -64,51 +71,6 @@ void	_string_expand(t_env *env, t_string *string)
 	}
 }
 
-void	tokens_field_split(t_token_array *tokens, size_t *index)
-{
-	t_token_array	*fields;
-	t_mask			*mask;
-	size_t			msk;
-	t_token			*tk;
-
-	mask = mask_construct();
-	msk = 0;
-	tk = &(tokens->items[*index]);
-
-	mask_copy_ignore_spaces(mask, tk->lexeme, 0);
-	// mask_copy(mask, tk->lexeme->mask, 0);
-	fields = tokenize_source((const char *)tk->lexeme->cstring);
-	while (fields->size + tokens->size >= tokens->cap)
-		tok_array_expand_anyhow(tokens);
-	str_destruct(tk->lexeme);
-	ft_memmove(
-		(tokens->items + *index + 0),
-		(tokens->items + *index + 1),
-		(tokens->size - *index) * sizeof(*tokens->items)
-	);
-	tokens->size--;
-	if (fields->size)
-	{
-		ft_memmove(
-			tokens->items + *index + fields->size,
-			tokens->items + *index,
-			(tokens->size - *index) * sizeof(*tokens->items));
-		ft_memcpy(tokens->items + *index, fields->items, fields->size * sizeof(*tokens->items));
-		for (size_t i = *index; (i - *index) < fields->size; ++i)
-		{
-			tokens->items[i].lexeme = vstr_construct(1, fields->items[i - *index].lexeme->cstring);
-			for (size_t j = 0; j < tokens->items[i].lexeme->size && msk < mask->size; j++)
-			{
-				mask_push_back(tokens->items[i].lexeme->mask, mask->items[msk]);
-				msk++;
-			}
-		}
-		tokens->size += fields->size;
-		while (!ft_strchr(tokens->items[*index].lexeme->cstring, '$') && *index < tokens->size)
-			(*index)++;
-	}
-	toks_destroy(fields);
-}
 
 void	string_expand(t_env *env, t_token_array *tokens, size_t *cursor)
 {
@@ -126,7 +88,10 @@ void	string_expand(t_env *env, t_token_array *tokens, size_t *cursor)
 			value = ft_strdup(env_get(env, ((key->cstring) + 1)));
 		str_substitute(tk->lexeme, value, key);
 		if (key->mask->context == NOT_QUOTED)
-			tokens_field_split(tokens, cursor);
+		{
+			tokens_field_split(tokens, (*cursor));
+			find_next_expansion(tokens, cursor);
+		}
 		ft_free(value);
 		str_destruct(key);
 		if (tokens->size == 0)

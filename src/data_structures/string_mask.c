@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:18:13 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/21 17:46:35 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/22 20:45:18 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -39,6 +39,7 @@ t_mask	*mask_construct(void)
 	mask->items = alloc(VAC_INIT_CAP * sizeof(*mask->items));
 	mask->cap = VEC_INIT_CAP;
 	mask->size = 0;
+	mask->cursor = 0;
 	return (mask);
 }
 

@@ -234,10 +234,7 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
                 str_destruct(line);
                 break;
             }
-			printf(">> Here\n");
-			// No mask so it needs to be known for the expander
 			_string_expand(get_context_env(), line);
-			printf("<< Here\n");
             write(fd, line->cstring, line->size);
             write(fd, "\n", 1);
 			str_join(input, 2, line->cstring, "\n");

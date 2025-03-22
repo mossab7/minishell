@@ -74,6 +74,7 @@ typedef enum s_token_type
     TOK_ESCAPE,
     TOK_COMMENT,
 	TOK_WORD,
+	TOK_WILD_CARD,
 	TOK_NUM,
 	TOK_OPAREN,
 	TOK_CPAREN,

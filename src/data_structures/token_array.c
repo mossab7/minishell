@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:40:42 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/18 17:54:03 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/22 20:28:19 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -133,6 +133,7 @@ char *get_type_as_cstr(t_token_type type)
 		"ESCAPE",
 		"COMMENT",
 		"WORD",
+		"TOK_WILD_CARD",
 		"NUM",
 		"OPAREN",
 		"CPAREN",

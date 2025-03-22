@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 15:15:46 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/21 17:42:08 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/22 20:45:40 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef T_STING_H
@@ -22,6 +22,7 @@ typedef struct s_mask {
 	u8		*items;
 	size_t	cap;
 	size_t	size;
+	size_t	cursor;
 }	t_mask;
 
 typedef struct s_string
