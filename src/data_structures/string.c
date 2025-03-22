@@ -100,6 +100,7 @@ void	str_append(char *src, t_string *vec)
 	while (src[index])
 	{
 		str_push_back(vec, src[index]);
+		mask_push_back(vec->mask, 0);
 		index++;
 	}
 }

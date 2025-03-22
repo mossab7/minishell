@@ -21,6 +21,7 @@ void	parser_procced_to_exec(t_parser *parser)
 		execute_ast(parser->tree, parser->env);
 	add_history(parser->input->cstring);
 }
+
 void	parser_lex(t_parser *parser)
 {
 	parser->lexer = lexer_init(parser->input->cstring);
