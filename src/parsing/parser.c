@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 15:36:48 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/22 21:36:07 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/22 21:41:04 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -14,8 +14,6 @@
 void	parser_procced_to_exec(t_parser *parser)
 {
 	expand(parser->env, parser->lexer->tokens);
-
-	tok_array_print(parser->lexer->tokens);
 	if (!parser->lexer->tokens->size)
 		return ;
 	parser->tree = build_ast(parser->lexer->tokens);
@@ -28,7 +26,6 @@ void	parser_lex(t_parser *parser)
 {
 	parser->lexer = lexer_init(parser->input->cstring);
 	parser->lexer_status = lexer_tokenize(parser->lexer);
-	tok_array_print(parser->lexer->tokens);
 }
 
 t_error	parser_prepare_input(t_parser *parser)
