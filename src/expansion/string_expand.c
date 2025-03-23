@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/12 17:29:42 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/23 17:09:31 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/03/23 17:20:30 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/03/23 17:21:07 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -23,8 +23,8 @@ static t_string	*extract_key(t_string *string)
 	u8			context;
 	t_string	*key;
 
-	if (!string->size
-		|| (size_t)string->cursor >= string->size || !string->cstring[string->cursor])
+
+	if (!string->size)
 		return (NULL);
 	string->cursor = str_search_using_cursor(string, "$");
 	if (string->cursor < 0)

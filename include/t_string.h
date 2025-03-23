@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 15:15:46 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/22 20:45:40 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/23 17:12:15 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef T_STING_H
@@ -50,6 +50,7 @@ void		mask_push_back(t_mask *mask, u8 item);
 t_mask		*mask_construct(void);
 void		mask_destroy(t_mask *mask);
 void		mask_expand_anyhow(t_mask *mask);
+void		str_expand_anyhow(t_string *vec);
 void		str_print(t_string *str);
 void		mask_fill(t_mask *mask, u8 item, size_t size);
 void		mask_copy(t_mask *dst, t_mask *src, size_t start);

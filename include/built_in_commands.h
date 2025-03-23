@@ -5,6 +5,18 @@
 #define PATH_MAX 4096
 #endif // PATH_MAX
 
+#define BUILT_IN_COMMANDS_COUNT 8
+typedef int	(*built_in_command)(t_env *, char **args);
+
+typedef enum e_type
+{
+    setup,
+    teardown
+}	t_type;
+
+
+typedef int	(*built_in_command)(t_env *, char **args);
+
 int built_in_cd(t_env *env, char **args);
 int built_in_echo(t_env *env, char **args);
 int built_in_env(t_env *env,char **args);

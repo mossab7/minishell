@@ -47,3 +47,19 @@ int main(int ac, char **av, const char *envp[])
     cleanup_memory_tracker(get_memory_tracker());
     return 0;
 }
+
+// int main(int ac, char **av, const char *envp[])
+// {
+// 	(void)ac;
+// 	(void)envp;
+// 	t_string_vector *entries = strv_construct();
+// 	if (!entries)
+// 		return (1);
+// 	entries = wildcardexpansion(av[1]);
+// 	for (size_t i = 0; i < entries->size; i++)
+// 	{
+// 		printf("->%s\n",entries->cstrings[i]);
+// 	}
+// 	strv_destruct(entries);
+// 	return (0);
+// }

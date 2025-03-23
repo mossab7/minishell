@@ -13,7 +13,7 @@
 
 void	parser_procced_to_exec(t_parser *parser)
 {
-	expand(parser->env, parser->lexer->tokens);
+	expand(parser->env, &parser->lexer->tokens);
 	if (!parser->lexer->tokens->size)
 		return ;
 	parser->tree = build_ast(parser->lexer->tokens);

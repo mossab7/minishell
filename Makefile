@@ -2,12 +2,14 @@ LIB_FT_DIR=./libft/
 LIB_FT_PRINTF_DIR=./ft_printf/
 LIB_FT=$(LIB_FT_DIR)libft.a
 LIB_FT_PRINTF=$(LIB_FT_PRINTF_DIR)libftprintf.a
-SRCS=./src/data_structures/string.c ./src/data_structures/token_array.c ./src/data_structures/stack.c ./src/parsing/syntax_tree.c\
+SRCS=./src/containers/string/string.c ./src/containers/token/token_array.c ./src/containers/stack/stack.c ./src/parsing/syntax_tree.c\
 	./src/environment/env.c ./src/environment/env_methods.c ./src/environment/built_in_commands.c ./src/pathname/path_resolver.c ./src/logger/zenlogger.c\
-	./src/execution/execute.c ./src/environment/path_methods.c ./src/data_structures/string_vector.c ./src/expansion/expand.c ./src/wildcard.c\
-	./src/data_structures/string_mask.c ./src/data_structures/token_push_back.c ./src/signals/signals.c context.c ./src/environment/export.c ./src/data_structures/cells.c\
+	./src/execution/execute.c ./src/environment/path_methods.c ./src/containers/string/string_vector.c ./src/expansion/expand.c ./src/wildcard.c\
+	./src/containers/string/string_mask.c ./src/containers/token/token_push_back.c ./src/signals/signals.c context.c ./src/environment/export.c ./src/containers/cells/cells.c\
 	./src/expansion/string_expand.c ./src/environment/simple_export_tokenizer.c ./src/lexer/lex_quotes.c ./src/lexer/lexer_consumers.c ./src/lexer/lexer_helpers.c\
-	./src/lexer/lexer_methods.c ./src/environment/zen_prompt.c ./src/parsing/parser.c ./src/expansion/expansion_lex.c ./src/expansion/field_split.c
+	./src/lexer/lexer_methods.c ./src/environment/zen_prompt.c ./src/parsing/parser.c ./src/expansion/expansion_lex.c ./src/expansion/field_split.c\
+	./src/containers/cells/cells_manipulation.c ./src/containers/stack/stack_manipulation.c ./src/containers/string/string_manipulation.c\
+	./src/containers/string/string_vconstructors.c ./src/containers/string/string_subs.c ./src/containers/token/token_array_manipulation.c
 OBJS=$(SRCS:%.c=%.o)
 ZEN_LIB=libzen.a
 NAME=minishell
