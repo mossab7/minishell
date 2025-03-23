@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 20:53:21 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/02/07 21:22:01 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/23 17:18:01 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -16,7 +16,8 @@ void	strv_expand(t_string_vector *vec)
 	if(vec->size + 1 >= vec->cap)
 	{
 		vec->cap *= VEC_GROWTH_FAC;
-		vec->cstrings = ft_realloc(vec->cstrings, vec->cap * sizeof(*vec->cstrings), vec->size * sizeof(*vec->cstrings));
+		vec->cstrings = ft_realloc(vec->cstrings,
+					vec->cap * sizeof(*vec->cstrings), vec->size * sizeof(*vec->cstrings));
 	}
 }
 

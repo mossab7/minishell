@@ -1,31 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cells.c                                            :+:      :+:    :+:   */
+/*   cells_manipulation.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/16 06:39:58 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 14:31:31 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/03/23 16:47:50 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/03/23 17:02:17 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
 
-
-void	cells_expand(t_cells *cells)
-{
-	if(cells->size >= cells->cap)
-	{
-		cells->cap *= VEC_GROWTH_FAC;
-		cells->items = ft_realloc(cells->items,
-					cells->cap * sizeof(*(cells->items)),
-					cells->size * sizeof(*(cells->items)));
-	}
-}
-
 void	cells_push_back(t_cells *cells, char *key, char *value)
 {
-	// No duplicates are allowed. so gott look for it first then if it exists then just replace it wsf?
 	size_t	index;
 
 	index = cells_search(cells, key);
@@ -45,36 +32,6 @@ void	cells_push_back(t_cells *cells, char *key, char *value)
 	cells->size++;
 }
 
-t_cells	*cells_construct(void)
-{
-	t_cells	*cells;
-
-	cells = alloc(sizeof(*cells));
-	cells->items = alloc(VAC_INIT_CAP * sizeof(*(cells->items)));
-	cells->cap = VEC_INIT_CAP;
-	cells->size = 0;
-	return (cells);
-}
-
-void	cells_destroy(t_cells *cells)
-{
-	size_t	index;
-
-	index = 0;
-	if (cells)
-	{
-		while (index < cells->size)
-		{
-			ft_free(cells->items[index].key);
-			ft_free(cells->items[index].value);
-			index++;
-		}
-		if (cells->items)
-			ft_free(cells->items);
-		ft_free(cells);
-	}
-}
-
 size_t	cells_search(t_cells *cells, char *key)
 {
 	size_t	index;
@@ -92,8 +49,8 @@ size_t	cells_search(t_cells *cells, char *key)
 void	cells_sort(t_cells *cells)
 {
 	t_cell	tmp;
-	size_t		i;
-	size_t		j;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
 	while (i < cells->size)
@@ -101,7 +58,6 @@ void	cells_sort(t_cells *cells)
 		j = i + 1;
 		while (j < cells->size)
 		{
-			// NOTE: Zakaria's contribution
 			if (ft_strcmp(cells->items[i].key, cells->items[j].key) > 0)
 			{
 				tmp = cells->items[i];

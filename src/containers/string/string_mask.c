@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:18:13 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/22 20:45:18 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/23 17:18:20 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -15,8 +15,8 @@ void	mask_expand_anyhow(t_mask *mask)
 {
 	mask->cap *= VEC_GROWTH_FAC;
 	mask->items = ft_realloc(mask->items,
-				mask->cap * sizeof(*(mask->items)),
-				mask->size * sizeof(*(mask->items)));
+			mask->cap * sizeof(*(mask->items)),
+			mask->size * sizeof(*(mask->items)));
 }
 
 void	mask_expand(t_mask *mask)
