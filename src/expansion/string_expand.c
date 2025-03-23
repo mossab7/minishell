@@ -18,6 +18,7 @@ static t_string	*extract_key(t_string *string)
 	t_string	*key;
 
 
+	cursor = 0;
 	if (!string->size)
 		return (NULL);
 	cursor = str_search(string + cursor, "$");
@@ -42,11 +43,9 @@ static t_string	*extract_key(t_string *string)
 
 void	_string_expand(t_env *env, t_string *string)
 {
-	int			cursor;
 	t_string	*key;
 	char		*value;
 
-	cursor = 0;
 	key = extract_key(string);
 	while (key)
 	{
