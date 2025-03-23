@@ -358,9 +358,25 @@ int	execute_subshell(t_ast *node, t_env *env)
 		exit(result);
 	}
 	waitpid(pid, &status, 0);
-	env->last_command_status = WEXITSTATUS(status);
-	return (env->last_command_status);
+	return (env->last_command_status = WEXITSTATUS(status));
 }
+
+int execute_logical_or(t_ast *node, t_env *env ,int left_status)
+{
+	left_status = execute_ast(node->left, env);
+	if (left_status != 0)
+		return (execute_ast(node->right, env));
+	return (left_status);
+}
+
+int execute_logical_and(t_ast *node, t_env *env ,int left_status)
+{
+	left_status = execute_ast(node->left, env);
+	if (left_status == 0)
+		return (execute_ast(node->right, env));
+	return (left_status);
+}
+
 
 int	execute_ast(t_ast *node, t_env *env)
 {
@@ -368,6 +384,7 @@ int	execute_ast(t_ast *node, t_env *env)
 
 	if (!node)
 		return (0);
+	left_status = 0;
 	if (node->type == NODE_COMMAND)
 		return (execute_command(&node->value.command, env));
 	else if (node->type == NODE_PIPE)
@@ -375,19 +392,9 @@ int	execute_ast(t_ast *node, t_env *env)
 	else if (node->type == NODE_SUBSHELL)
 		return (execute_subshell(node, env));
 	else if (node->type == NODE_LOGICAL_AND)
-	{
-		left_status = execute_ast(node->left, env);
-		if (left_status == 0)
-			return (execute_ast(node->right, env));
-		return (left_status);
-	}
+		return (execute_logical_and(node,env,left_status));
 	else if (node->type == NODE_LOGICAL_OR)
-	{
-		left_status = execute_ast(node->left, env);
-		if (left_status != 0)
-			return (execute_ast(node->right, env));
-		return (left_status);
-	}
+		return (execute_logical_or(node,env,left_status));
 	else
 	{
 		ft_printf("Unknown node type\n");
