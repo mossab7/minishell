@@ -8,13 +8,13 @@ SRCS=./src/containers/string/string.c ./src/containers/token/token_array.c ./src
 	./src/containers/string/string_mask.c ./src/containers/token/token_push_back.c ./src/signals/signals.c ./src/context/context.c ./src/environment/export.c ./src/containers/cells/cells.c\
 	./src/expansion/string_expand.c ./src/environment/simple_export_tokenizer.c ./src/lexer/lex_quotes.c ./src/lexer/lexer_consumers.c ./src/lexer/lexer_helpers.c\
 	./src/lexer/lexer_methods.c ./src/environment/zen_prompt.c ./src/parsing/parser.c ./src/expansion/expansion_lex.c ./src/expansion/field_split.c\
-	./src/containers/cells/cells_manipulation.c ./src/containers/stack/stack_manipulation.c ./src/containers/string/string_manipulation.c\
+	./src/containers/cells/cells_manipulation.c ./src/containers/stack/stack_manipulation.c ./src/containers/string/string_manipulation.c ./src/context/context_utils.c\
 	./src/containers/string/string_vconstructors.c ./src/containers/string/string_subs.c ./src/containers/token/token_array_manipulation.c
 OBJS=$(SRCS:%.c=%.o)
 ZEN_LIB=libzen.a
 NAME=minishell
 CC=cc
-LIBS=-L. -L$(LIB_FT_PRINTF_DIR) -L$(LIB_FT_DIR) -lzen -lftprintf -lreadline -lft 
+LIBS=-L. -L$(LIB_FT_PRINTF_DIR) -L$(LIB_FT_DIR) -lzen -lftprintf -lreadline -lft
 INCLUDE=-I./include
 MAIN=./src/zen.c
 CFLAGS=-Wall -Wextra -Werror $(INCLUDE) -ggdb # -fsanitize=address -g

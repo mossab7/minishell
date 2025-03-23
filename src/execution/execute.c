@@ -145,7 +145,7 @@ int	setup_builtin_redirections(t_command *cmd, t_type type)
 		original_stdout = dup(STDOUT_FILENO);
 		if (original_stdin == -1 || original_stdout == -1)
 		{
-			
+
 			original_stdin = 0;
 			original_stdout = 0;
 			return ((perror("dup")),-1);
@@ -201,7 +201,7 @@ int	execute_built_in_commands(t_command *cmd, char *command, t_env *env,
 	char				*function_names[BUILT_IN_COMMANDS_COUNT];
 	int					i;
 	int					command_result;
-	
+
 	init_builtin_commands(functions, function_names);
 	i = 0;
 	while (function_names[i])
@@ -219,11 +219,46 @@ int	execute_built_in_commands(t_command *cmd, char *command, t_env *env,
 	return (command_result);
 }
 
+void	launch_command(t_command *cmd, t_env *env)
+{
+	t_string	*cmd_path;
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (setup_redirections(cmd) == -1)
+		exit(EXIT_FAILURE);
+	cmd_path = search_path(env->path, cmd->args[0]);
+	if (cmd_path)
+	{
+		env_join(env);
+		execve(cmd_path->cstring, cmd->args, env->envp);
+		str_destruct(cmd_path);
+	}
+	ft_printf("minishell: %s: command not found\n", cmd->args[0]);
+	exit(127);
+}
+
+int	get_command_status(t_env *env,int status)
+{
+	if (WIFSIGNALED(status))
+	{
+		env->last_command_status = 128 + WTERMSIG(status);
+		if (WTERMSIG(status) == SIGQUIT)
+			ft_printf("Quit (core dumped)\n");
+		else if (WTERMSIG(status) == SIGINT)
+			set_context_flag(FLAG_SIGINT_RECEIVED);
+	}
+	else
+	{
+		env->last_command_status = WEXITSTATUS(status);
+	}
+	return (env->last_command_status);
+}
+
 int	execute_command(t_command *cmd, t_env *env)
 {
 	int			status;
 	pid_t		current_pid;
-	t_string	*cmd_path;
 
 	status = 0;
 	if (cmd->argc == 0)
@@ -239,35 +274,9 @@ int	execute_command(t_command *cmd, t_env *env)
 		return (-1);
 	}
 	if (current_pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		if (setup_redirections(cmd) == -1)
-			exit(EXIT_FAILURE);
-		cmd_path = search_path(env->path, cmd->args[0]);
-		if (cmd_path)
-		{
-			env_join(env);
-			execve(cmd_path->cstring, cmd->args, env->envp);
-			str_destruct(cmd_path);
-		}
-		ft_printf("minishell: %s: command not found\n", cmd->args[0]);
-		exit(127);
-	}
+		launch_command(cmd,env);
 	waitpid(current_pid, &status, 0);
-	if (WIFSIGNALED(status))
-	{
-		env->last_command_status = 128 + WTERMSIG(status);
-		if (WTERMSIG(status) == SIGQUIT)
-			ft_printf("Quit (core dumped)\n");
-		else if (WTERMSIG(status) == SIGINT)
-			set_context_flag(FLAG_SIGINT_RECEIVED);
-	}
-	else
-	{
-		env->last_command_status = WEXITSTATUS(status);
-	}
-	return (env->last_command_status);
+	return (get_command_status(env,status));
 }
 
 int handle_pipe_error(int *pipefd, char *msg)
