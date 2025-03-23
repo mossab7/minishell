@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 17:29:42 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/22 20:54:35 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/22 21:34:34 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -89,7 +89,7 @@ void	string_expand(t_env *env, t_token_array *tokens, size_t *cursor)
 		str_substitute(tk->lexeme, value, key);
 		if (key->mask->context == NOT_QUOTED)
 		{
-			tokens_field_split(tokens, (*cursor));
+			tokens_field_split(tokens, *cursor);
 			find_next_expansion(tokens, cursor);
 		}
 		ft_free(value);

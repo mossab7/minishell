@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:22:59 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/22 20:52:45 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/22 21:39:38 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -21,6 +21,7 @@ void	put_fields_inplace(t_token_array *tokens, size_t index, t_token_array *fiel
 	for (size_t i = index; (i - index) < fields->size; ++i)
 	{
 		tokens->items[i].lexeme = vstr_construct(1, fields->items[i - index].lexeme->cstring);
+		tokens->items[i].lexeme->mask->size = 0;
 		for (size_t j = 0; j < tokens->items[i].lexeme->size && mask->cursor < mask->size; j++)
 		{
 			mask_push_back(tokens->items[i].lexeme->mask, mask->items[mask->cursor]);

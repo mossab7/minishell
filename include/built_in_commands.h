@@ -15,6 +15,8 @@ typedef enum e_type
 }	t_type;
 
 
+typedef int	(*built_in_command)(t_env *, char **args);
+
 int built_in_cd(t_env *env, char **args);
 int built_in_echo(t_env *env, char **args);
 int built_in_env(t_env *env,char **args);

@@ -11,10 +11,9 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-
-int execute_here_doc(t_redirect *redir)
+int	execute_here_doc(t_redirect *redir)
 {
-	int fd;
+	int	fd;
 
 	fd = open(redir->filename, O_RDONLY);
 	unlink(redir->filename);
@@ -28,9 +27,10 @@ int execute_here_doc(t_redirect *redir)
 	return (0);
 }
 
-int inptu_redirection(t_redirect *redir)
+int	inptu_redirection(t_redirect *redir)
 {
-	int fd;
+	int	fd;
+
 	fd = open(redir->filename, O_RDONLY);
 	if (fd == -1)
 	{
@@ -42,9 +42,9 @@ int inptu_redirection(t_redirect *redir)
 	return (fd);
 }
 
-int output_redirection(t_redirect *redir)
+int	output_redirection(t_redirect *redir)
 {
-	int fd;
+	int	fd;
 
 	fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
@@ -57,9 +57,10 @@ int output_redirection(t_redirect *redir)
 	return (fd);
 }
 
-int append_redirection(t_redirect *redir)
+int	append_redirection(t_redirect *redir)
 {
-	int fd;
+	int	fd;
+
 	fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
@@ -71,61 +72,62 @@ int append_redirection(t_redirect *redir)
 	return (fd);
 }
 
-bool is_ambiguous_redirect(const char *filename) 
+bool	is_ambiguous_redirect(const char *filename)
 {
-    struct stat file_stat;
-    
-    if (!filename || filename[0] == '\0')
-        return true;
-    
-    if (stat(filename, &file_stat) == 0) 
+	struct stat	file_stat;
+
+	if (!filename || filename[0] == '\0')
+		return (true);
+	if (stat(filename, &file_stat) == 0)
 	{
-        if (S_ISDIR(file_stat.st_mode)) 
+		if (S_ISDIR(file_stat.st_mode))
 		{
-            zen_elog("bash: %s/: Is a directory\n", filename);
-            return true;
-        }
-    }
-    
-    if (strchr(filename, '$') || strchr(filename, '*') || strchr(filename, '?'))
-        return true;
-    
-    return false;
+			zen_elog("bash: %s/: Is a directory\n", filename);
+			return (true);
+		}
+	}
+	if (strchr(filename, '$') || strchr(filename, '*') || strchr(filename, '?'))
+		return (true);
+	return (false);
 }
 
 int	setup_redirections(t_command *cmd)
 {
 	t_redirect	*redir;
-	int fd;
-	for (int i = 0; i < cmd->redirect_count; i++)
+	int			fd;
+	int			i;
+
+	i = 0;
+	while(i < cmd->redirect_count)
 	{
 		redir = cmd->redirects[i];
-		if (redir->type != REDIR_HEREDOC) 
+		if (redir->type != REDIR_HEREDOC)
 		{
-            if (is_ambiguous_redirect(redir->filename)) 
+			if (is_ambiguous_redirect(redir->filename))
 			{
-                zen_elog("ambiguous redirect\n");
-                return (-1);
-            }
-        }
+				zen_elog("ambiguous redirect\n");
+				return (-1);
+			}
+		}
 		if (redir->type == REDIR_INPUT)
 		{
 			fd = inptu_redirection(redir);
 		}
-		else if(redir->type == REDIR_OUTPUT)
+		else if (redir->type == REDIR_OUTPUT)
 		{
 			fd = output_redirection(redir);
 		}
-		else if(redir->type == REDIR_APPEND)
+		else if (redir->type == REDIR_APPEND)
 		{
 			fd = append_redirection(redir);
 		}
-		else if(redir->type == REDIR_HEREDOC)
+		else if (redir->type == REDIR_HEREDOC)
 		{
 			fd = execute_here_doc(redir);
 		}
 		if (fd == -1)
 			return (-1);
+		i++;
 	}
 	return (0);
 }
@@ -191,7 +193,9 @@ void	init_builtin_commands(built_in_command *functions, char **function_names)
 	function_names[7] = NULL;
 }
 
-int	execute_built_in_commands(t_command *cmd,char *command, t_env *env, char **args)
+
+int	execute_built_in_commands(t_command *cmd, char *command, t_env *env,
+		char **args)
 {
 	built_in_command	functions[BUILT_IN_COMMANDS_COUNT];
 	char				*function_names[BUILT_IN_COMMANDS_COUNT];
@@ -226,7 +230,8 @@ int	execute_command(t_command *cmd, t_env *env)
 	status = 0;
 	if (cmd->argc == 0)
 		return (0);
-	env->last_command_status = execute_built_in_commands(cmd,cmd->args[0], env, cmd->args);
+	env->last_command_status = execute_built_in_commands(cmd, cmd->args[0], env,
+			cmd->args);
 	if (env->last_command_status != -1)
 		return (env->last_command_status);
 	current_pid = fork();
@@ -255,9 +260,9 @@ int	execute_command(t_command *cmd, t_env *env)
 	if (WIFSIGNALED(status))
 	{
 		env->last_command_status = 128 + WTERMSIG(status);
-		if(WTERMSIG(status) == SIGQUIT)
+		if (WTERMSIG(status) == SIGQUIT)
 			ft_printf("Quit (core dumped)\n");
-		else if(WTERMSIG(status) == SIGINT)
+		else if (WTERMSIG(status) == SIGINT)
 			context->siginit_received = true;
 	}
 	else
@@ -331,7 +336,7 @@ int	execute_subshell(t_ast *node, t_env *env)
 	if (pid == 0)
 	{
 		subshell_env = env_copy(env);
-		if(setup_redirections(&node->value.command) == -1)
+		if (setup_redirections(&node->value.command) == -1)
 		{
 			env_destroy(subshell_env);
 			exit(EXIT_FAILURE);
@@ -351,26 +356,29 @@ int	execute_ast(t_ast *node, t_env *env)
 
 	if (!node)
 		return (0);
-	if  (node->type == NODE_COMMAND)
+	if (node->type == NODE_COMMAND)
 		return (execute_command(&node->value.command, env));
 	else if (node->type == NODE_PIPE)
 		return (execute_pipe(node, env));
 	else if (node->type == NODE_SUBSHELL)
-		return execute_subshell(node, env);
+		return (execute_subshell(node, env));
 	else if (node->type == NODE_LOGICAL_AND)
 	{
 		left_status = execute_ast(node->left, env);
 		if (left_status == 0)
-			return execute_ast(node->right, env);
-		return left_status;
+			return (execute_ast(node->right, env));
+		return (left_status);
 	}
 	else if (node->type == NODE_LOGICAL_OR)
 	{
 		left_status = execute_ast(node->left, env);
 		if (left_status != 0)
-			return execute_ast(node->right, env);
-		return left_status;
+			return (execute_ast(node->right, env));
+		return (left_status);
 	}
 	else
+	{
+		ft_printf("Unknown node type\n");
 		return (-1);
+	}
 }
