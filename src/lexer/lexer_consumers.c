@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 05:40:31 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 14:49:11 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/18 17:34:01 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -57,6 +57,8 @@ t_error consume_word(t_lexer *lex)
 		return (ERROR_QUOTE_UNCLOSED);
 	if (!tok->lexeme->size)
 		token_push_back(tok, 0, 0);
+	if (ft_strchr(tok->lexeme->cstring, '*'))
+		tok->type = TOK_WILD_CARD;
 	return (OK);
 }
 

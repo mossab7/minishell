@@ -26,6 +26,7 @@
 #define NOT_QUOTED      0
 #define SINGLE_QUOTED   1
 #define DOUBLE_QUOTED   2
+#define EXPANDED        3
 
 /*
 	// NOTE:	 Unset a bit
@@ -73,6 +74,7 @@ typedef enum s_token_type
     TOK_ESCAPE,
     TOK_COMMENT,
 	TOK_WORD,
+	TOK_WILD_CARD,
 	TOK_NUM,
 	TOK_OPAREN,
 	TOK_CPAREN,
@@ -96,10 +98,10 @@ typedef  struct s_token_array
 	bool		here_doc_active;
 }	t_token_array;
 
-void			toks_destroy(t_token_array	*vec);
+t_token_array	*tokens_copy(t_token_array *other);
 t_token_array	*tok_array_construct(void);
+void			toks_destroy(t_token_array	*vec);
 void			token_next(t_token_array *vec);
-t_token_array	copy_tokens(t_token_array tokens);
 void			tok_array_expand(t_token_array *vec);
 void			tok_array_expand_anyhow(t_token_array *vec);
 void			tok_array_print(t_token_array *array);

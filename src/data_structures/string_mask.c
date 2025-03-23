@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 12:18:13 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/05 13:03:39 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/22 20:45:18 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -39,6 +39,7 @@ t_mask	*mask_construct(void)
 	mask->items = alloc(VAC_INIT_CAP * sizeof(*mask->items));
 	mask->cap = VEC_INIT_CAP;
 	mask->size = 0;
+	mask->cursor = 0;
 	return (mask);
 }
 
@@ -49,5 +50,41 @@ void	mask_destroy(t_mask *mask)
 		if (mask->items)
 			ft_free(mask->items);
 		ft_free(mask);
+	}
+}
+
+void	mask_fill(t_mask *mask, u8 item, size_t size)
+{
+	mask->size = 0;
+	while (mask->size < size)
+		mask_push_back(mask, item);
+}
+
+void	mask_copy(t_mask *dst, t_mask *src, size_t start)
+{
+	dst->size = start;
+	while (dst->size < src->size)
+		mask_push_back(dst, src->items[dst->size]);
+}
+
+void	mask_print(t_mask *mask)
+{
+	ft_printf("Mask size: %u\n", mask->size);
+	for (size_t i = 0; i < mask->size; i++)
+		ft_printf("%u", mask->items[i]);
+}
+
+void	mask_copy_ignore_spaces(t_mask *dst, t_string *src, size_t start)
+{
+	size_t	i;
+
+	dst->size = start;
+	i = start;
+	while (i < src->mask->size)
+	{
+		if (!ft_isspace(src->cstring[i]))
+			mask_push_back(dst, src->mask->items[i++]);
+		else
+			i++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:40:18 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:40:26 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/21 17:45:37 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -29,7 +29,6 @@ void str_push_back(t_string *vec, uintptr_t item)
 	str_expand(vec);
 	vec->cstring[vec->size++] = item;
 	vec->cstring[vec->size] = 0;
-	// mask_push_back(vec->mask, 0);
 }
 
 t_string	*str_construct()
@@ -41,6 +40,7 @@ t_string	*str_construct()
 	vec->cap = VEC_INIT_CAP;
 	vec->mask = mask_construct();
 	vec->size = 0;
+	vec->cursor = 0;
 	return (vec);
 }
 
@@ -79,12 +79,14 @@ t_string	*vstr_construct(size_t count, ...)
 
 void	str_destruct(t_string *vec)
 {
-	if(vec)
+	if (vec)
 	{
 		if (vec->cstring)
 			ft_free(vec->cstring);
+		vec->cstring = NULL;
 		if (vec->mask)
 			mask_destroy(vec->mask);
+		vec->mask = NULL;
 		ft_free(vec);
 	}
 }
@@ -98,6 +100,7 @@ void	str_append(char *src, t_string *vec)
 	while (src[index])
 	{
 		str_push_back(vec, src[index]);
+		mask_push_back(vec->mask, 0);
 		index++;
 	}
 }
@@ -113,6 +116,14 @@ void	str_overwrite(char *src, t_string *vec)
 	str_append(src, vec);
 }
 
+int	str_search_using_cursor(t_string *vec, const char *text)
+{
+	char	*cursor;
+
+	cursor = ft_strnstr(((const char *) vec->cstring + vec->cursor), text, vec->size);
+	return ((int)(cursor - vec->cstring));
+}
+
 int	str_search(t_string *vec, const char *text)
 {
 	char	*cursor;
@@ -123,56 +134,57 @@ int	str_search(t_string *vec, const char *text)
 
 void	str_print(t_string *str)
 {
+	ft_printf("Mask size: %u\n", str->mask->size);
+	ft_printf("str  size: %u\n", str->size);
 	ft_printf("[%u]# %s\n", str->size, str->cstring);
-	ft_printf("  ");
+	ft_printf("     ");
 	for (size_t i = 0; i < str->mask->size; i++)
 		ft_printf("%u", str->mask->items[i]);
 	ft_printf("\n");
 }
 
-void	str_substitute(t_string *vec, char *repl, char *which)
+void	str_shift_left(t_string *str, int new_dest, int size)
 {
-	u8	stat;
-	int	cursor;
-	int	repl_size;
-	int	which_size;
+	ft_memmove((str->cstring + new_dest), (str->cstring + new_dest + size), 
+	    (str->size - new_dest - size));
+	ft_memmove((str->mask->items + new_dest), (str->mask->items + new_dest + size), 
+		(str->mask->size - new_dest - size));
+	str->size -= size;
+	str->mask->size -= size;
+	str->cursor -= size;
+}
 
+void	str_shift_right(t_string *string, int old_dest, int size)
+{
+	ft_memmove((string->cstring + old_dest + size),
+		 (string->cstring + old_dest), 
+		 (string->size - old_dest));
+	ft_memmove((string->mask->items + old_dest + size),
+		 (string->mask->items + old_dest),
+		 (string->mask->size - old_dest));
+	string->size += size;
+	string->mask->size += size;
+	string->cursor += size;
+}
+
+void	str_substitute(t_string *string, char *repl, t_string *which)
+{
+	int	cursor;
+	size_t	repl_size;
+
+	cursor = str_search(string, (const char *)which->cstring);
 	repl_size = ft_strlen(repl);
-	which_size = ft_strlen(which);
-	cursor = str_search(vec, (const char *)which);
 	while (cursor >= 0)
 	{
-		while ((int)vec->size - which_size + repl_size >= (int)vec->cap)
-			str_expand_anyhow(vec);
-		stat = (vec->mask->items[cursor]);
-		{
-			ft_memmove((vec->cstring + cursor), (vec->cstring + cursor + which_size), 
-				 (vec->size - cursor));
-			ft_memmove((vec->mask->items + cursor), (vec->mask->items + cursor + which_size), 
-				 (vec->mask->size - cursor));
-			vec->size -= which_size;
-			vec->mask->size -= which_size;
-		}
+		while (string->size - which->size + repl_size >= string->cap)
+			str_expand_anyhow(string);
 
-		{
-
-			ft_memmove((vec->cstring + cursor + repl_size),
-				 (vec->cstring + cursor), 
-				 (vec->size - cursor));
-			ft_memmove((vec->mask->items + cursor + repl_size),
-				 (vec->mask->items + cursor),
-				 (vec->mask->size - cursor));
-			vec->size += repl_size;
-			vec->mask->size += repl_size;
-		}
-
-		// huehf value wiijwdi
-		// huehf       wiijwdi
-		//       ^
-		ft_memcpy((vec->cstring + cursor), (const char *)repl, repl_size);
-		for (int index = 0; index < repl_size; index++)
-			vec->mask->items[(index + cursor)] = stat;
-		vec->cstring[vec->size] = 0;
-		cursor = str_search(vec, (const char *)which);
+		str_shift_left(string, cursor, which->size);
+		str_shift_right(string, cursor, repl_size);
+		ft_memcpy((string->cstring + cursor), (const char *)repl, repl_size);
+		for (size_t index = cursor; index < (cursor + repl_size); index++)
+			string->mask->items[index] = EXPANDED;
+		string->cstring[string->size] = 0;
+		cursor = str_search(string, (const char *)which->cstring);
 	}
 }

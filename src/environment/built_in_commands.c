@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:41:00 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:41:04 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/18 17:15:24 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -71,7 +71,7 @@ int built_in_echo(t_env *env, char **args)
 	int r;
 
 	i = 1;
-
+	r = 0;
 	if (is_no_nlarg(args[i]))
 	{
 		new_line = false;

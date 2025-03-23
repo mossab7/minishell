@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 05:40:25 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 05:46:34 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/18 17:54:34 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -21,15 +21,6 @@ t_lexer *lexer_init(const char *source)
 	lex->tokens = tok_array_construct();
 
 	return (lex);
-}
-
-t_token_array	*tokenize_source(const char *source)
-{
-	t_lexer	*lex = lexer_init(source);
-
-	lexer_tokenize(lex);
-	ft_free(lex);
-	return (lex->tokens);
 }
 
 t_error lexer_tokenize(t_lexer *lex)
@@ -59,6 +50,7 @@ void	lexer_destroy(t_lexer *lex)
 	if (lex)
 	{
 		toks_destroy(lex->tokens);
+		lex->tokens = NULL;
 		ft_free(lex);
 	}
 }
