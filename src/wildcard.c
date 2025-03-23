@@ -145,6 +145,7 @@ void wildcard_expand(t_token_array **tokens_array, size_t *cursor)
     entries = wildcardexpansion(tokens->items[*cursor].lexeme->cstring);
     if (entries->size == 0)
     {
+		tokens->items[*cursor].type = TOK_WORD;
         strv_destruct(entries);
         return;
     }
