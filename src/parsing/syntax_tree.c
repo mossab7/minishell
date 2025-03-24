@@ -9,11 +9,7 @@
 /*   Updated: 2025/03/18 16:44:57 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <fcntl.h>
-#include <stdbool.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+
 #include <zen.h>
 
 t_ast		*parse_and_or(t_token_array *tokens, size_t *index);
@@ -40,7 +36,7 @@ t_ast	*create_command_node(char **args, int argc, t_redirect **redirects,
 		return (NULL);
 	node = alloc(sizeof(t_ast));
 	node->type = NODE_COMMAND;
-	node->value.command = (t_command){.args = args, .argc = argc,
+	node->u_value.command = (t_command){.args = args, .argc = argc,
 		.redirects = redirects, .redirect_count = redirect_count};
 	return (node);
 }
@@ -56,7 +52,6 @@ t_ast	*create_binary_node(t_node_type type, t_ast *left, t_ast *right)
 	return (node);
 }
 
-/*utils for heredoc*/
 char	*ft_mkstemp(void)
 {
 	long	i;
@@ -75,30 +70,6 @@ char	*ft_mkstemp(void)
 		i++;
 	}
 	return (filename);
-}
-
-void	setup_heredoc_signals(void)
-{
-	struct sigaction	sa;
-	int					signals[] = {SIGABRT, SIGALRM, SIGBUS, SIGCHLD, SIGCONT,
-							SIGFPE, SIGHUP, SIGILL, SIGPIPE, SIGPROF, SIGSEGV,
-							SIGTERM, SIGTRAP, SIGTSTP, SIGTTIN, SIGTTOU,
-							SIGUSR1, SIGUSR2, SIGVTALRM, SIGXCPU, SIGXFSZ};
-	int					i;
-
-	sigemptyset(&sa.sa_mask);
-	sa.sa_handler = SIG_IGN;
-	sa.sa_flags = 0;
-	i = 0;
-	while (i < (int)(sizeof(signals) / sizeof(signals[0])))
-	{
-		sigaction(signals[i], &sa, NULL);
-		i++;
-	}
-	sa.sa_handler = SIG_DFL;
-	sigaction(SIGINT, &sa, NULL);
-	sa.sa_handler = SIG_IGN;
-	sigaction(SIGQUIT, &sa, NULL);
 }
 
 int	setup_here_doc(t_redirect *redir)
@@ -180,7 +151,6 @@ int	setup_here_doc(t_redirect *redir)
 	redir->filename = filename;
 	return (0);
 }
-/*end*/
 t_redirect	*create_redirect(t_redirect_type type, char *target)
 {
 	t_redirect	*redir;
@@ -191,8 +161,6 @@ t_redirect	*create_redirect(t_redirect_type type, char *target)
 	{
 		redir->delimiter = target;
 		setup_here_doc(redir);
-		// if(redir->filename == NULL)
-		//     return (NULL);
 	}
 	else
 	{
@@ -299,9 +267,9 @@ t_ast	*create_subshell_node(t_ast *child)
 	node->type = NODE_SUBSHELL;
 	if (child)
 	{
-		node->value.command = (t_command){.args = NULL, .argc = 0,
-			.redirects = child->value.command.redirects,
-			.redirect_count = child->value.command.redirect_count};
+		node->u_value.command = (t_command){.args = NULL, .argc = 0,
+			.redirects = child->u_value.command.redirects,
+			.redirect_count = child->u_value.command.redirect_count};
 	}
 	node->left = child;
 	node->right = NULL;
@@ -319,11 +287,11 @@ t_ast	*parse_subshell_redirections(t_token_array *tokens, size_t *index,
 	subshell_node->type = NODE_SUBSHELL;
 	subshell_node->left = node;
 	subshell_node->right = NULL;
-	subshell_node->value.command.args = NULL;
-	subshell_node->value.command.argc = 0;
-	subshell_node->value.command.redirects = alloc(tokens->size
+	subshell_node->u_value.command.args = NULL;
+	subshell_node->u_value.command.argc = 0;
+	subshell_node->u_value.command.redirects = alloc(tokens->size
 			* sizeof(t_redirect *));
-	subshell_node->value.command.redirect_count = 0;
+	subshell_node->u_value.command.redirect_count = 0;
 	while (true)
 	{
 		token = peek_token(tokens, *index);
@@ -332,11 +300,11 @@ t_ast	*parse_subshell_redirections(t_token_array *tokens, size_t *index,
 			redir = parse_redirection(tokens, index);
 			if (!redir)
 			{
-				ft_free(subshell_node->value.command.redirects);
+				ft_free(subshell_node->u_value.command.redirects);
 				ft_free(subshell_node);
 				return (NULL);
 			}
-			subshell_node->value.command.redirects[subshell_node->value.command.redirect_count++] = redir;
+			subshell_node->u_value.command.redirects[subshell_node->u_value.command.redirect_count++] = redir;
 		}
 		else
 			break ;
@@ -442,15 +410,15 @@ void	ast_destroy(t_ast *root)
 		return ;
 	ast_destroy(root->left);
 	ast_destroy(root->right);
-	for (int i = 0; i < root->value.command.argc; i++)
-		ft_free(root->value.command.args[i]);
-	ft_free(root->value.command.args);
-	for (int i = 0; i < root->value.command.redirect_count; i++)
+	for (int i = 0; i < root->u_value.command.argc; i++)
+		ft_free(root->u_value.command.args[i]);
+	ft_free(root->u_value.command.args);
+	for (int i = 0; i < root->u_value.command.redirect_count; i++)
 	{
-		ft_free(root->value.command.redirects[i]->delimiter);
-		ft_free(root->value.command.redirects[i]->filename);
-		ft_free(root->value.command.redirects[i]);
+		ft_free(root->u_value.command.redirects[i]->delimiter);
+		ft_free(root->u_value.command.redirects[i]->filename);
+		ft_free(root->u_value.command.redirects[i]);
 	}
-	ft_free(root->value.command.redirects);
+	ft_free(root->u_value.command.redirects);
 	ft_free(root);
 }

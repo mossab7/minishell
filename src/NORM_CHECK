@@ -9,3 +9,4 @@
 [] pathname
 [*] signals
 [] zen.c
+[*] headers //excepte zeninit
