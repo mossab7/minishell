@@ -37,6 +37,8 @@ size_t	cells_search(t_cells *cells, char *key)
 	size_t	index;
 
 	index = 0;
+	if (cells->size == 0)
+		return (1);
 	while (index < cells->size)
 	{
 		if (ft_strcmp(cells->items[index].key, key) == 0)
@@ -73,4 +75,20 @@ void	cells_sort(t_cells *cells)
 int	cells_key_exists(t_cells *cells, char *key)
 {
 	return (cells_search(cells, key) < cells->size);
+}
+
+void	cells_remove(t_cells *cells, char *key)
+{
+	size_t	index;
+
+	index = cells_search(cells, key);
+	if (index < cells->size)
+	{
+		cells->size--;
+		ft_free(cells->items[index].value);
+		ft_free(cells->items[index].key);
+		ft_memmove(cells->items + index + 1,
+			cells->items + index + 0,
+			(index - cells->size) * sizeof(cells->items[0]));
+	}
 }

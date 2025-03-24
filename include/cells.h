@@ -19,4 +19,5 @@ t_cells	*cells_construct(void);
 void	cells_push_back(t_cells *cells, char *key, char *value);
 void	cells_expand(t_cells *cells);
 void	cells_sort(t_cells *cells);
+void	cells_remove(t_cells *cells, char *key);
 #endif // !CELLS_H

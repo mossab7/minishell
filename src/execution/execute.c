@@ -163,17 +163,15 @@ void	init_builtin_commands(built_in_command *functions,
 	functions[2] = built_in_env;
 	functions[3] = built_in_exit;
 	functions[4] = built_in_export;
-	functions[5] = built_in_set;
-	functions[6] = built_in_unset;
-	functions[7] = NULL;
+	functions[5] = built_in_unset;
+	functions[6] = NULL;
 	function_names[0] = "cd";
 	function_names[1] = "echo";
 	function_names[2] = "env";
 	function_names[3] = "exit";
 	function_names[4] = "export";
-	function_names[5] = "set";
-	function_names[6] = "unset";
-	function_names[7] = NULL;
+	function_names[5] = "unset";
+	function_names[6] = NULL;
 }
 
 int	execute_built_in_commands(t_command *cmd, char *command, t_env *env,

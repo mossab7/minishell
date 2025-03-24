@@ -1,18 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_free.c                                          :+:      :+:    :+:   */
+/*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/30 13:01:01 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/01/30 13:30:43 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/03/24 18:16:14 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/03/24 18:22:21 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <libft.h>
+#include <zen.h>
 
-void ft_free(void *addr)
+int	built_in_exit(t_env *env, char **args)
 {
-	if (addr)
-		detach_resource(get_memory_tracker(), addr);
+	int	code;
+
+	(void)env;
+	code = 0;
+	if (args && args[1])
+		code = ft_atoi(args[1]);
+	cleanup_memory_tracker(get_memory_tracker());
+	exit(code);
+	return (0);
 }

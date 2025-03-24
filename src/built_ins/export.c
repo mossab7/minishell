@@ -6,16 +6,31 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:41:30 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 14:34:22 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/24 18:22:21 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
 
+static	void	export_find_join(t_env *env, char *key, char *value)
+{
+	t_string	*new_value;
+	size_t		index;
+
+	index = cells_search(env->export_cells, key);
+	if (index < env->cells->size)
+	{
+		new_value = vstr_construct(2, env->export_cells->items[index].value,
+				value);
+		env_set(env, key, new_value->cstring);
+		str_destruct(new_value);
+	}
+	else
+		env_set(env, key, value);
+}
+
 static void	process_export_args(t_env *env, t_token_array *toks)
 {
 	t_token		*key;
-	size_t		index;
-	t_string	*new_value;
 	t_token		*assign_op;
 	t_token		*value;
 
@@ -25,24 +40,14 @@ static void	process_export_args(t_env *env, t_token_array *toks)
 		if (!cells_key_exists(env->export_cells, key->lexeme->cstring))
 			cells_push_back(env->export_cells, (key->lexeme->cstring),
 				EMPTY_VALUE);
+		return ;
 	}
 	assign_op = (toks->items + 1);
 	value = (toks->items + 2);
 	if (assign_op->type == TOK_EQ)
 		env_set(env, key->lexeme->cstring, value->lexeme->cstring);
 	else if (assign_op->type == TOK_PEQ)
-	{
-		index = cells_search(env->export_cells, key->lexeme->cstring);
-		if (index < env->cells->size)
-		{
-			new_value = vstr_construct(2, env->export_cells->items[index].value,
-					value->lexeme->cstring);
-			env_set(env, key->lexeme->cstring, new_value->cstring);
-			str_destruct(new_value);
-		}
-		else
-			env_set(env, key->lexeme->cstring, value->lexeme->cstring);
-	}
+		export_find_join(env, key->lexeme->cstring, value->lexeme->cstring);
 }
 
 static void	print_export(t_env *env)
