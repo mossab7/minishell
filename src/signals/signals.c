@@ -8,9 +8,8 @@
 void handle_sigint(int signum)
 {
     (void)signum;
-    t_context *context = *get_context();
 
-    if (context->readline_active == 1)
+    if (check_context_flag(FLAG_READLINE_ACTIVE))
     {
 		ft_putchar_fd('\n', STDOUT_FILENO);
         rl_on_new_line();

@@ -94,8 +94,6 @@ typedef  struct s_token_array
 	t_token		*current;
 	size_t		size;
 	size_t		cap;
-	bool		syntax_error;
-	bool		here_doc_active;
 }	t_token_array;
 
 t_token_array	*tokens_copy(t_token_array *other);

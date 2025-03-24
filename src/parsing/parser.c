@@ -17,7 +17,7 @@ void	parser_procced_to_exec(t_parser *parser)
 	if (!parser->lexer->tokens->size)
 		return ;
 	parser->tree = build_ast(parser->lexer->tokens);
-	if (parser->tree && !parser->lexer->tokens->syntax_error)
+	if (parser->tree && !check_context_flag(FLAG_SYNTAX_ERROR))
 		execute_ast(parser->tree, parser->env);
 	add_history(parser->input->cstring);
 }

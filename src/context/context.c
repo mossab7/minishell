@@ -11,6 +11,38 @@
 /* ************************************************************************** */
 #include <zen.h>
 
+void set_context_flag(t_ctx_flags flag)
+{
+	t_context *context;
+
+	context = *get_context();
+	context->flags |= flag;
+}
+
+void unset_context_flag(t_ctx_flags flag)
+{
+	t_context *context;
+
+	context = *get_context();
+	context->flags &= ~flag;
+}
+
+void toggle_context_flag(t_ctx_flags flag)
+{
+	t_context *context;
+
+	context = *get_context();
+	context->flags ^= flag;
+}
+
+bool check_context_flag(t_ctx_flags flag)
+{
+	t_context *context;
+
+	context = *get_context();
+	return (context->flags & flag);
+}
+
 t_context **get_context()
 {
     static t_context *context = NULL;
@@ -18,8 +50,9 @@ t_context **get_context()
     if (context == NULL)
     {
         context = alloc(sizeof(t_context));
-        context->siginit_received = false;
-        context->readline_active = 1;
+		context->flags = 0;
+		set_context_flag(FLAG_READLINE_ACTIVE);
+		context->input = NULL;
 		context->env = NULL;
     }
     return &context;
@@ -30,8 +63,7 @@ void	init_context(t_string *initial_input, t_env *env)
 	t_context	*context;
 
 	context = *get_context();
-	context->readline_active = 0;
-	context->siginit_received = false;
+	context->flags = 0;
 	context->input = initial_input;
 	if (!context->env)
 		context->env = env;

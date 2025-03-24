@@ -17,9 +17,7 @@ t_string *zen_prompt(t_env *env)
     char *pwd;
     t_string *buff;
     t_string *zen_prompt_;
-    t_context *context;
 
-    context = *get_context();
     zen_prompt_ = str_construct();
     pwd = env_get(env, "PWD");
     if (!pwd)
@@ -31,8 +29,8 @@ t_string *zen_prompt(t_env *env)
         str_join(zen_prompt_, 4, user, "@", pwd, ": ");
     else
         zen_prompt_->cstring = NULL;
-    context->readline_active = 1;
-	if (context->siginit_received == true)
+    set_context_flag(FLAG_READLINE_ACTIVE);
+	if (check_context_flag(FLAG_SIGINT_RECEIVED))
 		printf("\n");
     buff = ft_readline(zen_prompt_->cstring);
     str_destruct(zen_prompt_);

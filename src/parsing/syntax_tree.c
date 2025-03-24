@@ -99,15 +99,15 @@ void	print_ast(t_ast *node, int level)
 
 t_ast		*parse_and_or(t_token_array *tokens, size_t *index);
 
-void	*syntax_error(const char *message,t_token_array *tokens)
+void	*syntax_error(const char *message)
 {
-	if(tokens->syntax_error == false && tokens->here_doc_active == false)
+	if(!check_context_flag(FLAG_SYNTAX_ERROR) && !check_context_flag(FLAG_HERE_DOC_ACTIVE))
 	{
     	fprintf(stderr, "Syntax error: %s\n", message);
     	rl_replace_line("", 0);
     	rl_on_new_line();
 	}
-	tokens->syntax_error = true;
+    set_context_flag(FLAG_SYNTAX_ERROR);
 	return (NULL);
 }
 
@@ -189,10 +189,10 @@ void setup_heredoc_signals(void)
     sigaction(SIGQUIT, &sa, NULL);
 }
 
-int setup_here_doc(t_redirect *redir, t_token_array *tokens)
+int setup_here_doc(t_redirect *redir)
 {
 	t_string	*iinput;
-    tokens->here_doc_active = true;
+    set_context_flag(FLAG_HERE_DOC_ACTIVE);
     char *filename = ft_mkstemp();
     int fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
     pid_t pid;
@@ -271,7 +271,7 @@ int setup_here_doc(t_redirect *redir, t_token_array *tokens)
     return (0);
 }
 /*end*/
-t_redirect	*create_redirect(t_redirect_type type, char *target,t_token_array *tokens)
+t_redirect	*create_redirect(t_redirect_type type, char *target)
 {
     t_redirect	*redir;
 
@@ -280,7 +280,7 @@ t_redirect	*create_redirect(t_redirect_type type, char *target,t_token_array *to
     if (type == REDIR_HEREDOC)
     {
         redir->delimiter = target;
-        setup_here_doc(redir, tokens);
+        setup_here_doc(redir);
         // if(redir->filename == NULL)
         //     return (NULL);
     }
@@ -330,9 +330,9 @@ t_redirect	*parse_redirection(t_token_array *tokens, size_t *index)
     (*index)++;
     token = peek_token(tokens, *index);
     if (token.type != TOK_WORD)
-        return(syntax_error("Expected filename/delimiter after redirection",tokens));
+        return(syntax_error("Expected filename/delimiter after redirection"));
     (*index)++;
-    return (create_redirect(type, ft_strdup(token.lexeme->cstring), tokens));
+    return (create_redirect(type, ft_strdup(token.lexeme->cstring)));
 }
 
 t_ast	*parse_command(t_token_array *tokens, size_t *index)
@@ -446,18 +446,18 @@ t_ast *parse_primary(t_token_array *tokens, size_t *index)
     {
         node = parse_and_or(tokens, index);
         if (node == NULL)
-            return (syntax_error("near unexpected token `()'", tokens));
+            return (syntax_error("near unexpected token `()'"));
         if (!match_token(TOK_CPAREN, tokens, index))
         {
-            return (syntax_error("Expected closing parenthesis", tokens));
+            return (syntax_error("Expected closing parenthesis"));
         }        
         node = parse_subshell_redirections(tokens, index, node);
     }
     else
     {
         node = parse_command(tokens, index);
-        if (!node && !tokens->syntax_error)
-            return (syntax_error("Unexpected token", tokens));
+        if (!node && !check_context_flag(FLAG_SYNTAX_ERROR))
+            return (syntax_error("Unexpected token"));
     }
     return (node);
 }
@@ -474,7 +474,7 @@ t_ast	*parse_pipe(t_token_array *tokens, size_t *index)
         left = create_binary_node(NODE_PIPE, left, parse_primary(tokens,
                     index));
 		if(!left->right)
-			return (syntax_error("Invalid null command",tokens));
+			return (syntax_error("Invalid null command"));
     }
     return (left);
 }
@@ -491,7 +491,7 @@ t_ast	*parse_and_or(t_token_array *tokens, size_t *index)
         if (token.type == TOK_LOGICAL_AND)
         {
 			if (left == NULL)
-                return (syntax_error("near unexpected token `&&'",tokens));
+                return (syntax_error("near unexpected token `&&'"));
             (*index)++;
             left = create_binary_node(NODE_LOGICAL_AND, left, parse_pipe(tokens,
                         index));
@@ -499,7 +499,7 @@ t_ast	*parse_and_or(t_token_array *tokens, size_t *index)
         else if (token.type == TOK_LOGICAL_OR)
         {
 			if (left == NULL)
-				return (syntax_error("near unexpected token `||'",tokens));
+				return (syntax_error("near unexpected token `||'"));
             (*index)++;
             left = create_binary_node(NODE_LOGICAL_OR, left, parse_pipe(tokens,
                         index));
@@ -521,10 +521,10 @@ t_ast	*build_ast(t_token_array *tokens)
     token = peek_token(tokens, index);
     if (token.type != TOK_EOF)
     {
-        syntax_error("Unexpected input", tokens);
+        syntax_error("Unexpected input");
 		return (NULL);
     }
-	if(tokens->syntax_error == true)
+	if(check_context_flag(FLAG_SYNTAX_ERROR))
 		return (NULL);
     return (ast);
 }

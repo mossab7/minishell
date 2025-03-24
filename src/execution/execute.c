@@ -224,9 +224,7 @@ int	execute_command(t_command *cmd, t_env *env)
 	int			status;
 	pid_t		current_pid;
 	t_string	*cmd_path;
-	t_context	*context;
 
-	context = *get_context();
 	status = 0;
 	if (cmd->argc == 0)
 		return (0);
@@ -263,7 +261,7 @@ int	execute_command(t_command *cmd, t_env *env)
 		if (WTERMSIG(status) == SIGQUIT)
 			ft_printf("Quit (core dumped)\n");
 		else if (WTERMSIG(status) == SIGINT)
-			context->siginit_received = true;
+			set_context_flag(FLAG_SIGINT_RECEIVED);
 	}
 	else
 	{
