@@ -30,4 +30,3 @@ int	*stack_peek(t_stack *stack)
 		return (&stack->items[-1 + stack->size]);
 	return (NULL);
 }
-

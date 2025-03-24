@@ -6,18 +6,19 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 20:53:21 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/23 17:18:01 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/24 15:51:52 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
 
 void	strv_expand(t_string_vector *vec)
 {
-	if(vec->size + 1 >= vec->cap)
+	if (vec->size + 1 >= vec->cap)
 	{
 		vec->cap *= VEC_GROWTH_FAC;
 		vec->cstrings = ft_realloc(vec->cstrings,
-					vec->cap * sizeof(*vec->cstrings), vec->size * sizeof(*vec->cstrings));
+				vec->cap * sizeof(*vec->cstrings),
+				vec->size * sizeof(*vec->cstrings));
 	}
 }
 
@@ -41,7 +42,7 @@ void	strv_destruct(t_string_vector *vec)
 	ft_free(vec);
 }
 
-t_string_vector	*strv_construct()
+t_string_vector	*strv_construct(void)
 {
 	t_string_vector	*vec;
 

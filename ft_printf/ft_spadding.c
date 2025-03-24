@@ -16,8 +16,11 @@ void	ppad(int len, char byte, int *written)
 	while (len > 0)
 	{
 		ft_putchar(byte, written);
-		if (*written == -1)
-			return ;
+		if (written)
+		{
+			if (*written == -1)
+				return ;
+		}
 		len--;
 	}
 }

@@ -13,12 +13,12 @@
 
 void	cells_expand(t_cells *cells)
 {
-	if(cells->size >= cells->cap)
+	if (cells->size >= cells->cap)
 	{
 		cells->cap *= VEC_GROWTH_FAC;
 		cells->items = ft_realloc(cells->items,
-					cells->cap * sizeof(*(cells->items)),
-					cells->size * sizeof(*(cells->items)));
+				cells->cap * sizeof(*(cells->items)),
+				cells->size * sizeof(*(cells->items)));
 	}
 }
 

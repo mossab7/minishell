@@ -55,4 +55,5 @@ int			zen_elog(const char *fmt, ...);
 t_string	*zen_prompt(t_env *env);
 void		tokens_field_split(t_token_array *tokens, size_t index);
 void		wildcard_expand(t_token_array **tokens, size_t *cursor);
+void		ft_quote_error(t_parser *parser);
 #endif // ZEN_H

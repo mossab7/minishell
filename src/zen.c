@@ -36,7 +36,7 @@ int	main(int ac, char **av, const char *envp[])
 		parser_lex(&parser);
 		if (parser.lexer_status == ERROR_QUOTE_UNCLOSED)
 		{
-			// TODO: Visualize a proper error message for the quoute that was not closed
+			ft_quote_error(&parser);
 		}
 		if (parser.lexer_status == OK)
 			parser_procced_to_exec(&parser);

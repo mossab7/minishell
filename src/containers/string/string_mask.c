@@ -21,7 +21,7 @@ void	mask_expand_anyhow(t_mask *mask)
 
 void	mask_expand(t_mask *mask)
 {
-	if(mask->size >= mask->cap)
+	if (mask->size >= mask->cap)
 		mask_expand_anyhow(mask);
 }
 
@@ -50,41 +50,5 @@ void	mask_destroy(t_mask *mask)
 		if (mask->items)
 			ft_free(mask->items);
 		ft_free(mask);
-	}
-}
-
-void	mask_fill(t_mask *mask, u8 item, size_t size)
-{
-	mask->size = 0;
-	while (mask->size < size)
-		mask_push_back(mask, item);
-}
-
-void	mask_copy(t_mask *dst, t_mask *src, size_t start)
-{
-	dst->size = start;
-	while (dst->size < src->size)
-		mask_push_back(dst, src->items[dst->size]);
-}
-
-void	mask_print(t_mask *mask)
-{
-	ft_printf("Mask size: %u\n", mask->size);
-	for (size_t i = 0; i < mask->size; i++)
-		ft_printf("%u", mask->items[i]);
-}
-
-void	mask_copy_ignore_spaces(t_mask *dst, t_string *src, size_t start)
-{
-	size_t	i;
-
-	dst->size = start;
-	i = start;
-	while (i < src->mask->size)
-	{
-		if (!ft_isspace(src->cstring[i]))
-			mask_push_back(dst, src->mask->items[i++]);
-		else
-			i++;
 	}
 }

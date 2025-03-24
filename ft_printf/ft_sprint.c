@@ -46,8 +46,10 @@ void	ft_putchar(char c, int *count)
 {
 	if ((write(ft_io(FD_GET), &c, 1)) <= 0)
 	{
-		*count = -1;
+		if (count)
+			*count = -1;
 		return ;
 	}
-	*count += 1;
+	if (count)
+		*count += 1;
 }

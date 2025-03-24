@@ -20,18 +20,18 @@ void	str_expand_anyhow(t_string *vec)
 
 void	str_expand(t_string *vec)
 {
-	if(vec->size + 1 >= vec->cap)
+	if (vec->size + 1 >= vec->cap)
 		str_expand_anyhow(vec);
 }
 
-void str_push_back(t_string *vec, uintptr_t item)
+void	str_push_back(t_string *vec, uintptr_t item)
 {
 	str_expand(vec);
 	vec->cstring[vec->size++] = item;
 	vec->cstring[vec->size] = 0;
 }
 
-t_string	*str_construct()
+t_string	*str_construct(void)
 {
 	t_string	*vec;
 
@@ -56,15 +56,4 @@ void	str_destruct(t_string *vec)
 		vec->mask = NULL;
 		ft_free(vec);
 	}
-}
-
-void	str_print(t_string *str)
-{
-	ft_printf("Mask size: %u\n", str->mask->size);
-	ft_printf("str  size: %u\n", str->size);
-	ft_printf("[%u]# %s\n", str->size, str->cstring);
-	ft_printf("     ");
-	for (size_t i = 0; i < str->mask->size; i++)
-		ft_printf("%u", str->mask->items[i]);
-	ft_printf("\n");
 }
