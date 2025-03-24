@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:38:43 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/23 18:03:17 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/24 18:07:10 by mbouhia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -35,9 +35,7 @@ int	main(int ac, char **av, const char *envp[])
 		init_context(parser.input, parser.env);
 		parser_lex(&parser);
 		if (parser.lexer_status == ERROR_QUOTE_UNCLOSED)
-		{
 			ft_quote_error(&parser);
-		}
 		if (parser.lexer_status == OK)
 			parser_procced_to_exec(&parser);
 		if (!isatty(STDIN_FILENO))
