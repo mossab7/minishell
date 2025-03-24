@@ -33,15 +33,12 @@ t_token_array	*tok_array_construct(void)
 	vec->items = alloc(VEC_INIT_CAP * sizeof(t_token));
 	vec->cap = VEC_INIT_CAP;
 	vec->size = 0;
-	vec->here_doc_active = false;
-	vec->syntax_error = false;
 	for (size_t i = vec->size; i < vec->cap; ++i)
 	{
 		vec->items[i].lexeme = str_construct();
 		vec->items[i].type = TOK_NONE;
 	}
 	vec->current = (vec->items + vec->size);
-	vec->syntax_error = false;
 	return (vec);
 }
 

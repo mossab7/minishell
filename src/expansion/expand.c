@@ -14,13 +14,15 @@
 void	expand(t_env *env, t_token_array **tokens_array)
 {
 	size_t			iter;
-	t_token_array	*tokens = *tokens_array;
+	t_token_array	*tokens;
+
+	tokens = *tokens_array;
 	iter = 0;
 	while (iter < tokens->size)
 	{
 		if (tokens->items[iter].type == TOK_WORD)
 			string_expand(env, tokens, &iter);
-		else if(tokens->items[iter].type == TOK_WILD_CARD)
+		else if (tokens->items[iter].type == TOK_WILD_CARD)
 			wildcard_expand(tokens_array, &iter);
 		iter++;
 	}

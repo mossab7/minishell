@@ -11,18 +11,18 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-int main(int ac, char **av, const char *envp[])
+int	main(int ac, char **av, const char *envp[])
 {
 	t_parser	parser;
 	t_error		err;
-    (void)ac;
-    (void)av;
 
-    setbuf(stdout, NULL);
-    setup_signal_handlers();
+	(void)ac;
+	(void)av;
+	setbuf(stdout, NULL);
+	setup_signal_handlers();
 	ft_memset(&parser, 0, sizeof(parser));
-    parser.env = env_parse(envp);
-    while (1)
+	parser.env = env_parse(envp);
+	while (1)
 	{
 		err = parser_prepare_input(&parser);
 		if (err == FAILURE_)
@@ -40,12 +40,12 @@ int main(int ac, char **av, const char *envp[])
 		}
 		if (parser.lexer_status == OK)
 			parser_procced_to_exec(&parser);
-        if (!isatty(STDIN_FILENO))
-            break;
+		if (!isatty(STDIN_FILENO))
+			break ;
 		parser_destroy(&parser);
-    }
-    cleanup_memory_tracker(get_memory_tracker());
-    return 0;
+	}
+	cleanup_memory_tracker(get_memory_tracker());
+	return (0);
 }
 
 // int main(int ac, char **av, const char *envp[])

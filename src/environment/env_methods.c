@@ -43,7 +43,7 @@ t_env	*env_parse(const char *envp[])
 	char	pwd[PATH_MAX];
 	u8		pwd_set;
 	int		shell_level_index;
-	char **entry;
+	char	**entry;
 	t_env	*env;
 
 	iter = 0;
@@ -84,13 +84,14 @@ void	env_join(t_env *env)
 	char	*entry;
 	t_cell	cell;
 	size_t	iter;
+	size_t	i;
 
 	if (!env || !(env->cells) || !env->cells->size)
 		return ;
 	if (env->envp)
 	{
-		size_t i = 0;
-		while(env->envp[i])
+		i = 0;
+		while (env->envp[i])
 		{
 			ft_free(env->envp[i]);
 			i++;
@@ -98,7 +99,7 @@ void	env_join(t_env *env)
 		ft_free(env->envp);
 	}
 	iter = 0;
-	env->envp = alloc((env->cells->size + 1 ) * sizeof(*env->envp));
+	env->envp = alloc((env->cells->size + 1) * sizeof(*env->envp));
 	while (iter < env->cells->size)
 	{
 		cell = env->cells->items[iter];
@@ -122,7 +123,8 @@ void	env_del(t_env *env, char *key)
 	index = env_search(env, key);
 	if (index < env->cells->size)
 	{
-		ft_memmove(env->cells->items + index, env->cells->items + index + 1, env->cells->size - index);
+		ft_memmove(env->cells->items + index, env->cells->items + index + 1,
+			env->cells->size - index);
 		env->cells->size--;
 	}
 }
@@ -135,7 +137,7 @@ void	env_set(t_env *env, char *key, char *new_value)
 	env_join(env);
 }
 
-char *env_get(t_env *env, char *key)
+char	*env_get(t_env *env, char *key)
 {
 	size_t	index;
 

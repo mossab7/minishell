@@ -16,7 +16,7 @@ int	is_not_null(int c)
 	return (c != 0);
 }
 
-static	void	consume_if(t_lexer *lex, int (*pred)(int))
+static void	consume_if(t_lexer *lex, int (*pred)(int))
 {
 	str_push_back(lex->tokens->current->lexeme, lex->source[lex->cursor++]);
 	while (pred(lex->source[lex->cursor]))
@@ -24,10 +24,10 @@ static	void	consume_if(t_lexer *lex, int (*pred)(int))
 	token_next(lex->tokens);
 }
 
-t_token_array *simple_export_tokenizer(char *segment)
+t_token_array	*simple_export_tokenizer(char *segment)
 {
-	t_lexer	*lex;
-	t_token_array *token_array;
+	t_lexer			*lex;
+	t_token_array	*token_array;
 
 	lex = lexer_init(segment);
 	token_array = lex->tokens;
@@ -43,14 +43,19 @@ t_token_array *simple_export_tokenizer(char *segment)
 		if (ft_strncmp(lex->source + lex->cursor, "=", 1) == 0)
 		{
 			token_array->current->type = TOK_EQ;
-			str_push_back(token_array->current->lexeme, lex->source[lex->cursor++]);
+			str_push_back(token_array->current->lexeme,
+				lex->source[lex->cursor++]);
 		}
 		else if (ft_strncmp(lex->source + lex->cursor, "+=", 2) == 0)
 		{
 			token_array->current->type = TOK_PEQ;
-			str_push_back(token_array->current->lexeme, lex->source[lex->cursor++]); // ADD +
-			str_push_back(token_array->current->lexeme, lex->source[lex->cursor++]); // ADD =
-		} else {
+			str_push_back(token_array->current->lexeme,
+				lex->source[lex->cursor++]); // ADD +
+			str_push_back(token_array->current->lexeme,
+					lex->source[lex->cursor++]); // ADD =
+		}
+		else
+		{
 			lexer_destroy(lex);
 			return (NULL);
 		}

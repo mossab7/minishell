@@ -23,7 +23,8 @@ static void	process_export_args(t_env *env, t_token_array *toks)
 	if (toks->size == 1)
 	{
 		if (!cells_key_exists(env->export_cells, key->lexeme->cstring))
-			cells_push_back(env->export_cells, (key->lexeme->cstring), EMPTY_VALUE);
+			cells_push_back(env->export_cells, (key->lexeme->cstring),
+				EMPTY_VALUE);
 	}
 	assign_op = (toks->items + 1);
 	value = (toks->items + 2);
@@ -34,15 +35,17 @@ static void	process_export_args(t_env *env, t_token_array *toks)
 		index = cells_search(env->export_cells, key->lexeme->cstring);
 		if (index < env->cells->size)
 		{
-			new_value = vstr_construct(2, env->export_cells->items[index].value, value->lexeme->cstring);
+			new_value = vstr_construct(2, env->export_cells->items[index].value,
+					value->lexeme->cstring);
 			env_set(env, key->lexeme->cstring, new_value->cstring);
 			str_destruct(new_value);
-		} else
+		}
+		else
 			env_set(env, key->lexeme->cstring, value->lexeme->cstring);
 	}
 }
 
-static void		print_export(t_env *env)
+static void	print_export(t_env *env)
 {
 	size_t	i;
 
@@ -58,9 +61,9 @@ static void		print_export(t_env *env)
 	}
 }
 
-static void set_export(t_env *env, char *new, int *code)
+static void	set_export(t_env *env, char *new, int *code)
 {
-	t_token_array *toks;
+	t_token_array	*toks;
 
 	if (new)
 	{
@@ -78,12 +81,12 @@ static void set_export(t_env *env, char *new, int *code)
 	}
 }
 
-int built_in_export(t_env *env, char **args)
+int	built_in_export(t_env *env, char **args)
 {
-	int	code;
-	size_t i;
+	int		code;
+	size_t	i;
 
-	if(!args)
+	if (!args)
 		return (1);
 	i = 1;
 	code = EXIT_SUCCESS;

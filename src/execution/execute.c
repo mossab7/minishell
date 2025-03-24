@@ -98,46 +98,43 @@ int	setup_redirections(t_command *cmd)
 	int			i;
 
 	i = 0;
-	while(i < cmd->redirect_count)
+	while (i < cmd->redirect_count)
 	{
-		redir = cmd->redirects[i];
+		redir = cmd->redirects[i++];
 		if (redir->type != REDIR_HEREDOC)
 		{
 			if (is_ambiguous_redirect(redir->filename))
-			{
-				zen_elog("ambiguous redirect\n");
-				return (-1);
-			}
+				return ((zen_elog("ambiguous redirect\n")), -1);
 		}
 		if (redir->type == REDIR_INPUT)
-		{
 			fd = inptu_redirection(redir);
-		}
 		else if (redir->type == REDIR_OUTPUT)
-		{
 			fd = output_redirection(redir);
-		}
 		else if (redir->type == REDIR_APPEND)
-		{
 			fd = append_redirection(redir);
-		}
 		else if (redir->type == REDIR_HEREDOC)
-		{
 			fd = execute_here_doc(redir);
-		}
 		if (fd == -1)
 			return (-1);
-		i++;
 	}
 	return (0);
 }
 
+void	reset_redirections(int *original_stdin, int *original_stdout)
+{
+	dup2(*original_stdin, STDIN_FILENO);
+	dup2(*original_stdout, STDOUT_FILENO);
+	close(*original_stdin);
+	close(*original_stdout);
+	*original_stdin = 0;
+	*original_stdout = 0;
+}
 
 int	setup_builtin_redirections(t_command *cmd, t_type type)
 {
-	static int					original_stdin;
-	static int					original_stdout;
-	int							redirection_result;
+	static int	original_stdin;
+	static int	original_stdout;
+	int			redirection_result;
 
 	if (type == setup)
 	{
@@ -145,34 +142,21 @@ int	setup_builtin_redirections(t_command *cmd, t_type type)
 		original_stdout = dup(STDOUT_FILENO);
 		if (original_stdin == -1 || original_stdout == -1)
 		{
-			
 			original_stdin = 0;
 			original_stdout = 0;
-			return ((perror("dup")),-1);
+			return ((perror("dup")), -1);
 		}
 		redirection_result = setup_redirections(cmd);
 		if (redirection_result == -1)
-		{
-			dup2(original_stdin, STDIN_FILENO);
-			dup2(original_stdout, STDOUT_FILENO);
-			original_stdin = 0;
-			original_stdout = 0;
-			return ((close(original_stdin)),(close(original_stdout)),-1);
-		}
+			return (reset_redirections(&original_stdin, &original_stdout), -1);
 	}
 	else
-	{
-		dup2(original_stdin, STDIN_FILENO);
-		dup2(original_stdout, STDOUT_FILENO);
-		close(original_stdin);
-		close(original_stdout);
-		original_stdin = 0;
-		original_stdout = 0;
-	}
+		reset_redirections(&original_stdin, &original_stdout);
 	return (0);
 }
 
-void	init_builtin_commands(built_in_command *functions, char **function_names)
+void	init_builtin_commands(built_in_command *functions,
+		char **function_names)
 {
 	functions[0] = built_in_cd;
 	functions[1] = built_in_echo;
@@ -182,7 +166,6 @@ void	init_builtin_commands(built_in_command *functions, char **function_names)
 	functions[5] = built_in_set;
 	functions[6] = built_in_unset;
 	functions[7] = NULL;
-
 	function_names[0] = "cd";
 	function_names[1] = "echo";
 	function_names[2] = "env";
@@ -193,7 +176,6 @@ void	init_builtin_commands(built_in_command *functions, char **function_names)
 	function_names[7] = NULL;
 }
 
-
 int	execute_built_in_commands(t_command *cmd, char *command, t_env *env,
 		char **args)
 {
@@ -201,7 +183,7 @@ int	execute_built_in_commands(t_command *cmd, char *command, t_env *env,
 	char				*function_names[BUILT_IN_COMMANDS_COUNT];
 	int					i;
 	int					command_result;
-	
+
 	init_builtin_commands(functions, function_names);
 	i = 0;
 	while (function_names[i])
@@ -219,14 +201,47 @@ int	execute_built_in_commands(t_command *cmd, char *command, t_env *env,
 	return (command_result);
 }
 
+void	launch_command(t_command *cmd, t_env *env)
+{
+	t_string	*cmd_path;
+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
+	if (setup_redirections(cmd) == -1)
+		exit(EXIT_FAILURE);
+	cmd_path = search_path(env->path, cmd->args[0]);
+	if (cmd_path)
+	{
+		env_join(env);
+		execve(cmd_path->cstring, cmd->args, env->envp);
+		str_destruct(cmd_path);
+	}
+	ft_printf("minishell: %s: command not found\n", cmd->args[0]);
+	exit(127);
+}
+
+int	get_command_status(t_env *env, int status)
+{
+	if (WIFSIGNALED(status))
+	{
+		env->last_command_status = 128 + WTERMSIG(status);
+		if (WTERMSIG(status) == SIGQUIT)
+			ft_printf("Quit (core dumped)\n");
+		else if (WTERMSIG(status) == SIGINT)
+			set_context_flag(FLAG_SIGINT_RECEIVED);
+	}
+	else
+	{
+		env->last_command_status = WEXITSTATUS(status);
+	}
+	return (env->last_command_status);
+}
+
 int	execute_command(t_command *cmd, t_env *env)
 {
-	int			status;
-	pid_t		current_pid;
-	t_string	*cmd_path;
-	t_context	*context;
+	int		status;
+	pid_t	current_pid;
 
-	context = *get_context();
 	status = 0;
 	if (cmd->argc == 0)
 		return (0);
@@ -241,41 +256,15 @@ int	execute_command(t_command *cmd, t_env *env)
 		return (-1);
 	}
 	if (current_pid == 0)
-	{
-		signal(SIGINT, SIG_DFL);
-		signal(SIGQUIT, SIG_DFL);
-		if (setup_redirections(cmd) == -1)
-			exit(EXIT_FAILURE);
-		cmd_path = search_path(env->path, cmd->args[0]);
-		if (cmd_path)
-		{
-			env_join(env);
-			execve(cmd_path->cstring, cmd->args, env->envp);
-			str_destruct(cmd_path);
-		}
-		ft_printf("minishell: %s: command not found\n", cmd->args[0]);
-		exit(127);
-	}
+		launch_command(cmd, env);
 	waitpid(current_pid, &status, 0);
-	if (WIFSIGNALED(status))
-	{
-		env->last_command_status = 128 + WTERMSIG(status);
-		if (WTERMSIG(status) == SIGQUIT)
-			ft_printf("Quit (core dumped)\n");
-		else if (WTERMSIG(status) == SIGINT)
-			context->siginit_received = true;
-	}
-	else
-	{
-		env->last_command_status = WEXITSTATUS(status);
-	}
-	return (env->last_command_status);
+	return (get_command_status(env, status));
 }
 
-int handle_pipe_error(int *pipefd, char *msg)
+int	handle_pipe_error(int *pipefd, char *msg)
 {
 	perror(msg);
-	if(pipefd)
+	if (pipefd)
 	{
 		close(pipefd[0]);
 		close(pipefd[1]);
@@ -283,12 +272,28 @@ int handle_pipe_error(int *pipefd, char *msg)
 	return (-1);
 }
 
+void	launch_left_pipe(t_ast *node, t_env *env, int pipefd[2])
+{
+	close(pipefd[0]);
+	dup2(pipefd[1], STDOUT_FILENO);
+	close(pipefd[1]);
+	exit(execute_ast(node->left, env));
+}
+
+void	launch_right_pipe(t_ast *node, t_env *env, int pipefd[2])
+{
+	close(pipefd[1]);
+	dup2(pipefd[0], STDIN_FILENO);
+	close(pipefd[0]);
+	exit(execute_ast(node->right, env));
+}
+
 int	execute_pipe(t_ast *node, t_env *env)
 {
-	int	pipefd[2];
-	int	pipe_status;
-	pid_t pid1;
-	pid_t pid2;
+	int		pipefd[2];
+	int		pipe_status;
+	pid_t	pid1;
+	pid_t	pid2;
 
 	if (pipe(pipefd) == -1)
 		return (handle_pipe_error(NULL, "pipe"));
@@ -296,22 +301,12 @@ int	execute_pipe(t_ast *node, t_env *env)
 	if (pid1 == -1)
 		return (handle_pipe_error(pipefd, "fork"));
 	if (pid1 == 0)
-	{
-		close(pipefd[0]);
-		dup2(pipefd[1], STDOUT_FILENO);
-		close(pipefd[1]);
-		exit(execute_ast(node->left, env));
-	}
+		launch_left_pipe(node, env, pipefd);
 	pid2 = fork();
 	if (pid2 == -1)
 		return (handle_pipe_error(pipefd, "fork"));
 	if (pid2 == 0)
-	{
-		close(pipefd[1]);
-		dup2(pipefd[0], STDIN_FILENO);
-		close(pipefd[0]);
-		exit(execute_ast(node->right, env));
-	}
+		launch_right_pipe(node, env, pipefd);
 	close(pipefd[0]);
 	close(pipefd[1]);
 	waitpid(pid1, NULL, 0);
@@ -346,8 +341,23 @@ int	execute_subshell(t_ast *node, t_env *env)
 		exit(result);
 	}
 	waitpid(pid, &status, 0);
-	env->last_command_status = WEXITSTATUS(status);
-	return (env->last_command_status);
+	return (env->last_command_status = WEXITSTATUS(status));
+}
+
+int	execute_logical_or(t_ast *node, t_env *env, int left_status)
+{
+	left_status = execute_ast(node->left, env);
+	if (left_status != 0)
+		return (execute_ast(node->right, env));
+	return (left_status);
+}
+
+int	execute_logical_and(t_ast *node, t_env *env, int left_status)
+{
+	left_status = execute_ast(node->left, env);
+	if (left_status == 0)
+		return (execute_ast(node->right, env));
+	return (left_status);
 }
 
 int	execute_ast(t_ast *node, t_env *env)
@@ -356,6 +366,7 @@ int	execute_ast(t_ast *node, t_env *env)
 
 	if (!node)
 		return (0);
+	left_status = 0;
 	if (node->type == NODE_COMMAND)
 		return (execute_command(&node->value.command, env));
 	else if (node->type == NODE_PIPE)
@@ -363,19 +374,9 @@ int	execute_ast(t_ast *node, t_env *env)
 	else if (node->type == NODE_SUBSHELL)
 		return (execute_subshell(node, env));
 	else if (node->type == NODE_LOGICAL_AND)
-	{
-		left_status = execute_ast(node->left, env);
-		if (left_status == 0)
-			return (execute_ast(node->right, env));
-		return (left_status);
-	}
+		return (execute_logical_and(node, env, left_status));
 	else if (node->type == NODE_LOGICAL_OR)
-	{
-		left_status = execute_ast(node->left, env);
-		if (left_status != 0)
-			return (execute_ast(node->right, env));
-		return (left_status);
-	}
+		return (execute_logical_or(node, env, left_status));
 	else
 	{
 		ft_printf("Unknown node type\n");
