@@ -11,19 +11,19 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-t_context **get_context()
+t_context	**get_context(void)
 {
-    static t_context *context = NULL;
+	static t_context	*context = NULL;
 
-    if (context == NULL)
-    {
-        context = alloc(sizeof(t_context));
+	if (context == NULL)
+	{
+		context = alloc(sizeof(t_context));
 		context->flags = 0;
 		set_context_flag(FLAG_READLINE_ACTIVE);
 		context->input = NULL;
 		context->env = NULL;
-    }
-    return &context;
+	}
+	return (&context);
 }
 
 void	init_context(t_string *initial_input, t_env *env)
@@ -37,7 +37,7 @@ void	init_context(t_string *initial_input, t_env *env)
 		context->env = env;
 }
 
-t_string	*get_context_input()
+t_string	*get_context_input(void)
 {
 	t_context	*context;
 
@@ -45,7 +45,7 @@ t_string	*get_context_input()
 	return (context->input);
 }
 
-t_env	*get_context_env()
+t_env	*get_context_env(void)
 {
 	t_context	*context;
 

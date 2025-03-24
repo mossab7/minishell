@@ -33,7 +33,7 @@ t_error	parser_prepare_input(t_parser *parser)
 	parser->input = zen_prompt(parser->env);
 	if (!parser->input)
 		return (CATA_FAILURE_);
-	if(!*parser->input->cstring)
+	if (!*parser->input->cstring)
 		return (FAILURE_);
 	return (OK);
 }

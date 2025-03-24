@@ -13,7 +13,9 @@
 
 void	walk_back(t_string *path)
 {
-	char *loc = ft_strrchr(path->cstring, '/');
+	char	*loc;
+
+	loc = ft_strrchr(path->cstring, '/');
 	if (loc == path->cstring)
 	{
 		// root a3mi
@@ -25,13 +27,13 @@ void	walk_back(t_string *path)
 	*loc = 0;
 }
 
-void	do_nothing()
+void	do_nothing(void)
 {
 }
 
 int	handle_hiphen(t_env *env, char buff[PATH_MAX], char *dst)
 {
-	char		*value;
+	char	*value;
 
 	if (ft_strcmp(dst, "-") == 0)
 	{
@@ -57,9 +59,9 @@ int	handle_hiphen(t_env *env, char buff[PATH_MAX], char *dst)
 
 int	__resolve_path(t_string *path, t_env *env, char *dst)
 {
-	int			res;
-	char		*home;
-	char		buffer[PATH_MAX];
+	int		res;
+	char	*home;
+	char	buffer[PATH_MAX];
 
 	if (!dst || !*dst || ft_strcmp(dst, "~") == 0)
 	{
@@ -67,20 +69,14 @@ int	__resolve_path(t_string *path, t_env *env, char *dst)
 		{
 			home = env_get(env, "HOME");
 			if (!home)
-			{
-				zen_elog("cd: HOME not set\n");
-				return (FAILURE);
-			}
+				return ((zen_elog("cd: HOME not set\n")), FAILURE);
 			return (__resolve_path(path, env, home));
 		}
 		return (__resolve_path(path, env, "."));
 	}
 	res = handle_hiphen(env, buffer, dst);
 	if (res == HANDLED)
-	{
-		str_overwrite(buffer, path);
-		return (SUCCESS);
-	}
+		return ((str_overwrite(buffer, path)), SUCCESS);
 	if (res == FAILURE || res == INVALID_PARAMS_ERROR)
 		return (FAILURE);
 	str_overwrite(dst, path);
@@ -89,11 +85,11 @@ int	__resolve_path(t_string *path, t_env *env, char *dst)
 
 int	__resolve_path__(t_string *path, t_env *env, char *dst)
 {
-	char		**args;
-	int			res;
-	char		*home;
-	char		buffer[PATH_MAX];
-	size_t		i;
+	char	**args;
+	int		res;
+	char	*home;
+	char	buffer[PATH_MAX];
+	size_t	i;
 
 	if (!dst || !*dst)
 	{
@@ -117,19 +113,18 @@ int	__resolve_path__(t_string *path, t_env *env, char *dst)
 	}
 	if (res == FAILURE || res == INVALID_PARAMS_ERROR)
 		return (FAILURE);
-	if(!getcwd(buffer, PATH_MAX))
+	if (!getcwd(buffer, PATH_MAX))
 	{
 		zen_elog("cd: could not get current working dir\n");
 		return (FAILURE);
 	}
-	args = ft_split(dst,'/');
+	args = ft_split(dst, '/');
 	if (!*args)
 	{
 		str_overwrite("/", path);
 		return (SUCCESS);
 	}
 	i = 0;
-
 	if (!ft_strcmp(args[i], "..") && *dst != '/')
 	{
 		str_join(path, 1, buffer);

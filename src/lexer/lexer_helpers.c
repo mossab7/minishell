@@ -13,12 +13,8 @@
 
 int	ft_is_operator(int c)
 {
-	return ((c == PIPE)
-		|| (c == AND)
-		|| (c == INPUT_REDIRECT)
-		|| (c == OUTPUT_REDIRECT)
-		|| (c == OPAREN)
-		|| (c == CPAREN));
+	return ((c == PIPE) || (c == AND) || (c == INPUT_REDIRECT)
+		|| (c == OUTPUT_REDIRECT) || (c == OPAREN) || (c == CPAREN));
 }
 
 int	ft_zen_isalnum(int c)
@@ -37,8 +33,6 @@ int	is_valid_word_character(int c, u8 state)
 {
 	if (!c)
 		return (0);
-	return (ft_zen_isalnum(c)
-		|| is_quote(c)
-		|| c == EXPANSION_MARK
+	return (ft_zen_isalnum(c) || is_quote(c) || c == EXPANSION_MARK
 		|| is_inside_quotes(state));
 }

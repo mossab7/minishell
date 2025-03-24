@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-t_env	*env_construct()
+t_env	*env_construct(void)
 {
 	t_env	*env;
 
@@ -23,23 +23,22 @@ t_env	*env_construct()
 	return (env);
 }
 
-t_env    *env_copy(t_env *env)
+t_env	*env_copy(t_env *env)
 {
-    t_env    *_env;
+	t_env	*_env;
 
-    _env = alloc(sizeof(*env));
-    _env->cells = cells_construct();
+	_env = alloc(sizeof(*env));
+	_env->cells = cells_construct();
 	_env->export_cells = cells_construct();
-    _env->path = strv_construct();
-    while (_env->cells->size < env->cells->size)
+	_env->path = strv_construct();
+	while (_env->cells->size < env->cells->size)
 	{
-		cells_push_back(_env->cells, 
-			env->cells->items[_env->cells->size].key,
+		cells_push_back(_env->cells, env->cells->items[_env->cells->size].key,
 			env->cells->items[_env->cells->size].value);
 	}
-    for (; _env->path->size < env->path->size;)
-        strv_push_back(_env->path, env->path->cstrings[_env->path->size]);
-    return (_env);
+	for (; _env->path->size < env->path->size;)
+		strv_push_back(_env->path, env->path->cstrings[_env->path->size]);
+	return (_env);
 }
 
 void	env_destroy(t_env *env)

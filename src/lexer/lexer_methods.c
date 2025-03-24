@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-t_lexer *lexer_init(const char *source)
+t_lexer	*lexer_init(const char *source)
 {
 	t_lexer	*lex;
 
@@ -19,28 +19,28 @@ t_lexer *lexer_init(const char *source)
 	lex->source = source;
 	lex->cursor = 0;
 	lex->tokens = tok_array_construct();
-
 	return (lex);
 }
 
-t_error lexer_tokenize(t_lexer *lex)
+t_error	lexer_tokenize(t_lexer *lex)
 {
-    t_error err;
+	t_error	err;
 
-    err = OK;
-    while (lex->source[lex->cursor] != 0)
-    {
-        while (ft_isspace(lex->source[lex->cursor]))
-            lex->cursor++;
-        if (ft_zen_isalnum(lex->source[lex->cursor]) || is_quote(lex->source[lex->cursor]))
-            err = consume_word(lex);
-        else if (ft_ispunct(lex->source[lex->cursor]))
-            err = consume_symbol(lex);
-        if (err != OK)
+	err = OK;
+	while (lex->source[lex->cursor] != 0)
+	{
+		while (ft_isspace(lex->source[lex->cursor]))
+			lex->cursor++;
+		if (ft_zen_isalnum(lex->source[lex->cursor])
+			|| is_quote(lex->source[lex->cursor]))
+			err = consume_word(lex);
+		else if (ft_ispunct(lex->source[lex->cursor]))
+			err = consume_symbol(lex);
+		if (err != OK)
 			break ;
-        while (ft_isspace(lex->source[lex->cursor]))
-            lex->cursor++;
-    }
+		while (ft_isspace(lex->source[lex->cursor]))
+			lex->cursor++;
+	}
 	lex->tokens->current->type = TOK_EOF;
 	return (err);
 }

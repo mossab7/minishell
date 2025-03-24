@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-static void	lex_single(t_token *tok, u8 *state, char quote, t_stack *stacks[QUOTING_STACKS_SIZE])
+static void	lex_single(t_token *tok, u8 *state, char quote,
+		t_stack *stacks[QUOTING_STACKS_SIZE])
 {
 	if (*state & DOUBLE_QUOTED)
 		token_push_back(tok, quote, *state);
@@ -23,13 +24,15 @@ static void	lex_single(t_token *tok, u8 *state, char quote, t_stack *stacks[QUOT
 	}
 	else if (!(*state & DOUBLE_QUOTED))
 	{
-		if (!(*state & DOUBLE_QUOTED) && (stacks[DOUBLE_QUOTES_INDEX]->size == 0))
+		if (!(*state & DOUBLE_QUOTED)
+			&& (stacks[DOUBLE_QUOTES_INDEX]->size == 0))
 			*state |= SINGLE_QUOTED;
 		stack_push_back(stacks[SINGLE_QUOTES_INDEX], quote);
 	}
 }
 
-static void	lex_double(t_token *tok, u8 *state, char quote, t_stack *stacks[QUOTING_STACKS_SIZE])
+static void	lex_double(t_token *tok, u8 *state, char quote,
+		t_stack *stacks[QUOTING_STACKS_SIZE])
 {
 	if (*state & SINGLE_QUOTED)
 		token_push_back(tok, quote, *state);
@@ -41,13 +44,15 @@ static void	lex_double(t_token *tok, u8 *state, char quote, t_stack *stacks[QUOT
 	}
 	else if (!(*state & SINGLE_QUOTED))
 	{
-		if (!(*state & SINGLE_QUOTED) && (stacks[SINGLE_QUOTES_INDEX]->size == 0))
+		if (!(*state & SINGLE_QUOTED)
+			&& (stacks[SINGLE_QUOTES_INDEX]->size == 0))
 			*state |= DOUBLE_QUOTED;
 		stack_push_back(stacks[DOUBLE_QUOTES_INDEX], quote);
 	}
 }
 
-void	lex_quote(t_token *tok, u8 *state, char quote, t_stack *stacks[QUOTING_STACKS_SIZE])
+void	lex_quote(t_token *tok, u8 *state, char quote,
+		t_stack *stacks[QUOTING_STACKS_SIZE])
 {
 	if (quote == QUOTE_SINGLE)
 		lex_single(tok, state, quote, stacks);
