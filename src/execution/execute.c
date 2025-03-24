@@ -100,34 +100,22 @@ int	setup_redirections(t_command *cmd)
 	i = 0;
 	while(i < cmd->redirect_count)
 	{
-		redir = cmd->redirects[i];
+		redir = cmd->redirects[i++];
 		if (redir->type != REDIR_HEREDOC)
 		{
 			if (is_ambiguous_redirect(redir->filename))
-			{
-				zen_elog("ambiguous redirect\n");
-				return (-1);
-			}
+				return ((zen_elog("ambiguous redirect\n")),-1);
 		}
 		if (redir->type == REDIR_INPUT)
-		{
 			fd = inptu_redirection(redir);
-		}
 		else if (redir->type == REDIR_OUTPUT)
-		{
 			fd = output_redirection(redir);
-		}
 		else if (redir->type == REDIR_APPEND)
-		{
 			fd = append_redirection(redir);
-		}
 		else if (redir->type == REDIR_HEREDOC)
-		{
 			fd = execute_here_doc(redir);
-		}
 		if (fd == -1)
 			return (-1);
-		i++;
 	}
 	return (0);
 }
