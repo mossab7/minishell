@@ -82,7 +82,7 @@ int built_in_echo(t_env *env, char **args)
 		r = ft_printf("%s", args[i]);
 		if(r < 0)
 			return (env->last_command_status = 1);
-		if (args[i])
+		if (args[i] && args[i + 1])
 		{
 			r = ft_printf(" ");
 			if(r < 0)
