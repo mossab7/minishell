@@ -133,6 +133,16 @@ int	setup_redirections(t_command *cmd)
 }
 
 
+void reset_redirections(int *original_stdin, int *original_stdout)
+{
+	dup2(*original_stdin, STDIN_FILENO);
+	dup2(*original_stdout, STDOUT_FILENO);
+	close(*original_stdin);
+	close(*original_stdout);
+	*original_stdin = 0;
+	*original_stdout = 0;
+}
+
 int	setup_builtin_redirections(t_command *cmd, t_type type)
 {
 	static int					original_stdin;
@@ -152,23 +162,10 @@ int	setup_builtin_redirections(t_command *cmd, t_type type)
 		}
 		redirection_result = setup_redirections(cmd);
 		if (redirection_result == -1)
-		{
-			dup2(original_stdin, STDIN_FILENO);
-			dup2(original_stdout, STDOUT_FILENO);
-			original_stdin = 0;
-			original_stdout = 0;
-			return ((close(original_stdin)),(close(original_stdout)),-1);
-		}
+			return (reset_redirections(&original_stdin, &original_stdout),-1);
 	}
 	else
-	{
-		dup2(original_stdin, STDIN_FILENO);
-		dup2(original_stdout, STDOUT_FILENO);
-		close(original_stdin);
-		close(original_stdout);
-		original_stdin = 0;
-		original_stdout = 0;
-	}
+		reset_redirections(&original_stdin, &original_stdout);
 	return (0);
 }
 
