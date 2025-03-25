@@ -27,8 +27,6 @@ void	tokens_expand(t_env *env, t_token_array *tokens, size_t *cursor)
 
 	tk = &(tokens->items[*cursor]);
 	key = extract_key(tk->lexeme);
-	if (key)
-		printf("KEY: %s\n", key->cstring);
 	while (key && *cursor <= tokens->size && tokens->size)
 	{
 		if (ft_strcmp(((key->cstring) + 1), "?") == 0)
