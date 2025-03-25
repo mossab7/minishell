@@ -18,7 +18,6 @@ void	walk_back(t_string *path)
 	loc = ft_strrchr(path->cstring, '/');
 	if (loc == path->cstring)
 	{
-		// root a3mi
 		path->cstring[1] = 0;
 		path->size = 1;
 		return ;

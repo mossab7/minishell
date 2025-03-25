@@ -64,8 +64,8 @@ typedef enum e_cconversion
 typedef struct s_flags
 {
 	int				perc;
-	int				neg_width; // MINUS_BIT
-	int				pos_width; // PLUS_BIT
+	int neg_width; // MINUS_BIT
+	int pos_width; // PLUS_BIT
 	uint8_t			detected;
 	t_cconversion	conv;
 }					t_flags;
