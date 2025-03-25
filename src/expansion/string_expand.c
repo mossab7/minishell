@@ -53,7 +53,7 @@ static t_string	*handle_solo_dollar(t_string *string, t_string *key)
 
 t_string	*extract_key(t_string *string)
 {
-	t_u8			context;
+	t_u8		context;
 	t_string	*key;
 
 	if (!string->size)

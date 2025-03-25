@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-
 bool	should_skip_expansion(t_token_array *tokens, size_t cursor)
 {
 	return (cursor >= tokens->size);

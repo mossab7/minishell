@@ -1,12 +1,12 @@
 [*] container
 [*] context
 [*] environment
-[*] execution
 [*] expansion
-[...] lexer
+[*] lexer
 [*] logger
-[] parsing
-[] pathname
+[*] pathname
 [*] signals
 [*] zen.c
-[*] headers //excepte zeninit
+[*] headers
+[] execution
+[] parsing

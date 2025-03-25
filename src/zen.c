@@ -11,7 +11,8 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-static void	initialize_shell(t_parser *parser, const char *envp[], const char *program)
+static void	initialize_shell(t_parser *parser,
+					const char *envp[], const char *program)
 {
 	setbuf(stdout, NULL);
 	setup_signal_handlers();

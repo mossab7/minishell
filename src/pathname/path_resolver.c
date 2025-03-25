@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 19:41:19 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/02/07 22:01:37 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 19:51:32 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -18,7 +18,6 @@ void	walk_back(t_string *path)
 	loc = ft_strrchr(path->cstring, '/');
 	if (loc == path->cstring)
 	{
-		// root a3mi
 		path->cstring[1] = 0;
 		path->size = 1;
 		return ;
