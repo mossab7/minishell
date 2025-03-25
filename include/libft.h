@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/23 20:11:07 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 17:01:35 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 18:21:43 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef LIBFT_H
@@ -15,7 +15,10 @@
 # include <readline/readline.h>
 # include <stdint.h>
 # include <stdio.h>
+# include <stdbool.h>
 # include <stdlib.h>
+# include <sys/types.h>
+# include <sys/stat.h>
 # include <t_string.h>
 # include <unistd.h>
 
@@ -148,4 +151,5 @@ char				*ft_strcpy_until(char *dst, const char *src,
 						char c);
 char				*ft_strchr(char *s, int c);
 int					is_not_null(int c);
+bool				is_dir(const char *filename);
 #endif // LIBFT_H

@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:44:28 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/18 16:44:57 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 17:11:41 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ static t_string	*read_heredoc_content(t_redirect *redir, int fd)
 			str_destruct(line);
 			break ;
 		}
-		_string_expand(get_context_env(), line);
+		string_expand(get_context_env(), line);
 		write(fd, line->cstring, line->size);
 		write(fd, "\n", 1);
 		str_join(input, 2, line->cstring, "\n");

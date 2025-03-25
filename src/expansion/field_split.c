@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:22:59 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/22 21:39:38 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 17:05:49 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -14,22 +14,29 @@
 void	put_fields_inplace(t_token_array *tokens, size_t index,
 		t_token_array *fields, t_mask *mask)
 {
+	size_t	i;
+	size_t	j;
+
 	ft_memmove(tokens->items + index + fields->size, tokens->items + index,
 		(tokens->size - index) * sizeof(*tokens->items));
 	ft_memcpy(tokens->items + index, fields->items, fields->size
 		* sizeof(*tokens->items));
-	for (size_t i = index; (i - index) < fields->size; ++i)
+	i = index;
+	while ((i - index) < fields->size)
 	{
 		tokens->items[i].lexeme = vstr_construct(1, fields->items[i
 				- index].lexeme->cstring);
 		tokens->items[i].lexeme->mask->size = 0;
-		for (size_t j = 0; j < tokens->items[i].lexeme->size
-			&& mask->cursor < mask->size; j++)
+		j = 0;
+		while (j < tokens->items[i].lexeme->size
+			&& mask->cursor < mask->size)
 		{
 			mask_push_back(tokens->items[i].lexeme->mask,
 				mask->items[mask->cursor]);
 			mask->cursor++;
+			j++;
 		}
+		i++;
 	}
 	tokens->size += fields->size;
 }

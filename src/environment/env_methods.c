@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:41:14 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 16:31:47 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 18:34:22 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -29,6 +29,8 @@ void	increment_shell_level(t_env *env, int index)
 		lvl = 0;
 	ft_free(env->cells->items[index].value);
 	env->cells->items[index].value = ft_itoa(lvl);
+	ft_free(env->export_cells->items[index].value);
+	env->export_cells->items[index].value = ft_itoa(lvl);
 }
 
 static void	process_env_entries(t_env *env, const char *envp[])
@@ -50,7 +52,6 @@ static void	process_env_entries(t_env *env, const char *envp[])
 		ft_free(entry);
 		iter++;
 	}
-	env_join(env);
 }
 
 t_env	*env_parse(const char *envp[], const char *program)
@@ -61,5 +62,6 @@ t_env	*env_parse(const char *envp[], const char *program)
 	env->program = program;
 	process_env_entries(env, envp);
 	env_set_defaults(env);
+	env_join(env);
 	return (env);
 }

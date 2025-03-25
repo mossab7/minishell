@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/24 19:43:41 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/03/25 18:06:46 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,12 +108,22 @@ typedef struct s_token_array
 	size_t			cap;
 }					t_token_array;
 
+void	copy_left_tokens(t_token_array *tokens, t_token_array *new_tokens_array,
+		size_t cursor);
+void	copy_entries(t_string_vector *entries, t_token_array *new_tokens_array,
+		size_t cursor);
+void	copy_right_tokens(t_token_array *tokens,
+		t_token_array *new_tokens_array, size_t cursor, size_t entries_size);
 t_token_array		*tokens_copy(t_token_array *other);
 t_token_array		*tok_array_construct(void);
+t_token_array		*create_new_token_array(size_t new_size, size_t new_cap);
 void				toks_destroy(t_token_array *vec);
 void				token_next(t_token_array *vec);
 void				tok_array_expand(t_token_array *vec);
 void				tok_array_expand_anyhow(t_token_array *vec);
 void				tok_array_print(t_token_array *array);
 void				token_push_back(t_token *tok, char c, u8 state);
+bool				should_skip_expansion(t_token_array *tokens, size_t cursor);
+void				handle_no_matches(t_token_array *tokens, size_t cursor,
+		t_string_vector *entries);
 #endif // !TOKEN_H

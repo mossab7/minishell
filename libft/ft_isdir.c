@@ -1,29 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   expand.c                                           :+:      :+:    :+:   */
+/*   ft_isdir.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/16 06:43:05 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 17:10:54 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/03/25 18:01:39 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/03/25 18:03:06 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include <zen.h>
+#include <libft.h>
 
-void	expand(t_env *env, t_token_array **tokens_array)
+bool	is_dir(const char *filename)
 {
-	size_t			iter;
-	t_token_array	*tokens;
+	struct stat	file_stat;
 
-	tokens = *tokens_array;
-	iter = 0;
-	while (iter < tokens->size)
+	if (stat(filename, &file_stat) == 0)
 	{
-		if (tokens->items[iter].type == TOK_WORD)
-			tokens_expand(env, tokens, &iter);
-		else if (tokens->items[iter].type == TOK_WILD_CARD)
-			wildcard_expand(tokens_array, &iter);
-		iter++;
+		if (S_ISDIR(file_stat.st_mode))
+		{
+			return (true);
+		}
 	}
+	return (false);
 }
