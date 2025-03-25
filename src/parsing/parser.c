@@ -6,14 +6,13 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/17 15:36:48 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 20:07:22 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 20:23:00 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
 
 void	parser_procced_to_exec(t_parser *parser)
 {
-	tok_array_print(parser->lexer->tokens);
 	expand(parser->env, &parser->lexer->tokens);
 	if (!parser->lexer->tokens->size)
 		return ;
