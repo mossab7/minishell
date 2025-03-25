@@ -1,9 +1,9 @@
 #include <libft.h>
 
-t_string *ft_readline(const char *prompt)
+t_string	*ft_readline(const char *prompt)
 {
 	t_string	*line;
-	char 		*tmp;
+	char		*tmp;
 
 	tmp = readline(prompt);
 	if (!tmp)

@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/24 19:43:41 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/03/25 16:16:07 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,5 @@ void	cells_push_back(t_cells *cells, char *key, char *value);
 void	cells_expand(t_cells *cells);
 void	cells_sort(t_cells *cells);
 void	cells_remove(t_cells *cells, char *key);
+void	insert_if_not_found(t_cells *cells, char *key, char *value);
 #endif // !CELLS_H

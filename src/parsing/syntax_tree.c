@@ -12,7 +12,7 @@
 
 #include <zen.h>
 
-t_ast		*parse_and_or(t_token_array *tokens, size_t *index);
+t_ast			*parse_and_or(t_token_array *tokens, size_t *index);
 
 void	*syntax_error(const char *message)
 {
@@ -27,16 +27,16 @@ void	*syntax_error(const char *message)
 	return (NULL);
 }
 
-t_ast	*create_command_node(char **args, int argc, t_redirect **redirects,
+t_ast	*create_command_node(t_arg arg, t_redirect **redirects,
 		int redirect_count)
 {
 	t_ast	*node;
 
-	if (!*args)
+	if (!*arg.args && !redirect_count)
 		return (NULL);
 	node = alloc(sizeof(t_ast));
 	node->type = NODE_COMMAND;
-	node->u_value.command = (t_command){.args = args, .argc = argc,
+	node->u_value.command = (t_command){.args = arg.args, .argc = arg.argc,
 		.redirects = redirects, .redirect_count = redirect_count};
 	return (node);
 }
@@ -72,85 +72,124 @@ char	*ft_mkstemp(void)
 	return (filename);
 }
 
-int	setup_here_doc(t_redirect *redir)
+static int	init_heredoc(char **filename, int *fd, int pipefd[2])
 {
-	t_string	*iinput;
-	char		*filename;
-	int			fd;
-	pid_t		pid;
-	int			status;
-	int			pipefd[2];
-	t_string	*line;
-	t_string	*input;
-	char		*heredoc_content;
-
-	set_context_flag(FLAG_HERE_DOC_ACTIVE);
-	filename = ft_mkstemp();
-	fd = open(filename, O_RDWR | O_CREAT | O_EXCL, 0600);
-	iinput = get_context_input();
+	*filename = ft_mkstemp();
+	*fd = open(*filename, O_RDWR | O_CREAT | O_EXCL, 0600);
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
 		return (-1);
 	}
-	if (fd == -1)
+	if (*fd == -1)
 	{
 		perror("heredoc");
 		return (-1);
 	}
-	pid = fork();
-	if (pid == -1)
-	{
-		close(fd);
-		unlink(filename);
-		perror("fork");
-		return (-1);
-	}
-	if (pid == 0)
-	{
-		setup_heredoc_signals();
-		input = str_construct();
-		close(pipefd[0]);
-		while ((line = ft_readline("> ")) != NULL)
-		{
-			if (strcmp(line->cstring, redir->delimiter) == 0)
-			{
-				str_destruct(line);
-				break ;
-			}
-			_string_expand(get_context_env(), line);
-			write(fd, line->cstring, line->size);
-			write(fd, "\n", 1);
-			str_join(input, 2, line->cstring, "\n");
-			str_destruct(line);
-		}
-		write(pipefd[1], input->cstring, input->size);
-		close(pipefd[1]);
-		close(fd);
-		exit(0);
-	}
-	close(fd);
-	close(pipefd[1]);
-	str_append("\n", iinput);
+	return (0);
+}
+
+static t_string	*read_heredoc_content(t_redirect *redir, int fd)
+{
+	t_string	*line;
+	t_string	*input;
+
+	input = str_construct();
 	while (true)
 	{
-		heredoc_content = get_next_line(pipefd[0]);
+		line = ft_readline("> ");
+		if (line == NULL)
+		{
+			zen_elog(DL, redir->delimiter);
+			break ;
+		}
+		if (strcmp(line->cstring, redir->delimiter) == 0)
+		{
+			str_destruct(line);
+			break ;
+		}
+		_string_expand(get_context_env(), line);
+		write(fd, line->cstring, line->size);
+		write(fd, "\n", 1);
+		str_join(input, 2, line->cstring, "\n");
+		str_destruct(line);
+	}
+	return (input);
+}
+
+static void	handle_heredoc_child(int fd, int pipefd[2], t_redirect *redir)
+{
+	t_string	*input;
+
+	setup_heredoc_signals();
+	close(pipefd[0]);
+	input = read_heredoc_content(redir, fd);
+	write(pipefd[1], input->cstring, input->size);
+	close(pipefd[1]);
+	close(fd);
+	str_destruct(input);
+	exit(0);
+}
+
+static void	read_from_pipe(int pipefd)
+{
+	char		*heredoc_content;
+	t_string	*input;
+
+	input = get_context_input();
+	str_append("\n", input);
+	while (true)
+	{
+		heredoc_content = get_next_line(pipefd);
 		if (!heredoc_content)
 			break ;
-		str_append(heredoc_content, iinput);
+		str_append(heredoc_content, input);
 		ft_free(heredoc_content);
 	}
-	close(pipefd[0]);
-	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status))
+}
+
+static int	cleanup_on_error(char *filename, int fd)
+{
+	if (fd >= 0)
+		close(fd);
+	if (filename)
 	{
 		unlink(filename);
 		ft_free(filename);
-		return (-1);
 	}
-	redir->filename = filename;
+	set_context_flag(FLAG_SYNTAX_ERROR);
+	return (-1);
+}
+
+int	setup_here_doc(t_redirect *redir)
+{
+	int		fd;
+	pid_t	pid;
+	int		status;
+	int		pipefd[2];
+
+	status = 0;
+	set_context_flag(FLAG_HERE_DOC_ACTIVE);
+	if (init_heredoc(&redir->filename, &fd, pipefd) == -1)
+		return (-1);
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		return (cleanup_on_error(redir->filename, fd));
+	}
+	if (pid == 0)
+		handle_heredoc_child(fd, pipefd, redir);
+	close(fd);
+	close(pipefd[1]);
+	read_from_pipe(pipefd[0]);
+	close(pipefd[0]);
+	waitpid(pid, &status, 0);
+	if (WIFSIGNALED(status))
+		return (cleanup_on_error(redir->filename, -1));
 	return (0);
 }
+
 t_redirect	*create_redirect(t_redirect_type type, char *target)
 {
 	t_redirect	*redir;
@@ -213,50 +252,68 @@ t_redirect	*parse_redirection(t_token_array *tokens, size_t *index)
 	return (create_redirect(type, ft_strdup(token.lexeme->cstring)));
 }
 
-t_ast	*parse_command(t_token_array *tokens, size_t *index)
+static void	init_command_resources(t_arg *arg, t_redirect ***redirects,
+		int *redirect_count, size_t size)
 {
-	char		**args;
-	t_redirect	**redirects;
-	int			argc;
-	int			redirect_count;
-	t_token		token;
+	arg->args = alloc((size + 1) * sizeof(char *));
+	*redirects = alloc(size * sizeof(t_redirect *));
+	arg->argc = 0;
+	*redirect_count = 0;
+}
+
+static void	cleanup_command_resources(t_arg *arg, t_redirect **redirects)
+{
+	while (arg->argc > 0)
+		ft_free(arg->args[--arg->argc]);
+	ft_free(arg->args);
+	ft_free(redirects);
+}
+
+static void	process_word_token(t_token token, t_arg *arg, size_t *index)
+{
+	arg->args[arg->argc] = ft_strdup(token.lexeme->cstring);
+	arg->argc++;
+	(*index)++;
+}
+
+static bool	process_redirection_token(t_token_array *tokens, size_t *index,
+		t_redirect **redirects, int *redirect_count)
+{
 	t_redirect	*redir;
 
-	argc = 0;
-	args = alloc((tokens->size + 1) * sizeof(char *));
-	redirects = alloc(tokens->size * sizeof(t_redirect *));
-	argc = 0, redirect_count = 0;
+	redir = parse_redirection(tokens, index);
+	if (!redir)
+		return (false);
+	redirects[*redirect_count] = redir;
+	(*redirect_count)++;
+	return (true);
+}
+
+t_ast	*parse_command(t_token_array *tokens, size_t *index)
+{
+	t_arg		arg;
+	t_redirect	**redirects;
+	int			redirect_count;
+	t_token		token;
+
+	init_command_resources(&arg, &redirects, &redirect_count, tokens->size);
 	while (true)
 	{
 		token = peek_token(tokens, *index);
 		if (token.type == TOK_WORD)
-		{
-			args[argc++] = ft_strdup(token.lexeme->cstring);
-			(*index)++;
-		}
+			process_word_token(token, &arg, index);
 		else if (token.type >= TOK_INPUT_REDIRECT && token.type <= TOK_HEREDOC)
 		{
-			redir = parse_redirection(tokens, index);
-			if (!redir)
-			{
-				while (argc > 0)
-					ft_free(args[--argc]);
-				ft_free(args);
-				ft_free(redirects);
-				return (NULL);
-			}
-			redirects[redirect_count++] = redir;
+			if (!process_redirection_token(tokens, index, redirects,
+					&redirect_count))
+				return ((cleanup_command_resources(&arg, redirects)), NULL);
 		}
 		else
 			break ;
 	}
-	if (argc == 0 && redirect_count == 0)
-	{
-		ft_free(args);
-		ft_free(redirects);
-		return (NULL);
-	}
-	return (create_command_node(args, argc, redirects, redirect_count));
+	if (arg.argc == 0 && redirect_count == 0)
+		return ((cleanup_command_resources(&arg, redirects)), NULL);
+	return (create_command_node(arg, redirects, redirect_count));
 }
 
 t_ast	*create_subshell_node(t_ast *child)
@@ -276,22 +333,28 @@ t_ast	*create_subshell_node(t_ast *child)
 	return (node);
 }
 
-t_ast	*parse_subshell_redirections(t_token_array *tokens, size_t *index,
-		t_ast *node)
+static t_ast	*init_subshell_node(t_ast *child, t_token_array *tokens)
 {
-	t_redirect	*redir;
-	t_token		token;
-	t_ast		*subshell_node;
+	t_ast	*subshell_node;
 
 	subshell_node = alloc(sizeof(t_ast));
 	subshell_node->type = NODE_SUBSHELL;
-	subshell_node->left = node;
+	subshell_node->left = child;
 	subshell_node->right = NULL;
 	subshell_node->u_value.command.args = NULL;
 	subshell_node->u_value.command.argc = 0;
 	subshell_node->u_value.command.redirects = alloc(tokens->size
 			* sizeof(t_redirect *));
 	subshell_node->u_value.command.redirect_count = 0;
+	return (subshell_node);
+}
+
+static bool	collect_subshell_redirections(t_ast *subshell_node,
+		t_token_array *tokens, size_t *index)
+{
+	t_redirect	*redir;
+	t_token		token;
+
 	while (true)
 	{
 		token = peek_token(tokens, *index);
@@ -299,15 +362,27 @@ t_ast	*parse_subshell_redirections(t_token_array *tokens, size_t *index,
 		{
 			redir = parse_redirection(tokens, index);
 			if (!redir)
-			{
-				ft_free(subshell_node->u_value.command.redirects);
-				ft_free(subshell_node);
-				return (NULL);
-			}
-			subshell_node->u_value.command.redirects[subshell_node->u_value.command.redirect_count++] = redir;
+				return (false);
+			subshell_node->u_value.command.redirects[subshell_node
+				->u_value.command.redirect_count++] = redir;
 		}
 		else
 			break ;
+	}
+	return (true);
+}
+
+t_ast	*parse_subshell_redirections(t_token_array *tokens, size_t *index,
+		t_ast *node)
+{
+	t_ast	*subshell_node;
+
+	subshell_node = init_subshell_node(node, tokens);
+	if (!collect_subshell_redirections(subshell_node, tokens, index))
+	{
+		ft_free(subshell_node->u_value.command.redirects);
+		ft_free(subshell_node);
+		return (NULL);
 	}
 	return (subshell_node);
 }
@@ -354,31 +429,43 @@ t_ast	*parse_pipe(t_token_array *tokens, size_t *index)
 	return (left);
 }
 
+static t_ast	*process_logical_operator(t_token_type token_type, t_ast *left,
+		t_token_array *tokens, size_t *index)
+{
+	t_node_type	node_type;
+	t_ast		*right;
+	const char	*error_msg;
+
+	if (left == NULL)
+	{
+		if (token_type == TOK_LOGICAL_AND)
+			error_msg = "near unexpected token `&&'";
+		else
+			error_msg = "near unexpected token `||'";
+		return (syntax_error(error_msg));
+	}
+	(*index)++;
+	if (token_type == TOK_LOGICAL_AND)
+		node_type = NODE_LOGICAL_AND;
+	else
+		node_type = NODE_LOGICAL_OR;
+	right = parse_pipe(tokens, index);
+	if (!right)
+		return (left);
+	return (create_binary_node(node_type, left, right));
+}
+
 t_ast	*parse_and_or(t_token_array *tokens, size_t *index)
 {
 	t_ast	*left;
 	t_token	token;
 
 	left = parse_pipe(tokens, index);
-	while (true)
+	while (left && true)
 	{
 		token = peek_token(tokens, *index);
-		if (token.type == TOK_LOGICAL_AND)
-		{
-			if (left == NULL)
-				return (syntax_error("near unexpected token `&&'"));
-			(*index)++;
-			left = create_binary_node(NODE_LOGICAL_AND, left, parse_pipe(tokens,
-						index));
-		}
-		else if (token.type == TOK_LOGICAL_OR)
-		{
-			if (left == NULL)
-				return (syntax_error("near unexpected token `||'"));
-			(*index)++;
-			left = create_binary_node(NODE_LOGICAL_OR, left, parse_pipe(tokens,
-						index));
-		}
+		if (token.type == TOK_LOGICAL_AND || token.type == TOK_LOGICAL_OR)
+			left = process_logical_operator(token.type, left, tokens, index);
 		else
 			break ;
 	}
@@ -406,18 +493,23 @@ t_ast	*build_ast(t_token_array *tokens)
 
 void	ast_destroy(t_ast *root)
 {
+	int	i;
+
 	if (root == NULL)
 		return ;
 	ast_destroy(root->left);
 	ast_destroy(root->right);
-	for (int i = 0; i < root->u_value.command.argc; i++)
-		ft_free(root->u_value.command.args[i]);
+	i = 0;
+	while (i < root->u_value.command.argc)
+		ft_free(root->u_value.command.args[i++]);
 	ft_free(root->u_value.command.args);
-	for (int i = 0; i < root->u_value.command.redirect_count; i++)
+	i = 0;
+	while (i < root->u_value.command.redirect_count)
 	{
 		ft_free(root->u_value.command.redirects[i]->delimiter);
 		ft_free(root->u_value.command.redirects[i]->filename);
 		ft_free(root->u_value.command.redirects[i]);
+		i++;
 	}
 	ft_free(root->u_value.command.redirects);
 	ft_free(root);

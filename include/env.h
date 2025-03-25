@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/24 19:43:41 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/03/25 16:18:29 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,15 @@
 
 typedef struct s_env
 {
-	t_cells			*cells;
-	t_cells			*export_cells;
-	char			**envp;
-	t_string_vector	*path;
-	int				last_command_status;
+	t_cells				*cells;
+	t_cells				*export_cells;
+	char				**envp;
+	t_string_vector		*path;
+	int					last_command_status;
+	const char			*program;
 }					t_env;
 
-t_env				*env_parse(const char *envp[]);
+t_env				*env_parse(const char *envp[], const char *program);
 void				env_join(t_env *env);
 void				env_append_both(t_env *env, char *key, char *value);
 void				env_del(t_env *env, char *key);
@@ -43,4 +44,5 @@ void				env_print(t_env *env);
 void				parse_path(t_string_vector *path, char *src);
 t_string			*search_path(t_string_vector *path, char *command);
 int					cells_key_exists(t_cells *cells, char *key);
+void				env_set_defaults(t_env *env);
 #endif // !ENV_H

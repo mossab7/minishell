@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 20:56:12 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/24 20:56:25 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 16:30:02 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -43,4 +43,10 @@ void	env_print(t_env *env)
 		ft_printf("%s=%s\n", cell.key, cell.value);
 		iter++;
 	}
+}
+
+void	env_append_both(t_env *env, char *key, char *value)
+{
+	cells_push_back(env->cells, key, value);
+	cells_push_back(env->export_cells, key, value);
 }

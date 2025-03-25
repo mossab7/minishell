@@ -11,7 +11,8 @@ SRCS=./src/containers/string/string.c ./src/containers/token/token_array.c ./src
 	./src/containers/cells/cells_manipulation.c ./src/containers/stack/stack_manipulation.c ./src/containers/string/string_manipulation.c ./src/context/context_utils.c\
 	./src/containers/string/string_vconstructors.c ./src/containers/string/string_subs.c ./src/containers/token/token_array_manipulation.c\
 	./src/containers/string/string_mask_manipulation.c  ./src/built_ins/cd.c ./src/built_ins/echo.c ./src/built_ins/env_command.c\
-	./src/built_ins/exit.c ./src/built_ins/unset.c ./src/signals/here_doc_signals.c
+	./src/built_ins/exit.c ./src/built_ins/unset.c ./src/signals/here_doc_signals.c\
+	./src/environment/env_insert_defaults.c ./src/environment/env_join.c
 OBJS=$(SRCS:%.c=%.o)
 ZEN_LIB=libzen.a
 NAME=minishell

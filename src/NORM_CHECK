@@ -1,6 +1,6 @@
 [*] container
 [*] context
-[] environment
+[*] environment
 [*] execution
 [] expansion
 [] lexer

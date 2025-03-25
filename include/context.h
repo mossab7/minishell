@@ -25,8 +25,6 @@ typedef enum e_flags
 
 typedef struct s_context
 {
-	bool		siginit_received;
-	int			readline_active;
 	int			flags;
 	t_string	*input;
 	t_env		*env;

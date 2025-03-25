@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:41:30 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/24 18:22:21 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 16:52:16 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -30,16 +30,16 @@ static	void	export_find_join(t_env *env, char *key, char *value)
 
 static void	process_export_args(t_env *env, t_token_array *toks)
 {
-	t_token		*key;
-	t_token		*assign_op;
-	t_token		*value;
+	t_token	*key;
+	t_token	*assign_op;
+	t_token	*value;
 
 	key = (toks->items + 0);
 	if (toks->size == 1)
 	{
 		if (!cells_key_exists(env->export_cells, key->lexeme->cstring))
-			cells_push_back(env->export_cells, (key->lexeme->cstring),
-				EMPTY_VALUE);
+			cells_push_back(env->export_cells,
+				key->lexeme->cstring, NULL);
 		return ;
 	}
 	assign_op = (toks->items + 1);

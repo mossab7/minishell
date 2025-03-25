@@ -6,15 +6,10 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/15 16:20:32 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:41:54 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 17:01:45 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
-
-int	is_not_null(int c)
-{
-	return (c != 0);
-}
 
 static void	consume_if(t_lexer *lex, int (*pred)(int))
 {
@@ -24,6 +19,40 @@ static void	consume_if(t_lexer *lex, int (*pred)(int))
 	token_next(lex->tokens);
 }
 
+static int	parse_variable_name(t_lexer *lex, t_token_array *token_array)
+{
+	if (!ft_isalpha(lex->source[lex->cursor]))
+		return (0);
+	token_array->current->type = TOK_WORD;
+	consume_if(lex, ft_isalnum);
+	return (1);
+}
+
+static int	parse_equals_operator(t_lexer *lex, t_token_array *token_array)
+{
+	if (ft_strncmp(lex->source + lex->cursor, "=", 1) == 0)
+	{
+		token_array->current->type = TOK_EQ;
+		str_push_back(token_array->current->lexeme, lex->source[lex->cursor++]);
+	}
+	else if (ft_strncmp(lex->source + lex->cursor, "+=", 2) == 0)
+	{
+		token_array->current->type = TOK_PEQ;
+		str_push_back(token_array->current->lexeme, lex->source[lex->cursor++]);
+		str_push_back(token_array->current->lexeme, lex->source[lex->cursor++]);
+	}
+	else
+		return (0);
+	token_next(token_array);
+	return (1);
+}
+
+static void	parse_value(t_lexer *lex, t_token_array *token_array)
+{
+	token_array->current->type = TOK_WORD;
+	consume_if(lex, is_not_null);
+}
+
 t_token_array	*simple_export_tokenizer(char *segment)
 {
 	t_lexer			*lex;
@@ -31,37 +60,19 @@ t_token_array	*simple_export_tokenizer(char *segment)
 
 	lex = lexer_init(segment);
 	token_array = lex->tokens;
-	if (!ft_isalpha(lex->source[lex->cursor]))
+	if (!parse_variable_name(lex, token_array))
 	{
 		lexer_destroy(lex);
 		return (NULL);
 	}
-	token_array->current->type = TOK_WORD;
-	consume_if(lex, ft_isalnum);
 	if (lex->source[lex->cursor])
 	{
-		if (ft_strncmp(lex->source + lex->cursor, "=", 1) == 0)
-		{
-			token_array->current->type = TOK_EQ;
-			str_push_back(token_array->current->lexeme,
-				lex->source[lex->cursor++]);
-		}
-		else if (ft_strncmp(lex->source + lex->cursor, "+=", 2) == 0)
-		{
-			token_array->current->type = TOK_PEQ;
-			str_push_back(token_array->current->lexeme,
-				lex->source[lex->cursor++]); // ADD +
-			str_push_back(token_array->current->lexeme,
-					lex->source[lex->cursor++]); // ADD =
-		}
-		else
+		if (!parse_equals_operator(lex, token_array))
 		{
 			lexer_destroy(lex);
 			return (NULL);
 		}
-		token_next(token_array);
-		token_array->current->type = TOK_WORD;
-		consume_if(lex, is_not_null);
+		parse_value(lex, token_array);
 	}
 	ft_free(lex);
 	return (token_array);

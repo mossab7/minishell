@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:39:58 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/23 17:02:13 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 16:15:52 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -50,4 +50,20 @@ void	cells_destroy(t_cells *cells)
 			ft_free(cells->items);
 		ft_free(cells);
 	}
+}
+
+void	insert_if_not_found(t_cells *cells, char *key, char *value)
+{
+	size_t	index;
+
+	index = cells_search(cells, key);
+	if (index < cells->size)
+		return ;
+	cells_expand(cells);
+	cells->items[cells->size].key = ft_strdup(key);
+	if (value == NULL)
+		cells->items[cells->size].value = NULL;
+	else
+		cells->items[cells->size].value = ft_strdup(value);
+	cells->size++;
 }

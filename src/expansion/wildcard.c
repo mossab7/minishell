@@ -141,6 +141,38 @@ void	copy_right_tokens(t_token_array *tokens,
 	}
 }
 
+static bool	should_skip_expansion(t_token_array *tokens, size_t cursor)
+{
+	return (cursor >= tokens->size);
+}
+
+static void	handle_no_matches(t_token_array *tokens, size_t cursor,
+		t_string_vector *entries)
+{
+	tokens->items[cursor].type = TOK_WORD;
+	strv_destruct(entries);
+}
+
+static t_token_array	*create_new_token_array(size_t new_size, size_t new_cap)
+{
+	t_token_array	*new_tokens_array;
+
+	new_tokens_array = alloc(sizeof(t_token_array));
+	new_tokens_array->size = new_size;
+	new_tokens_array->cap = new_cap;
+	new_tokens_array->items = alloc(sizeof(t_token) * new_cap);
+	return (new_tokens_array);
+}
+
+static void	perform_token_expansion(t_token_array *tokens,
+		t_token_array *new_tokens_array, t_string_vector *entries,
+		size_t cursor)
+{
+	copy_left_tokens(tokens, new_tokens_array, cursor);
+	copy_entries(entries, new_tokens_array, cursor);
+	copy_right_tokens(tokens, new_tokens_array, cursor, entries->size);
+}
+
 void	wildcard_expand(t_token_array **tokens_array, size_t *cursor)
 {
 	t_string_vector	*entries;
@@ -150,39 +182,35 @@ void	wildcard_expand(t_token_array **tokens_array, size_t *cursor)
 	size_t			new_cap;
 
 	tokens = *tokens_array;
-	if (*cursor >= tokens->size)
+	if (should_skip_expansion(tokens, *cursor))
 		return ;
 	entries = wildcardexpansion(tokens->items[*cursor].lexeme->cstring);
 	if (entries->size == 0)
 	{
-		tokens->items[*cursor].type = TOK_WORD;
-		strv_destruct(entries);
+		handle_no_matches(tokens, *cursor, entries);
 		return ;
 	}
 	new_size = tokens->size + entries->size - 1;
 	new_cap = tokens->cap + entries->size;
-	new_tokens_array = alloc(sizeof(t_token_array));
-	new_tokens_array->size = new_size;
-	new_tokens_array->cap = new_cap;
-	new_tokens_array->items = alloc(sizeof(t_token) * new_cap);
-	copy_left_tokens(tokens, new_tokens_array, *cursor);
-	copy_entries(entries, new_tokens_array, *cursor);
-	copy_right_tokens(tokens, new_tokens_array, *cursor, entries->size);
+	new_tokens_array = create_new_token_array(new_size, new_cap);
+	perform_token_expansion(tokens, new_tokens_array, entries, *cursor);
 	*cursor += entries->size - 1;
 	strv_destruct(entries);
 	*tokens_array = new_tokens_array;
 }
-t_string_vector	*wildcardexpansion(char *pattern)
+
+static t_string_vector	*init_wildcard_expansion(void)
 {
-	DIR				*dir;
-	struct dirent	*entry;
-	u8				hidden;
-	char			buffer[PATH_MAX];
 	t_string_vector	*entries;
 
 	entries = strv_construct();
-	if (!entries)
-		return (NULL);
+	return (entries);
+}
+
+static DIR	*open_current_directory(t_string_vector *entries, char *buffer)
+{
+	DIR	*dir;
+
 	if (getcwd(buffer, PATH_MAX) == NULL)
 	{
 		strv_destruct(entries);
@@ -194,9 +222,21 @@ t_string_vector	*wildcardexpansion(char *pattern)
 		strv_destruct(entries);
 		return (NULL);
 	}
+	return (dir);
+}
+
+static void	process_dir_entries(DIR *dir, t_string_vector *entries,
+		char *pattern)
+{
+	struct dirent	*entry;
+	u8				hidden;
+
 	errno = 0;
-	while ((entry = readdir(dir)) != NULL)
+	while (true)
 	{
+		entry = readdir(dir);
+		if (!entry)
+			break ;
 		hidden = (*(entry->d_name) == '.');
 		if ((!hidden || *pattern == '.') && strchr(pattern, '/')
 			&& is_dir(entry->d_name))
@@ -210,6 +250,10 @@ t_string_vector	*wildcardexpansion(char *pattern)
 			strv_push_back(entries, entry->d_name);
 		}
 	}
+}
+
+static t_string_vector	*check_for_errors(t_string_vector *entries, DIR *dir)
+{
 	if (errno != 0)
 	{
 		strv_destruct(entries);
@@ -218,4 +262,20 @@ t_string_vector	*wildcardexpansion(char *pattern)
 	}
 	closedir(dir);
 	return (entries);
+}
+
+t_string_vector	*wildcardexpansion(char *pattern)
+{
+	DIR				*dir;
+	char			buffer[PATH_MAX];
+	t_string_vector	*entries;
+
+	entries = init_wildcard_expansion();
+	if (!entries)
+		return (NULL);
+	dir = open_current_directory(entries, buffer);
+	if (!dir)
+		return (NULL);
+	process_dir_entries(dir, entries, pattern);
+	return (check_for_errors(entries, dir));
 }

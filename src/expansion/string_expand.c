@@ -19,19 +19,20 @@ static void	find_next_expansion(t_token_array *tokens, size_t *cursor)
 		(*cursor)++;
 }
 
-static t_string	*extract_key(t_string *string)
+static int	find_dollar_sign(t_string *string)
 {
-	u8			context;
-	t_string	*key;
-
-	if (!string->size)
-		return (NULL);
 	string->cursor = str_search_using_cursor(string, "$");
 	if (string->cursor < 0)
-		return (NULL);
-	context = string->mask->items[string->cursor];
-	if (context == SINGLE_QUOTED)
-		return (NULL);
+		return (0);
+	if (string->mask->items[string->cursor] == SINGLE_QUOTED)
+		return (0);
+	return (1);
+}
+
+static t_string	*build_key(t_string *string, u8 context)
+{
+	t_string	*key;
+
 	key = str_construct();
 	while (string->cstring[string->cursor] != 0
 		&& !ft_isspace(string->cstring[string->cursor]))
@@ -44,6 +45,11 @@ static t_string	*extract_key(t_string *string)
 			break ;
 	}
 	key->mask->context = context;
+	return (key);
+}
+
+static t_string	*handle_solo_dollar(t_string *string, t_string *key)
+{
 	if (key->size == 1)
 	{
 		string->cursor++;
@@ -51,6 +57,20 @@ static t_string	*extract_key(t_string *string)
 		return (extract_key(string));
 	}
 	return (key);
+}
+
+t_string	*extract_key(t_string *string)
+{
+	u8			context;
+	t_string	*key;
+
+	if (!string->size)
+		return (NULL);
+	if (!find_dollar_sign(string))
+		return (NULL);
+	context = string->mask->items[string->cursor];
+	key = build_key(string, context);
+	return (handle_solo_dollar(string, key));
 }
 
 void	_string_expand(t_env *env, t_string *string)

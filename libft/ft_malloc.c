@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <libft.h>
 
-void *alloc(size_t cap)
+void	*alloc(size_t cap)
 {
 	return (allocate_tracked_memory(cap));
 }

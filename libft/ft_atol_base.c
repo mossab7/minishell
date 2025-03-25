@@ -57,7 +57,7 @@ static int	fetch_digit(char digit, t_num *num)
 
 int	atol_loop(const char *str, int index, t_num *num)
 {
-	int		res;
+	int	res;
 
 	res = SUCCESS;
 	*(num->number) = 0;

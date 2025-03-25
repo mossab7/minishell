@@ -16,6 +16,8 @@
 # include <env.h>
 # include <lexer.h>
 
+# define DL "warning: here-document delimited by end-of-file (wanted `%s')\n"
+
 typedef enum e_node_type
 {
 	NODE_COMMAND,
@@ -70,6 +72,12 @@ typedef struct s_parser
 	t_error				lexer_status;
 	t_string			*input;
 }						t_parser;
+
+typedef struct s_arg
+{
+	char				**args;
+	int					argc;
+}						t_arg;
 
 void					free_ast(t_ast *node);
 t_ast					*new_node(t_ast node);

@@ -30,7 +30,7 @@ static int	digit_length_base(unsigned long num)
 
 static char	*fill_number(unsigned long num, int n, int digcount)
 {
-	char			*ascii;
+	char	*ascii;
 
 	ascii = alloc(digcount + 1);
 	if (!ascii)
