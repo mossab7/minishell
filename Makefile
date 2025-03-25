@@ -12,7 +12,7 @@ SRCS=./src/containers/string/string.c ./src/containers/token/token_array.c ./src
 	./src/containers/string/string_vconstructors.c ./src/containers/string/string_subs.c ./src/containers/token/token_array_manipulation.c ./src/parsing/parse_command.c ./src/execution/redirections.c\
 	./src/containers/string/string_mask_manipulation.c  ./src/built_ins/cd.c ./src/built_ins/echo.c ./src/built_ins/env_command.c ./src/parsing/parse_subshell.c ./src/execution/execute_command.c\
 	./src/built_ins/exit.c ./src/built_ins/unset.c ./src/signals/here_doc_signals.c ./src/parsing/heredoc_utils.c ./src/parsing/setup_heredoc.c ./src/parsing/parse_and_or_pipe.c\
-	./src/environment/env_insert_defaults.c ./src/environment/env_join.c ./src/expansion/tokens_expand.c ./src/containers/token/tokens_copying.c ./src/execution/built_ins.c\
+	./src/environment/env_insert_defaults.c ./src/environment/env_join.c ./src/expansion/tokens_expand.c ./src/containers/token/tokens_copying.c ./src/execution/built_ins_exec.c\
 	./src/expansion/wildcard_match.c ./src/containers/token/tokens_wild_card_helpers.c ./src/expansion/wildcard_open_dir.c ./src/expansion/wildcard_errors.c ./src/execution/execute_pipe.c\
 	./src/lexer/lexer_consume_symbol.c
 OBJS=$(SRCS:%.c=%.o)

@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:20:30 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 20:20:57 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 21:12:06 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -28,7 +28,7 @@ static t_string	*build_key(t_string *string, t_u8 context)
 	key = str_construct();
 	str_push_back(key, string->cstring[string->cursor++]);
 	while (string->cstring[string->cursor] != 0
-		&& ft_isalnum(string->cstring[string->cursor]))
+		&& !ft_isspace(string->cstring[string->cursor]))
 	{
 		str_push_back(key, string->cstring[string->cursor]);
 		string->cursor++;

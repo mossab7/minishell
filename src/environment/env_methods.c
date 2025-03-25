@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:41:14 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 18:34:22 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 21:29:27 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -42,7 +42,8 @@ static void	process_env_entries(t_env *env, const char *envp[])
 	while (envp[iter])
 	{
 		entry = ft_split((char const *)envp[iter], '=');
-		env_append_both(env, entry[KEY_INDEX], entry[VALUE_INDEX]);
+		if (ft_strcmp(entry[KEY_INDEX], "_") != 0)
+			env_append_both(env, entry[KEY_INDEX], entry[VALUE_INDEX]);
 		if (ft_strcmp(entry[KEY_INDEX], "PATH") == 0)
 			parse_path(env->path, entry[VALUE_INDEX]);
 		if (ft_strcmp(entry[KEY_INDEX], "SHLVL") == 0)
