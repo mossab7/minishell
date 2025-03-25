@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:08:42 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 20:14:46 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 20:24:36 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -27,8 +27,6 @@ void	tokens_expand(t_env *env, t_token_array *tokens, size_t *cursor)
 
 	tk = &(tokens->items[*cursor]);
 	key = extract_key(tk->lexeme);
-	if (key)
-		printf("KEY: %s\n", key->cstring);
 	while (key && *cursor <= tokens->size && tokens->size)
 	{
 		if (ft_strcmp(((key->cstring) + 1), "?") == 0)
