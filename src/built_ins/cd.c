@@ -22,15 +22,15 @@ static void	__cd_error(t_string *resolved_path, char *dst)
 	str_destruct(resolved_path);
 }
 
-static int	__cd_success(t_env *env,
-				t_string *resolved_path, char owd[PATH_MAX])
+static int	__cd_success(t_env *env, t_string *resolved_path,
+		char owd[PATH_MAX])
 {
 	env_set(env, "OLDPWD", owd);
 	if (!getcwd(owd, PATH_MAX))
 	{
 		zen_elog("error retrieving current directory: "
-		   "getcwd: cannot access parent directories: "
-		   "No such file or directory\n");
+			"getcwd: cannot access parent directories: "
+			"No such file or directory\n");
 		str_destruct(resolved_path);
 		return (env->last_command_status = 1);
 	}
@@ -55,8 +55,8 @@ int	built_in_cd(t_env *env, char **dst)
 	if (!getcwd(owd, PATH_MAX))
 	{
 		zen_elog("error retrieving current directory: "
-		   "getcwd: cannot access parent directories: "
-		   "No such file or directory\n");
+			"getcwd: cannot access parent directories: "
+			"No such file or directory\n");
 		str_destruct(resolved_path);
 		return (env->last_command_status = 1);
 	}

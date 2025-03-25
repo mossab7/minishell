@@ -36,8 +36,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s2l = len(s2);
 	iter = 0;
 	new = alloc(s1l + s2l + 1);
-	if (!new)
-		return (NULL);
 	while (s1[iter])
 	{
 		new[iter] = s1[iter];

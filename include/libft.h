@@ -121,14 +121,17 @@ t_list						*ft_lstmap(t_list *lst, void *(*f)(void *),
 								void (*del)(void *));
 void						*allocate_tracked_memory(size_t size);
 void						handle_allocation_failure(void *resource);
-void						register_memory_allocation(t_alloc_record **memory_records,
+void						register_memory_allocation(
+								t_alloc_record **memory_records,
 								t_alloc_record *new_record);
 t_alloc_record				*create_memory_record(void *resource,
 								void (*deallocator)(void *));
 t_alloc_record				**get_memory_tracker(void);
-void						detach_resource(t_alloc_record **memory_records,
+void						detach_resource(
+								t_alloc_record **memory_records,
 								void *target_resource);
-void						cleanup_memory_tracker(t_alloc_record **memory_records);
+void						cleanup_memory_tracker(
+								t_alloc_record **memory_records);
 void						free_resource(void (*free_func)(void *),
 								void *resource);
 void						*ft_realloc(void *ptr, size_t new_sz,
