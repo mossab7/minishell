@@ -115,5 +115,5 @@ void				token_next(t_token_array *vec);
 void				tok_array_expand(t_token_array *vec);
 void				tok_array_expand_anyhow(t_token_array *vec);
 void				tok_array_print(t_token_array *array);
-void				token_push_back(t_token *tok, char c, u8 state);
+void				token_push_back(t_token *tok, char c, t_u8 state);
 #endif // !TOKEN_H

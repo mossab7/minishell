@@ -229,7 +229,7 @@ static void	process_dir_entries(DIR *dir, t_string_vector *entries,
 		char *pattern)
 {
 	struct dirent	*entry;
-	u8				hidden;
+	t_u8				hidden;
 
 	errno = 0;
 	while (true)

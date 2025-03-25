@@ -47,7 +47,7 @@ typedef enum e_error_res
 	NOT_HANDLED,
 }			t_error_res;
 
-void		lex_quote(t_token *tok, u8 *state, char quote,
+void		lex_quote(t_token *tok, t_u8 *state, char quote,
 				t_stack *stacks[QUOTING_STACKS_SIZE]);
 void		string_expand(t_env *env, t_token_array *tokens, size_t *cursor);
 void		_string_expand(t_env *env, t_string *string);

@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-static void	lex_single(t_token *tok, u8 *state, char quote,
+static void	lex_single(t_token *tok, t_u8 *state, char quote,
 		t_stack *stacks[QUOTING_STACKS_SIZE])
 {
 	if (*state & DOUBLE_QUOTED)
@@ -31,7 +31,7 @@ static void	lex_single(t_token *tok, u8 *state, char quote,
 	}
 }
 
-static void	lex_double(t_token *tok, u8 *state, char quote,
+static void	lex_double(t_token *tok, t_u8 *state, char quote,
 		t_stack *stacks[QUOTING_STACKS_SIZE])
 {
 	if (*state & SINGLE_QUOTED)
@@ -51,7 +51,7 @@ static void	lex_double(t_token *tok, u8 *state, char quote,
 	}
 }
 
-void	lex_quote(t_token *tok, u8 *state, char quote,
+void	lex_quote(t_token *tok, t_u8 *state, char quote,
 		t_stack *stacks[QUOTING_STACKS_SIZE])
 {
 	if (quote == QUOTE_SINGLE)

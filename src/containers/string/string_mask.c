@@ -25,7 +25,7 @@ void	mask_expand(t_mask *mask)
 		mask_expand_anyhow(mask);
 }
 
-void	mask_push_back(t_mask *mask, u8 item)
+void	mask_push_back(t_mask *mask, t_u8 item)
 {
 	mask_expand(mask);
 	mask->items[mask->size++] = item;

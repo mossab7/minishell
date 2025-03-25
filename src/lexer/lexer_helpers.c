@@ -24,12 +24,12 @@ int	ft_zen_isalnum(int c)
 	return (!ft_isspace(c) && (ft_isalnum(c) || !ft_is_operator(c)));
 }
 
-int	is_inside_quotes(u8 state)
+int	is_inside_quotes(t_u8 state)
 {
 	return ((state & SINGLE_QUOTED) || (state & DOUBLE_QUOTED));
 }
 
-int	is_valid_word_character(int c, u8 state)
+int	is_valid_word_character(int c, t_u8 state)
 {
 	if (!c)
 		return (0);

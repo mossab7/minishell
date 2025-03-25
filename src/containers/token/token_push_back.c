@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-void	token_push_back(t_token	*tok, char c, u8 state)
+void	token_push_back(t_token	*tok, char c, t_u8 state)
 {
 	str_push_back(tok->lexeme, c);
 	mask_push_back(tok->lexeme->mask, state);
