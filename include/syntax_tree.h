@@ -71,6 +71,12 @@ typedef struct s_parser
 	t_string			*input;
 }						t_parser;
 
+typedef struct s_arg
+{
+	char			**args;
+	int				argc;
+}	t_arg;
+
 void					free_ast(t_ast *node);
 t_ast					*new_node(t_ast node);
 void					print_ast(t_ast *node, int level);
