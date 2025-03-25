@@ -108,7 +108,7 @@ char	*get_next_line(int fd)
 {
 	static char	*rest;
 	int			nstashed;
-	t_line_gnl		line;
+	t_line_gnl	line;
 	size_t		sz;
 
 	sz = 0;

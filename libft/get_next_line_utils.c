@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <libft.h>
 
-char		*ft_strdup_heap(const char *s1, char *heap)
+char	*ft_strdup_heap(const char *s1, char *heap)
 {
 	char	*dup;
 	size_t	size;
@@ -103,7 +103,8 @@ ssize_t	line_read(int fd, t_line_gnl *line, char **nl_loc, ssize_t *nread)
 {
 	if (line->size + BUFFER_SIZE >= line->cap)
 	{
-		line->content = ft_realloc_gnl(line->content, (line->cap * 2), line->size);
+		line->content = ft_realloc_gnl(line->content, (line->cap * 2),
+				line->size);
 		if (!line->content)
 			return (-1);
 		line->cap *= 2;

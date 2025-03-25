@@ -67,12 +67,12 @@ static char	**xfree(char **v, size_t size)
 	return (NULL);
 }
 
-static char	**ft_split_private(char **vec,
-	char const *s, char c, size_t vec_idx)
+static char	**ft_split_private(char **vec, char const *s, char c,
+		size_t vec_idx)
 {
-	int		wlength;
-	int		i;
-	int		k;
+	int	wlength;
+	int	i;
+	int	k;
 
 	k = 0;
 	i = 0;

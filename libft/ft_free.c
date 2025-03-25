@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <libft.h>
 
-void ft_free(void *addr)
+void	ft_free(void *addr)
 {
 	detach_resource(get_memory_tracker(), addr);
 }
