@@ -19,5 +19,4 @@ void	setup_heredoc_signals(void)
 		signo++;
 	}
 	signal(SIGINT, handle_child_sigint);
-	signal(SIGTSTP, SIG_IGN);
 }

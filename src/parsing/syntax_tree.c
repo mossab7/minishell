@@ -98,8 +98,14 @@ static void	handle_heredoc_child(int fd, int pipefd[2], t_redirect *redir)
     setup_heredoc_signals();
     input = str_construct();
     close(pipefd[0]);
-    while ((line = ft_readline("> ")) != NULL)
+    while (true)
     {
+		line = ft_readline("> ");
+		if(line == NULL)
+		{
+			zen_elog("warning: here-document delimited by end-of-file (wanted `%s')\n", redir->delimiter);
+			break;
+		}
         if (strcmp(line->cstring, redir->delimiter) == 0)
         {
             str_destruct(line);

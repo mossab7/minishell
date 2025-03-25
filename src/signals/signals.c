@@ -62,4 +62,5 @@ void	setup_signal_handlers(void)
 	sa_term.sa_flags = SA_RESTART | SA_NOCLDSTOP;
 	if (sigaction(SIGTERM, &sa_term, 0) == -1)
 		signal_error("sigaction (SIGTERM)");
+	signal(SIGTSTP, SIG_IGN);
 }
