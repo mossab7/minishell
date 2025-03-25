@@ -134,10 +134,11 @@ t_token					peek_token(t_token_array *tokens, size_t index);
 bool					match_token(t_token_type type, t_token_array *tokens,
 							size_t *index);
 void					*syntax_error(const char *message);
-t_ast	*process_logical_operator(t_token_type token_type, t_ast *left,
-	t_token_array *tokens, size_t *index);
-	t_ast	*parse_and_or(t_token_array *tokens, size_t *index);
-	t_ast	*create_binary_node(t_node_type type, t_ast *left, t_ast *right);
-	t_ast	*parse_primary(t_token_array *tokens, size_t *index);
-	t_ast	*parse_pipe(t_token_array *tokens, size_t *index);
+t_ast					*process_logical_operator(t_token_type token_type,
+							t_ast *left, t_token_array *tokens, size_t *index);
+t_ast					*parse_and_or(t_token_array *tokens, size_t *index);
+t_ast					*create_binary_node(t_node_type type, t_ast *left,
+							t_ast *right);
+t_ast					*parse_primary(t_token_array *tokens, size_t *index);
+t_ast					*parse_pipe(t_token_array *tokens, size_t *index);
 #endif // SYNTAX_TREE_H
