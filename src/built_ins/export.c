@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:41:30 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 16:52:16 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 20:06:37 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -81,7 +81,6 @@ static void	set_export(t_env *env, char *new, int *code)
 			return ;
 		}
 		process_export_args(env, toks);
-		tok_array_print(toks);
 		toks_destroy(toks);
 	}
 }

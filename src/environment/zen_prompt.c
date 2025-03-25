@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 14:28:09 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 14:28:44 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 20:00:36 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -16,12 +16,10 @@ t_string	*zen_prompt(t_env *env)
 	char		*user;
 	t_string	*buff;
 	t_string	*zen_prompt_;
-	char		pwd[PATH_MAX];
+	char		*pwd;
 
 	zen_prompt_ = str_construct();
-	ft_memset(pwd, 0, PATH_MAX);
-	if (!getcwd(pwd, PATH_MAX))
-		zen_elog("cd: error getting current directory\n");
+	pwd = env_get(env, "PWD");
 	user = env_get(env, "USER");
 	if (!user)
 		user = "incognito";

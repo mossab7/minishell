@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 18:13:36 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/24 18:31:56 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 20:02:51 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -28,7 +28,9 @@ static int	__cd_success(t_env *env,
 	env_set(env, "OLDPWD", owd);
 	if (!getcwd(owd, PATH_MAX))
 	{
-		zen_elog("cd: error getting current directory\n");
+		zen_elog("error retrieving current directory: "
+		   "getcwd: cannot access parent directories: "
+		   "No such file or directory\n");
 		str_destruct(resolved_path);
 		return (env->last_command_status = 1);
 	}
@@ -52,7 +54,9 @@ int	built_in_cd(t_env *env, char **dst)
 	}
 	if (!getcwd(owd, PATH_MAX))
 	{
-		zen_elog("cd: error getting current directory\n");
+		zen_elog("error retrieving current directory: "
+		   "getcwd: cannot access parent directories: "
+		   "No such file or directory\n");
 		str_destruct(resolved_path);
 		return (env->last_command_status = 1);
 	}
