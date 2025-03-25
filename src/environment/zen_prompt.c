@@ -14,14 +14,14 @@
 t_string	*zen_prompt(t_env *env)
 {
 	char		*user;
-	char		*pwd;
 	t_string	*buff;
 	t_string	*zen_prompt_;
+	char		pwd[PATH_MAX];
 
 	zen_prompt_ = str_construct();
-	pwd = env_get(env, "PWD");
-	if (!pwd)
-		pwd = "PWD_NOT_SET";
+	ft_memset(pwd, 0, PATH_MAX);
+	if (!getcwd(pwd, PATH_MAX))
+		zen_elog("cd: error getting current directory\n");
 	user = env_get(env, "USER");
 	if (!user)
 		user = "incognito";

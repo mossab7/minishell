@@ -36,7 +36,7 @@ t_env	*env_copy(t_env *env)
 		cells_push_back(_env->cells, env->cells->items[_env->cells->size].key,
 			env->cells->items[_env->cells->size].value);
 	}
-	for (; _env->path->size < env->path->size;)
+	while (_env->path->size < env->path->size)
 		strv_push_back(_env->path, env->path->cstrings[_env->path->size]);
 	return (_env);
 }

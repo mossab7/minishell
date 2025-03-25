@@ -48,7 +48,7 @@ int	built_in_cd(t_env *env, char **dst)
 	if (res != SUCCESS)
 	{
 		str_destruct(resolved_path);
-		return (env->last_command_status = res);
+		return (env->last_command_status = 1);
 	}
 	if (!getcwd(owd, PATH_MAX))
 	{

@@ -155,7 +155,7 @@ int	setup_builtin_redirections(t_command *cmd, t_type type)
 	return (0);
 }
 
-void	init_builtin_commands(built_in_command *functions,
+void	init_builtin_commands(t_built_in_command *functions,
 		char **function_names)
 {
 	functions[0] = built_in_cd;
@@ -177,7 +177,7 @@ void	init_builtin_commands(built_in_command *functions,
 int	execute_built_in_commands(t_command *cmd, char *command, t_env *env,
 		char **args)
 {
-	built_in_command	functions[BUILT_IN_COMMANDS_COUNT];
+	t_built_in_command	functions[BUILT_IN_COMMANDS_COUNT];
 	char				*function_names[BUILT_IN_COMMANDS_COUNT];
 	int					i;
 	int					command_result;
@@ -329,7 +329,7 @@ int	execute_subshell(t_ast *node, t_env *env)
 	if (pid == 0)
 	{
 		subshell_env = env_copy(env);
-		if (setup_redirections(&node->value.command) == -1)
+		if (setup_redirections(&node->u_value.command) == -1)
 		{
 			env_destroy(subshell_env);
 			exit(EXIT_FAILURE);
@@ -366,7 +366,7 @@ int	execute_ast(t_ast *node, t_env *env)
 		return (0);
 	left_status = 0;
 	if (node->type == NODE_COMMAND)
-		return (execute_command(&node->value.command, env));
+		return (execute_command(&node->u_value.command, env));
 	else if (node->type == NODE_PIPE)
 		return (execute_pipe(node, env));
 	else if (node->type == NODE_SUBSHELL)
