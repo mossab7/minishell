@@ -13,8 +13,8 @@
 #ifndef BUILT_IN_COMMANDS_H
 # define BUILT_IN_COMMANDS_H
 
-# include <t_string.h>
 # include <env.h>
+# include <t_string.h>
 
 # ifndef PATH_MAX
 #  define PATH_MAX 4096

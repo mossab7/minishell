@@ -19,8 +19,8 @@
 
 typedef struct s_mask
 {
-	t_u8		context;
-	t_u8		*items;
+	t_u8	context;
+	t_u8	*items;
 	size_t	cap;
 	size_t	size;
 	size_t	cursor;

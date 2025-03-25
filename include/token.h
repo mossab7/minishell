@@ -108,12 +108,13 @@ typedef struct s_token_array
 	size_t			cap;
 }					t_token_array;
 
-void	copy_left_tokens(t_token_array *tokens, t_token_array *new_tokens_array,
-		size_t cursor);
-void	copy_entries(t_string_vector *entries, t_token_array *new_tokens_array,
-		size_t cursor);
-void	copy_right_tokens(t_token_array *tokens,
-		t_token_array *new_tokens_array, size_t cursor, size_t entries_size);
+void				copy_left_tokens(t_token_array *tokens,
+						t_token_array *new_tokens_array, size_t cursor);
+void				copy_entries(t_string_vector *entries,
+						t_token_array *new_tokens_array, size_t cursor);
+void				copy_right_tokens(t_token_array *tokens,
+						t_token_array *new_tokens_array, size_t cursor,
+						size_t entries_size);
 t_token_array		*tokens_copy(t_token_array *other);
 t_token_array		*tok_array_construct(void);
 t_token_array		*create_new_token_array(size_t new_size, size_t new_cap);
@@ -125,5 +126,5 @@ void				tok_array_print(t_token_array *array);
 void				token_push_back(t_token *tok, char c, t_u8 state);
 bool				should_skip_expansion(t_token_array *tokens, size_t cursor);
 void				handle_no_matches(t_token_array *tokens, size_t cursor,
-		t_string_vector *entries);
+						t_string_vector *entries);
 #endif // !TOKEN_H

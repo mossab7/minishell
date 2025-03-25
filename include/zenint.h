@@ -15,9 +15,9 @@
 # include <stdint.h>
 # define SHLVL_MAX 1000
 
-typedef uint8_t			t_u8;
-typedef uint16_t		t_u16;
-typedef uint32_t		t_u32;
-typedef uint64_t		t_u64;
+typedef uint8_t		t_u8;
+typedef uint16_t	t_u16;
+typedef uint32_t	t_u32;
+typedef uint64_t	t_u64;
 
 #endif // !ZENINT_H

@@ -16,17 +16,18 @@
 # define KEY_INDEX 0
 # define VALUE_INDEX 1
 # include <cells.h>
+# include <t_string.h>
 # include <t_string_vector.h>
 # include <zenint.h>
 
 typedef struct s_env
 {
-	t_cells				*cells;
-	t_cells				*export_cells;
-	char				**envp;
-	t_string_vector		*path;
-	int					last_command_status;
-	const char			*program;
+	t_cells			*cells;
+	t_cells			*export_cells;
+	char			**envp;
+	t_string_vector	*path;
+	int				last_command_status;
+	const char		*program;
 }					t_env;
 
 t_env				*env_parse(const char *envp[], const char *program);

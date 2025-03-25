@@ -15,7 +15,9 @@
 # include <assert.h>
 # include <built_in_commands.h>
 # include <context.h>
+# include <dirent.h>
 # include <env.h>
+# include <errno.h>
 # include <execute.h>
 # include <fcntl.h>
 # include <ft_printf.h>
@@ -28,8 +30,6 @@
 # include <stdio.h>
 # include <syntax_tree.h>
 # include <sys/stat.h>
-# include <dirent.h>
-# include <errno.h>
 # include <sys/wait.h>
 # include <t_string.h>
 # include <t_string_vector.h>
@@ -47,11 +47,12 @@ typedef enum e_error_res
 	HANDLED,
 	INVALID_PARAMS_ERROR,
 	NOT_HANDLED,
-}			t_error_res;
+}				t_error_res;
 
 void			lex_quote(t_token *tok, t_u8 *state, char quote,
 					t_stack *stacks[QUOTING_STACKS_SIZE]);
-void			tokens_expand(t_env *env, t_token_array *tokens, size_t *cursor);
+void			tokens_expand(t_env *env, t_token_array *tokens,
+					size_t *cursor);
 void			string_expand(t_env *env, t_string *string);
 void			expand(t_env *env, t_token_array **tokens);
 int				zen_elog(const char *fmt, ...);

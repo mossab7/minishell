@@ -15,6 +15,7 @@
 
 # include <env.h>
 # include <lexer.h>
+# include <t_string.h>
 
 # define DL "warning: here-document delimited by end-of-file (wanted `%s')\n"
 
@@ -79,8 +80,6 @@ typedef struct s_arg
 	int					argc;
 }						t_arg;
 
-void					free_ast(t_ast *node);
-t_ast					*new_node(t_ast node);
 void					print_ast(t_ast *node, int level);
 void					ast_destroy(t_ast *root);
 t_ast					*build_ast(t_token_array *tokens);
@@ -89,4 +88,56 @@ void					parser_destroy(t_parser *parser);
 t_error					parser_prepare_input(t_parser *parser);
 void					parser_lex(t_parser *parser);
 void					parser_procced_to_exec(t_parser *parser);
+t_ast					*parse_command(t_token_array *tokens, size_t *index);
+t_ast					*parse_pipe(t_token_array *tokens, size_t *index);
+t_ast					*parse_and_or(t_token_array *tokens, size_t *index);
+t_ast					*parse_subshell_redirections(t_token_array *tokens,
+							size_t *index, t_ast *node);
+t_ast					*parse_primary(t_token_array *tokens, size_t *index);
+char					*ft_mkstemp(void);
+int						cleanup_on_error(char *filename, int fd);
+int						init_heredoc(char **filename, int *fd, int pipefd[2]);
+t_string				*read_heredoc_content(t_redirect *redir, int fd);
+void					handle_heredoc_child(int fd, int pipefd[2],
+							t_redirect *redir);
+void					read_from_pipe(int pipefd);
+int						setup_here_doc(t_redirect *redir);
+t_ast					*create_subshell_node(t_ast *child);
+t_ast					*init_subshell_node(t_ast *child,
+							t_token_array *tokens);
+bool					collect_subshell_redirections(t_ast *subshell_node,
+							t_token_array *tokens, size_t *index);
+t_ast					*parse_subshell_redirections(t_token_array *tokens,
+							size_t *index, t_ast *node);
+t_ast					*create_command_node(t_arg arg, t_redirect **redirects,
+							int redirect_count);
+void					init_command_resources(t_arg *arg,
+							t_redirect ***redirects, int *redirect_count,
+							size_t size);
+void					cleanup_command_resources(t_arg *arg,
+							t_redirect **redirects);
+void					process_word_token(t_token token, t_arg *arg,
+							size_t *index);
+bool					process_redirection_token(t_token_array *tokens,
+							size_t *index, t_redirect **redirects,
+							int *redirect_count);
+t_ast					*parse_command(t_token_array *tokens, size_t *index);
+t_redirect				*create_redirect(t_redirect_type type, char *target);
+t_redirect				*parse_redirection(t_token_array *tokens,
+							size_t *index);
+t_ast					*create_binary_node(t_node_type node_type, t_ast *left,
+							t_ast *right);
+t_ast					*parse_primary(t_token_array *tokens, size_t *index);
+t_ast					*parse_pipe(t_token_array *tokens, size_t *index);
+t_ast					*parse_and_or(t_token_array *tokens, size_t *index);
+t_token					peek_token(t_token_array *tokens, size_t index);
+bool					match_token(t_token_type type, t_token_array *tokens,
+							size_t *index);
+void					*syntax_error(const char *message);
+t_ast	*process_logical_operator(t_token_type token_type, t_ast *left,
+	t_token_array *tokens, size_t *index);
+	t_ast	*parse_and_or(t_token_array *tokens, size_t *index);
+	t_ast	*create_binary_node(t_node_type type, t_ast *left, t_ast *right);
+	t_ast	*parse_primary(t_token_array *tokens, size_t *index);
+	t_ast	*parse_pipe(t_token_array *tokens, size_t *index);
 #endif // SYNTAX_TREE_H
