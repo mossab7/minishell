@@ -155,6 +155,7 @@ int	setup_here_doc(t_redirect *redir)
     int			status;
     int			pipefd[2];
 
+	status = 0;
     set_context_flag(FLAG_HERE_DOC_ACTIVE);
     if (init_heredoc(&redir->filename, &fd, pipefd) == -1)
         return (-1);
