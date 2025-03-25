@@ -21,7 +21,7 @@ static int	find_dollar_sign(t_string *string)
 	return (1);
 }
 
-static t_string	*build_key(t_string *string, u8 context)
+static t_string	*build_key(t_string *string, t_u8 context)
 {
 	t_string	*key;
 
@@ -53,7 +53,7 @@ static t_string	*handle_solo_dollar(t_string *string, t_string *key)
 
 t_string	*extract_key(t_string *string)
 {
-	u8			context;
+	t_u8			context;
 	t_string	*key;
 
 	if (!string->size)

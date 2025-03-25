@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-void	mask_fill(t_mask *mask, u8 item, size_t size)
+void	mask_fill(t_mask *mask, t_u8 item, size_t size)
 {
 	mask->size = 0;
 	while (mask->size < size)

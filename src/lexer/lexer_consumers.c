@@ -29,7 +29,7 @@ static t_error	consume_sym_pair(t_token *tok, t_lexer *lex, t_token_type type,
 	return (check_next(tok, lex, pair_type));
 }
 
-static void	init_word_token(t_lexer *lex, t_token **tok, u8 *input_state,
+static void	init_word_token(t_lexer *lex, t_token **tok, t_u8 *input_state,
 		t_stack *stacks[])
 {
 	*tok = lex->tokens->current;
@@ -40,7 +40,7 @@ static void	init_word_token(t_lexer *lex, t_token **tok, u8 *input_state,
 	stacks[DOUBLE_QUOTES_INDEX] = stack_construct();
 }
 
-static int	process_char(t_token *tok, t_lexer *lex, u8 *input_state,
+static int	process_char(t_token *tok, t_lexer *lex, t_u8 *input_state,
 		t_stack *stacks[])
 {
 	if (is_quote(lex->source[lex->cursor]))
@@ -77,7 +77,7 @@ static void	finalize_word_token(t_token *tok)
 t_error	consume_word(t_lexer *lex)
 {
 	t_stack	*stacks[QUOTING_STACKS_SIZE];
-	u8		input_state;
+	t_u8		input_state;
 	t_token	*tok;
 	t_error	status;
 	int		processed_quote;

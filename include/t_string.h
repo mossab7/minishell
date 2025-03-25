@@ -19,8 +19,8 @@
 
 typedef struct s_mask
 {
-	u8		context;
-	u8		*items;
+	t_u8		context;
+	t_u8		*items;
 	size_t	cap;
 	size_t	size;
 	size_t	cursor;
@@ -47,13 +47,13 @@ void		str_destruct(t_string *vec);
 void		str_join(t_string *vec, size_t count, ...);
 void		str_substitute(t_string *string, char *repl, t_string *which);
 void		mask_expand(t_mask *mask);
-void		mask_push_back(t_mask *mask, u8 item);
+void		mask_push_back(t_mask *mask, t_u8 item);
 t_mask		*mask_construct(void);
 void		mask_destroy(t_mask *mask);
 void		mask_expand_anyhow(t_mask *mask);
 void		str_expand_anyhow(t_string *vec);
 void		str_print(t_string *str);
-void		mask_fill(t_mask *mask, u8 item, size_t size);
+void		mask_fill(t_mask *mask, t_u8 item, size_t size);
 void		mask_copy(t_mask *dst, t_mask *src, size_t start);
 void		mask_print(t_mask *mask);
 void		mask_copy_ignore_spaces(t_mask *dst, t_string *src, size_t start);

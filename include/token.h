@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/25 18:06:46 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/25 18:38:09 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void				token_next(t_token_array *vec);
 void				tok_array_expand(t_token_array *vec);
 void				tok_array_expand_anyhow(t_token_array *vec);
 void				tok_array_print(t_token_array *array);
-void				token_push_back(t_token *tok, char c, u8 state);
+void				token_push_back(t_token *tok, char c, t_u8 state);
 bool				should_skip_expansion(t_token_array *tokens, size_t cursor);
 void				handle_no_matches(t_token_array *tokens, size_t cursor,
 		t_string_vector *entries);
