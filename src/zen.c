@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:38:43 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 18:23:13 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/03/26 17:44:36 by mbouhia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -18,6 +18,7 @@ static void	initialize_shell(t_parser *parser,
 	setup_signal_handlers();
 	ft_memset(parser, 0, sizeof(*parser));
 	parser->env = env_parse(envp, program);
+	init_context(parser->input, parser->env);
 }
 
 static t_error	process_command(t_parser *parser)
