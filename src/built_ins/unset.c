@@ -17,6 +17,10 @@ int	built_in_unset(t_env *env, char **args)
 
 	iter = 1;
 	while (args[iter])
-		cells_remove(env->cells, args[iter++]);
+	{
+		cells_remove(env->cells, args[iter]);
+		cells_remove(env->export_cells, args[iter]);
+		iter++;
+	}
 	return (0);
 }
