@@ -16,6 +16,9 @@ void	parser_procced_to_exec(t_parser *parser)
 	expand(parser->env, &parser->lexer->tokens);
 	if (!parser->lexer->tokens->size)
 		return ;
+	cells_push_back(parser->env->cells,
+		"_", parser->lexer->tokens->items[parser
+		->lexer->tokens->size - 1].lexeme->cstring);
 	parser->tree = build_ast(parser->lexer->tokens);
 	if (parser->tree && !check_context_flag(FLAG_SYNTAX_ERROR))
 		execute_ast(parser->tree, parser->env);
