@@ -51,8 +51,9 @@ typedef enum e_error_res
 
 void			lex_quote(t_token *tok, t_u8 *state, char quote,
 					t_stack *stacks[QUOTING_STACKS_SIZE]);
-void			tokens_expand(t_env *env, t_token_array *tokens,
-					size_t *cursor);
+void			tokens_expand(t_env *env,
+					t_token_array *tokens,
+					size_t *cursor, int is_export);
 void			string_expand(t_env *env, t_string *string);
 void			expand(t_env *env, t_token_array **tokens);
 int				zen_elog(const char *fmt, ...);
@@ -64,4 +65,7 @@ t_string		*extract_key(t_string *string);
 bool			match_pattern(const char *pattern, const char *str);
 DIR				*open_current_directory(t_string_vector *entries, char *buffer);
 t_string_vector	*check_for_errors(t_string_vector *entries, DIR *dir);
+void			expand_command(t_env *env,
+					t_token_array **tokens, size_t cursor);
+int				is_expandable(t_token_type type);
 #endif // ZEN_H

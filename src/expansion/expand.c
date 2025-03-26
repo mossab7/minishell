@@ -21,9 +21,30 @@ void	expand(t_env *env, t_token_array **tokens_array)
 	while (iter < tokens->size)
 	{
 		if (tokens->items[iter].type == TOK_WORD)
-			tokens_expand(env, tokens, &iter);
+			tokens_expand(env, tokens, &iter, 0);
 		else if (tokens->items[iter].type == TOK_WILD_CARD)
 			wildcard_expand(tokens_array, &iter);
 		iter++;
+	}
+}
+
+void	expand_command(t_env *env, t_token_array **tokens_array, size_t cursor)
+{
+	t_token_array	*tokens;
+	int				is_export;
+
+	tokens = *tokens_array;
+	is_export = 0;
+	if (ft_strcmp(tokens->items[cursor].lexeme->cstring, "export") == 0)
+		is_export = 1;
+	while (cursor < tokens->size)
+	{
+		if (tokens->items[cursor].type == TOK_WORD)
+			tokens_expand(env, tokens, &cursor, is_export);
+		else if (tokens->items[cursor].type == TOK_WILD_CARD)
+			wildcard_expand(tokens_array, &cursor);
+		else
+			break ;
+		cursor++;
 	}
 }

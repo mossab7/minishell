@@ -19,7 +19,14 @@ static void	find_next_expansion(t_token_array *tokens, size_t *cursor)
 		(*cursor)++;
 }
 
-void	tokens_expand(t_env *env, t_token_array *tokens, size_t *cursor)
+static int	must_field_split(t_string *key, t_token *tk, int is_export)
+{
+	return (key->mask->context == NOT_QUOTED
+		&& !is_export && !ft_strchr(tk->lexeme->cstring, '='));
+}
+
+void	tokens_expand(t_env *env, t_token_array *tokens,
+				size_t *cursor, int is_export)
 {
 	t_string	*key;
 	char		*value;
@@ -34,7 +41,7 @@ void	tokens_expand(t_env *env, t_token_array *tokens, size_t *cursor)
 		else
 			value = ft_strdup(env_get(env, ((key->cstring) + 1)));
 		str_substitute(tk->lexeme, value, key);
-		if (key->mask->context == NOT_QUOTED)
+		if (must_field_split(key, tk, is_export))
 		{
 			tokens_field_split(tokens, *cursor);
 			find_next_expansion(tokens, cursor);
@@ -46,4 +53,9 @@ void	tokens_expand(t_env *env, t_token_array *tokens, size_t *cursor)
 		tk = &(tokens->items[*cursor]);
 		key = extract_key(tk->lexeme);
 	}
+}
+
+int	is_expandable(t_token_type type)
+{
+	return ((type == TOK_WORD) || (type == TOK_WILD_CARD));
 }

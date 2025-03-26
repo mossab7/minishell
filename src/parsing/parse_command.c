@@ -57,6 +57,7 @@ t_ast	*parse_command(t_token_array *tokens, size_t *index)
 	int			redirect_count;
 	t_token		token;
 
+	expand_command(get_context_env(), &tokens, *index);
 	init_command_resources(&arg, &redirects, &redirect_count, tokens->size);
 	while (true)
 	{
