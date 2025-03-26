@@ -13,6 +13,8 @@
 #ifndef SIGNALS_H
 # define SIGNALS_H
 
+# define EXIT_SIGINT 130
+
 void	setup_signal_handlers(void);
 void	setup_heredoc_signals(void);
 #endif

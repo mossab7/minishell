@@ -27,8 +27,7 @@ void	launch_command(t_command *cmd, t_env *env)
 		execve(cmd_path->cstring, cmd->args, env->envp);
 		str_destruct(cmd_path);
 	}
-	ft_printf("minishell: %s: command not found\n", cmd->args[0]);
-	exit(127);
+	zen_elog("%s: command not found\n", cmd->args[0]);
 }
 
 int	get_command_status(t_env *env, int status)

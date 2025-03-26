@@ -14,7 +14,11 @@
 
 void	handle_sigint(int signum)
 {
+	t_env	*env;
+
 	(void)signum;
+	env = get_context_env();
+	env->last_command_status = EXIT_SIGINT;
 	if (check_context_flag(FLAG_READLINE_ACTIVE))
 	{
 		ft_putchar_fd('\n', STDOUT_FILENO);
