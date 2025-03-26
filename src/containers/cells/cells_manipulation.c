@@ -87,9 +87,9 @@ void	cells_remove(t_cells *cells, char *key)
 		cells->size--;
 		ft_free(cells->items[index].value);
 		ft_free(cells->items[index].key);
-		memmove(cells->items + index, 
-                cells->items + index + 1, 
-                (cells->size - index - 1) * sizeof(cells->items[0]));
-        cells->size--;
+		memmove(cells->items + index,
+			cells->items + index + 1,
+			(cells->size - index - 1) * sizeof(cells->items[0]));
+		cells->size--;
 	}
 }
