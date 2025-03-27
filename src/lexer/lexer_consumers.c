@@ -52,7 +52,8 @@ static void	finalize_word_token(t_token *tok)
 {
 	if (!tok->lexeme->size)
 		token_push_back(tok, 0, 0);
-	if (ft_strchr(tok->lexeme->cstring, '*') && !ft_strchr(tok->lexeme->cstring, '$'))
+	if (ft_strchr(tok->lexeme->cstring, '*')
+		&& !ft_strchr(tok->lexeme->cstring, '$'))
 		tok->type = TOK_WILD_CARD;
 }
 

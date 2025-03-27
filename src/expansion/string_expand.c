@@ -13,7 +13,10 @@
 
 static int	find_dollar_sign(t_string *string)
 {
-	string->cursor = str_search_using_cursor(string, "$");
+	if (string->cursor < 0)
+		return (0);
+	string->cursor = ft_strchr(
+			(string->cstring + string->cursor), '$') - string->cstring;
 	if (string->cursor < 0)
 		return (0);
 	if (string->mask->items[string->cursor] == SINGLE_QUOTED)

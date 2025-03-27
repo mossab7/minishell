@@ -11,20 +11,6 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-// ==129791== Invalid read of size 1
-// ==129791==    at 0x40DB05: ft_strnstr (in /home/lazmoud/Desktop/programming/projects/Minishell/minishell)
-// ==129791==    by 0x403A33: str_search_using_cursor (string_manipulation.c:44)
-// ==129791==    by 0x40A35E: find_dollar_sign (string_expand.c:16)
-// ==129791==    by 0x40A2E0: extract_key (string_expand.c:62)
-// ==129791==    by 0x40993C: tokens_expand (tokens_expand.c:36)
-// ==129791==    by 0x408A38: expand_command (expand.c:65)
-// ==129791==    by 0x407AD7: parse_command (parse_command.c:60)
-// ==129791==    by 0x405D93: parse_primary (parse_and_or_pipe.c:87)
-// ==129791==    by 0x405B0C: parse_pipe (parse_and_or_pipe.c:98)
-// ==129791==    by 0x405C2C: parse_and_or (parse_and_or_pipe.c:46)
-// ==129791==    by 0x404690: build_ast (syntax_tree.c:54)
-// ==129791==    by 0x40333C: parser_procced_to_exec (parser.c:16)
-// ==129791==  Address 0x0 is not stack'd, malloc'd or (recently) free'd
 void	str_append(char *src, t_string *vec)
 {
 	size_t	index;
