@@ -62,7 +62,7 @@ t_ast	*parse_command(t_token_array *tokens, size_t *index)
 	while (true)
 	{
 		token = peek_token(tokens, *index);
-		if (token.type == TOK_WORD)
+		if (token.type == TOK_WORD || token.type == TOK_WILD_CARD)
 			process_word_token(token, &arg, index);
 		else if (token.type >= TOK_INPUT_REDIRECT && token.type <= TOK_HEREDOC)
 		{

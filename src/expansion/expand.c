@@ -28,23 +28,42 @@ void	expand(t_env *env, t_token_array **tokens_array)
 	}
 }
 
+static void	find_next_wcard(t_token_array *tokens, size_t *cursor)
+{
+	*cursor = 0;
+	while (*cursor < tokens->size
+		&& !ft_strchr(tokens->items[*cursor].lexeme->cstring, '*'))
+		(*cursor)++;
+}
+
+static int	get_next_(t_token_array *tokens, size_t *cursor)
+{
+	find_next_expansion(tokens, cursor);
+	if (*cursor < tokens->size)
+		return (1);
+	find_next_wcard(tokens, cursor);
+	if (*cursor < tokens->size)
+		return (1);
+	return (0);
+}
+
 void	expand_command(t_env *env, t_token_array **tokens_array, size_t cursor)
 {
 	t_token_array	*tokens;
 	int				is_export;
 
-	tokens = *tokens_array;
 	is_export = 0;
+	tokens = *tokens_array;
 	if (ft_strcmp(tokens->items[cursor].lexeme->cstring, "export") == 0)
 		is_export = 1;
-	while (cursor < tokens->size)
+	while (true)
 	{
+		tokens = *tokens_array;
+		if (!get_next_(tokens, &cursor))
+			break ;
 		if (tokens->items[cursor].type == TOK_WORD)
 			tokens_expand(env, tokens, &cursor, is_export);
 		else if (tokens->items[cursor].type == TOK_WILD_CARD)
 			wildcard_expand(tokens_array, &cursor);
-		else
-			break ;
-		cursor++;
 	}
 }

@@ -127,4 +127,5 @@ void				token_push_back(t_token *tok, char c, t_u8 state);
 bool				should_skip_expansion(t_token_array *tokens, size_t cursor);
 void				handle_no_matches(t_token_array *tokens, size_t cursor,
 						t_string_vector *entries);
+void				find_next_expansion(t_token_array *tokens, size_t *cursor);
 #endif // !TOKEN_H

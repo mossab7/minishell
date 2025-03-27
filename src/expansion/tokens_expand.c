@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-static void	find_next_expansion(t_token_array *tokens, size_t *cursor)
+void	find_next_expansion(t_token_array *tokens, size_t *cursor)
 {
 	*cursor = 0;
-	while (!ft_strchr(tokens->items[*cursor].lexeme->cstring, '$')
-		&& *cursor < tokens->size)
+	while (*cursor < tokens->size
+		&& !ft_strchr(tokens->items[*cursor].lexeme->cstring, '$'))
 		(*cursor)++;
 }
 
@@ -34,7 +34,7 @@ void	tokens_expand(t_env *env, t_token_array *tokens,
 
 	tk = &(tokens->items[*cursor]);
 	key = extract_key(tk->lexeme);
-	while (key && *cursor <= tokens->size && tokens->size)
+	while (key && *cursor < tokens->size && tokens->size)
 	{
 		if (ft_strcmp(((key->cstring) + 1), "?") == 0)
 			value = ft_itoa(env->last_command_status);
@@ -48,7 +48,7 @@ void	tokens_expand(t_env *env, t_token_array *tokens,
 		}
 		ft_free(value);
 		str_destruct(key);
-		if (tokens->size == 0)
+		if (tokens->size == 0 || *cursor == tokens->size)
 			break ;
 		tk = &(tokens->items[*cursor]);
 		key = extract_key(tk->lexeme);
