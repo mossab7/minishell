@@ -15,7 +15,11 @@ void	find_next_expansion(t_token_array *tokens, size_t *cursor)
 {
 	*cursor = 0;
 	while (*cursor < tokens->size
-		&& !ft_strchr(tokens->items[*cursor].lexeme->cstring, '$'))
+		&& (!ft_strchr(tokens->items[*cursor].lexeme->cstring, '$')
+			|| (tokens->items[*cursor].lexeme->size == 1)))
+		(*cursor)++;
+	while (*cursor < tokens->size
+		&& (tokens->items[*cursor].type != TOK_WORD))
 		(*cursor)++;
 }
 
