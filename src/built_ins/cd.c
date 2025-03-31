@@ -39,19 +39,20 @@ static int	__cd_success(t_env *env, t_string *resolved_path,
 	return (env->last_command_status = 0);
 }
 
-int	built_in_cd(t_env *env, char **dst)
+int	built_in_cd(t_env *env, int argc, char **dst)
 {
 	t_string	*resolved_path;
 	int			res;
 	char		owd[PATH_MAX];
 
+	if (argc > 2)
+		return ((zen_elog("cd: too many arguments\n"))
+			, env->last_command_status = 1);
 	resolved_path = str_construct();
 	res = __resolve_path(resolved_path, env, dst[1]);
 	if (res != SUCCESS)
-	{
-		str_destruct(resolved_path);
-		return (env->last_command_status = 1);
-	}
+		return ((str_destruct(resolved_path))
+			, env->last_command_status = 1);
 	if (!getcwd(owd, PATH_MAX))
 	{
 		zen_elog("error retrieving current directory: "

@@ -22,7 +22,7 @@ static bool	is_numeric(char *str)
 	return (true);
 }
 
-int	built_in_exit(t_env *env, char **args)
+int	built_in_exit(t_env *env, int argc, char **args)
 {
 	int	code;
 
@@ -30,7 +30,7 @@ int	built_in_exit(t_env *env, char **args)
 	code = 0;
 	if (args && args[1])
 	{
-		if (args[2])
+		if (argc > 2)
 		{
 			zen_elog("exit: too many arguments \n");
 			return (1);

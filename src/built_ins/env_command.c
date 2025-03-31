@@ -11,9 +11,10 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-int	built_in_env(t_env *env, char **args)
+int	built_in_env(t_env *env, int argc, char **args)
 {
 	(void)args;
+	(void)argc;
 	env_print(env);
 	return (env->last_command_status = 0);
 }

@@ -85,11 +85,12 @@ static void	set_export(t_env *env, char *new, int *code)
 	}
 }
 
-int	built_in_export(t_env *env, char **args)
+int	built_in_export(t_env *env, int argc, char **args)
 {
 	int		code;
 	size_t	i;
 
+	(void)argc;
 	if (!args)
 		return (1);
 	i = 1;

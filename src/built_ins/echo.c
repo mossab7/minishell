@@ -37,12 +37,18 @@ int	is_no_nlarg(char *arg)
 	return (*arg == 0);
 }
 
-int	built_in_echo(t_env *env, char **args)
+int	built_in_echo(t_env *env, int argc, char **args)
 {
 	bool	new_line;
 	size_t	i;
 
 	(void)env;
+	if (argc == 1)
+	{
+		if (ft_printf("\n") < 0)
+			return (env->last_command_status = 1);
+		return (env->last_command_status = 0);
+	}
 	new_line = true;
 	i = 1;
 	if (is_no_nlarg(args[i]))

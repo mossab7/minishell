@@ -11,10 +11,11 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-int	built_in_unset(t_env *env, char **args)
+int	built_in_unset(t_env *env, int argc, char **args)
 {
 	size_t	iter;
 
+	(void)argc;
 	iter = 1;
 	while (args[iter])
 	{
