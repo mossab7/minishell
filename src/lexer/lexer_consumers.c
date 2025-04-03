@@ -14,8 +14,8 @@
 static void	init_word_token(t_lexer *lex, t_token **tok, t_u8 *input_state,
 		t_stack *stacks[])
 {
-	*tok = lex->tokens->current;
 	token_next(lex->tokens);
+	*tok = lex->tokens->items + lex->tokens->size - 1;
 	(*tok)->type = TOK_WORD;
 	*input_state = 0;
 	stacks[SINGLE_QUOTES_INDEX] = stack_construct();

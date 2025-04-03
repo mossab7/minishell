@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 #ifndef LIBFT_H
 # define LIBFT_H
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <stdbool.h>
 # include <stdint.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <sys/stat.h>
 # include <sys/types.h>

@@ -51,7 +51,9 @@ int	str_search(t_string *vec, const char *text)
 	char	*cursor;
 
 	cursor = ft_strnstr(((const char *) vec->cstring), text, vec->size);
-	return ((int)(cursor - vec->cstring));
+	if (cursor)
+		return ((int)(cursor - vec->cstring));
+	return (-1);
 }
 
 void	str_print(t_string *str)
