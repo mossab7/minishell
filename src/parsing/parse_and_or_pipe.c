@@ -17,16 +17,9 @@ t_ast	*process_logical_operator(t_token_type token_type, t_ast *left,
 {
 	t_node_type	node_type;
 	t_ast		*right;
-	const char	*error_msg;
 
 	if (left == NULL)
-	{
-		if (token_type == TOK_LOGICAL_AND)
-			error_msg = "near unexpected token `&&'";
-		else
-			error_msg = "near unexpected token `||'";
-		return (syntax_error(error_msg));
-	}
+		return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
 	(*index)++;
 	if (token_type == TOK_LOGICAL_AND)
 		node_type = NODE_LOGICAL_AND;
@@ -75,10 +68,10 @@ t_ast	*parse_primary(t_token_array *tokens, size_t *index)
 	{
 		node = parse_and_or(tokens, index);
 		if (node == NULL)
-			return (syntax_error("near unexpected token `()'"));
+			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
 		if (!match_token(TOK_CPAREN, tokens, index))
 		{
-			return (syntax_error("Expected closing parenthesis"));
+			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
 		}
 		node = parse_subshell_redirections(tokens, index, node);
 	}
@@ -86,7 +79,7 @@ t_ast	*parse_primary(t_token_array *tokens, size_t *index)
 	{
 		node = parse_command(tokens, index);
 		if (!node && !check_context_flag(FLAG_SYNTAX_ERROR))
-			return (syntax_error("Unexpected token"));
+			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
 	}
 	return (node);
 }
@@ -103,7 +96,7 @@ t_ast	*parse_pipe(t_token_array *tokens, size_t *index)
 		left = create_binary_node(NODE_PIPE, left, parse_primary(tokens,
 					index));
 		if (!left->right)
-			return (syntax_error("Invalid null command"));
+			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
 	}
 	return (left);
 }

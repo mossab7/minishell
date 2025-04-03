@@ -25,7 +25,9 @@ bool	is_ambiguous_redirect(const char *filename)
 			return (true);
 		}
 	}
-	if (strchr(filename, '$') || strchr(filename, '*') || strchr(filename, '?'))
+	if (ft_strchr((char *)filename, '$')
+		|| ft_strchr((char *)filename, '*')
+		|| ft_strchr((char *)filename, '?'))
 		return (true);
 	return (false);
 }
