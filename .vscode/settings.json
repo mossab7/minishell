@@ -1,7 +1,0 @@
-{
-	"files.associations": {
-		"zen.h": "c",
-		"assert.h": "c",
-		"built_in_commands.h": "c"
-	}
-}
