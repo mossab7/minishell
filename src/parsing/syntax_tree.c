@@ -17,7 +17,7 @@ void	*syntax_error(const char *message)
 	if (!check_context_flag(FLAG_SYNTAX_ERROR)
 		&& !check_context_flag(FLAG_HERE_DOC_ACTIVE))
 	{
-		fprintf(stderr, "Syntax error: %s\n", message);
+		zen_elog ("Syntax error: %s\n", message);
 		rl_replace_line("", 0);
 		rl_on_new_line();
 	}
