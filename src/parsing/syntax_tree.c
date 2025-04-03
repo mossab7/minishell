@@ -55,7 +55,8 @@ t_ast	*build_ast(t_token_array *tokens)
 	token = peek_token(tokens, index);
 	if (token.type != TOK_EOF)
 	{
-		syntax_error("Unexpected input");
+		zen_elog ("syntax error near unexpected token : %s\n"\
+			, tokens->items[index].lexeme->cstring);
 		return (NULL);
 	}
 	if (check_context_flag(FLAG_SYNTAX_ERROR))

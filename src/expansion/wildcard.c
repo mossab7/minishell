@@ -79,7 +79,7 @@ static void	process_dir_entries(DIR *dir, t_string_vector *entries,
 		if (!entry)
 			break ;
 		hidden = (*(entry->d_name) == '.');
-		if ((!hidden || *pattern == '.') && strchr(pattern, '/')
+		if ((!hidden || *pattern == '.') && ft_strchr(pattern, '/')
 			&& is_dir(entry->d_name))
 		{
 			handle_dir(entry->d_name, entries, pattern);
