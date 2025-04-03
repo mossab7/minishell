@@ -14,6 +14,7 @@
 void	handle_child_sigint(int signo)
 {
 	(void)signo;
+	printf("\n");
 	exit(130);
 }
 
