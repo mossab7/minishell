@@ -103,7 +103,7 @@ int	setup_here_doc(t_redirect *redir)
 	if (pid == -1)
 	{
 		perror("fork");
-		return (cleanup_on_error(redir->filename, fd));
+		return (cleanup_on_error(redir->filename, fd, -1));
 	}
 	if (pid == 0)
 		handle_heredoc_child(fd, pipefd, redir);
@@ -112,7 +112,7 @@ int	setup_here_doc(t_redirect *redir)
 	read_from_pipe(pipefd[0]);
 	close(pipefd[0]);
 	waitpid(pid, &status, 0);
-	if (WIFSIGNALED(status))
-		return (cleanup_on_error(redir->filename, -1));
+	if (WIFSIGNALED(WEXITSTATUS(status)))
+		return (cleanup_on_error(redir->filename, -1, status));
 	return (0);
 }

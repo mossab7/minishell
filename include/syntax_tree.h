@@ -95,7 +95,7 @@ t_ast					*parse_subshell_redirections(t_token_array *tokens,
 							size_t *index, t_ast *node);
 t_ast					*parse_primary(t_token_array *tokens, size_t *index);
 char					*ft_mkstemp(void);
-int						cleanup_on_error(char *filename, int fd);
+int						cleanup_on_error(char *filename, int fd, int status);
 int						init_heredoc(char **filename, int *fd, int pipefd[2]);
 t_string				*read_heredoc_content(t_redirect *redir, int fd);
 void					handle_heredoc_child(int fd, int pipefd[2],

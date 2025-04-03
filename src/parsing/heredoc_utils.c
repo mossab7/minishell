@@ -32,7 +32,7 @@ char	*ft_mkstemp(void)
 	return (filename);
 }
 
-int	cleanup_on_error(char *filename, int fd)
+int	cleanup_on_error(char *filename, int fd, int status)
 {
 	if (fd >= 0)
 		close(fd);
@@ -41,6 +41,7 @@ int	cleanup_on_error(char *filename, int fd)
 		unlink(filename);
 		ft_free(filename);
 	}
-	set_context_flag(FLAG_SYNTAX_ERROR);
+	if (status == -1 || WTERMSIG(WEXITSTATUS(status)) == SIGINT)
+		set_context_flag(FLAG_SYNTAX_ERROR);
 	return (-1);
 }

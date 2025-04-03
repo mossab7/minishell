@@ -14,7 +14,7 @@
 void	handle_child_sigint(int signo)
 {
 	(void)signo;
-	exit(0);
+	exit(130);
 }
 
 void	setup_heredoc_signals(void)
