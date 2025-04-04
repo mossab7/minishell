@@ -29,4 +29,5 @@ void	ft_quote_error(t_parser *parser)
 		parser->lexer->cursor--;
 	ppad(parser->lexer->cursor, ' ', NULL);
 	ft_fprintf(STDERR_FILENO, "^\n");
+	add_history(parser->input->cstring);
 }
