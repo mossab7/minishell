@@ -71,7 +71,7 @@ t_ast	*parse_primary(t_token_array *tokens, size_t *index)
 			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
 		if (!match_token(TOK_CPAREN, tokens, index))
 		{
-			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
+			return (syntax_error("unclosed parenthesis"));
 		}
 		node = parse_subshell_redirections(tokens, index, node);
 	}
