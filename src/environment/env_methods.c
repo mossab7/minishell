@@ -11,14 +11,14 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-void	increment_shell_level(t_env *env, int index)
+void	increment_shell_level(t_env *env)
 {
 	long	lvl;
 	int		res;
 
 	if (index < 0)
 		return ;
-	res = ft_atol_base(env->cells->items[index].value, BASE_10, &lvl);
+	res = ft_atol_base(env->cells->items[env->cells->size - 1].value, BASE_10, &lvl);
 	lvl++;
 	if (res == NON || res == OVER_FLOW_DETECTED || lvl > SHLVL_MAX)
 	{
@@ -27,10 +27,10 @@ void	increment_shell_level(t_env *env, int index)
 	}
 	if (lvl < 0)
 		lvl = 0;
-	ft_free(env->cells->items[index].value);
-	env->cells->items[index].value = ft_itoa(lvl);
-	ft_free(env->export_cells->items[index].value);
-	env->export_cells->items[index].value = ft_itoa(lvl);
+	ft_free(env->cells->items[env->cells->size - 1].value);
+	env->cells->items[env->cells->size - 1].value = ft_itoa(lvl);
+	ft_free(env->export_cells->items[env->cells->size - 1].value);
+	env->export_cells->items[env->cells->size - 1].value = ft_itoa(lvl);
 }
 
 static void	process_env_entries(t_env *env, const char *envp[])
@@ -47,7 +47,7 @@ static void	process_env_entries(t_env *env, const char *envp[])
 		if (ft_strcmp(entry[KEY_INDEX], "PATH") == 0)
 			parse_path(env->path, entry[VALUE_INDEX]);
 		if (ft_strcmp(entry[KEY_INDEX], "SHLVL") == 0)
-			increment_shell_level(env, iter);
+			increment_shell_level(env);
 		ft_free(entry[KEY_INDEX]);
 		ft_free(entry[VALUE_INDEX]);
 		ft_free(entry);
