@@ -14,6 +14,11 @@
 void	parser_procced_to_exec(t_parser *parser)
 {
 	parser->tree = build_ast(parser->lexer->tokens);
+	if (parser->lexer->tokens->size == 0)
+	{
+		add_history(parser->input->cstring);
+		return ;
+	}
 	cells_push_back(parser->env->cells,
 		"_", parser->lexer->tokens->items[parser
 		->lexer->tokens->size - 1].lexeme->cstring);
