@@ -15,22 +15,21 @@ void	increment_shell_level(t_env *env)
 {
 	long	lvl;
 	int		res;
+	int		index;
 
-	if (index < 0)
-		return ;
-	res = ft_atol_base(env->cells->items[env->cells->size - 1].value, BASE_10, &lvl);
+	index = env->cells->size - 1;
+	res = ft_atol_base(env->cells->items[index].value, BASE_10, &lvl);
 	lvl++;
-	if (res == NON || res == OVER_FLOW_DETECTED || lvl > SHLVL_MAX)
-	{
+	if (lvl > SHLVL_MAX && (res != NON && res != OVER_FLOW_DETECTED))
 		zen_elog("warning: shell level (%d) too high, resetting to 1\n", lvl);
+	if (res == NON || res == OVER_FLOW_DETECTED || lvl > SHLVL_MAX)
 		lvl = 1;
-	}
 	if (lvl < 0)
 		lvl = 0;
-	ft_free(env->cells->items[env->cells->size - 1].value);
-	env->cells->items[env->cells->size - 1].value = ft_itoa(lvl);
-	ft_free(env->export_cells->items[env->cells->size - 1].value);
-	env->export_cells->items[env->cells->size - 1].value = ft_itoa(lvl);
+	ft_free(env->cells->items[index].value);
+	env->cells->items[index].value = ft_itoa(lvl);
+	ft_free(env->export_cells->items[index].value);
+	env->export_cells->items[index].value = ft_itoa(lvl);
 }
 
 static void	process_env_entries(t_env *env, const char *envp[])

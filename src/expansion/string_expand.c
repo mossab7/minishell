@@ -31,8 +31,11 @@ static t_string	*build_key(t_string *string, t_u8 context)
 	key = str_construct();
 	str_push_back(key, string->cstring[string->cursor++]);
 	while (string->cstring[string->cursor] != 0
-		&& !ft_isspace(string->cstring[string->cursor]))
+		&& !ft_isspace(string->cstring[string->cursor])
+		&& string->cstring[string->cursor] != '/')
 	{
+		if (key->size > 1 && !ft_isalnum(string->cstring[string->cursor]))
+			break ;
 		str_push_back(key, string->cstring[string->cursor]);
 		string->cursor++;
 		if (context != string->mask->items[string->cursor])
