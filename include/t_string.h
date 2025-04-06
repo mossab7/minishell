@@ -36,7 +36,7 @@ typedef struct s_string
 }			t_string;
 
 t_string	*str_construct(void);
-int			str_search(t_string *vec, const char *text);
+int			str_search(t_string *vec, const char *text, int offset);
 int			str_search_using_cursor(t_string *vec, const char *text);
 t_string	*vstr_construct(size_t count, ...);
 void		str_expand(t_string *vec);

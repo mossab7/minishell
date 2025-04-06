@@ -41,10 +41,16 @@ void	str_substitute(t_string *string, char *repl, t_string *which)
 	int		cursor;
 	size_t	repl_size;
 
-	cursor = str_search(string, (const char *)which->cstring);
+	cursor = str_search(string, (const char *)which->cstring, 0);
 	repl_size = ft_strlen(repl);
 	while (cursor >= 0)
 	{
+		if (string->mask->items[cursor] == 1)
+		{
+			cursor = str_search(string,
+					(const char *)which->cstring, (cursor + 1));
+			continue ;
+		}
 		while (string->size - which->size + repl_size >= string->cap)
 			str_expand_anyhow(string);
 		str_shift_left(string, cursor, which->size);
@@ -52,6 +58,8 @@ void	str_substitute(t_string *string, char *repl, t_string *which)
 		ft_memcpy((string->cstring + cursor), (const char *)repl, repl_size);
 		ft_memset((string->mask->items + cursor), EXPANDED, repl_size);
 		string->cstring[string->size] = 0;
-		cursor = str_search(string, (const char *)which->cstring);
+		cursor += repl_size;
+		cursor -= which->size;
+		cursor = str_search(string, (const char *)which->cstring, cursor);
 	}
 }

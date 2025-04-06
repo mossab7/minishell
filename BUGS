@@ -1,0 +1,12 @@
+- HANG
+lazmoud@/home/lazmoud/Desktop/programming/projects/minishell: export a="ls -
+al"
+lazmoud@/home/lazmoud/Desktop/programming/projects/minishell: echo " $a$jf$a
+ "
+^C^C^C^Z^Z^Z
+- ls should work.
+lazmoud@/home/lazmoud/Desktop/programming/projects/minishell: $'ls'
+- all heredocs should term in ^C signal
+lazmoud@/home/lazmoud/Desktop/programming/projects/minishell: << a << asdasd
+> ^C
+> ^C

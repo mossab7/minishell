@@ -21,7 +21,9 @@ void	increment_shell_level(t_env *env)
 	res = ft_atol_base(env->cells->items[index].value, BASE_10, &lvl);
 	lvl++;
 	if (lvl > SHLVL_MAX && (res != NON && res != OVER_FLOW_DETECTED))
+	{
 		zen_elog("warning: shell level (%d) too high, resetting to 1\n", lvl);
+	}
 	if (res == NON || res == OVER_FLOW_DETECTED || lvl > SHLVL_MAX)
 		lvl = 1;
 	if (lvl < 0)

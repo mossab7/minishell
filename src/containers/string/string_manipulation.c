@@ -43,14 +43,17 @@ int	str_search_using_cursor(t_string *vec, const char *text)
 
 	cursor = ft_strnstr(((const char *) vec->cstring + vec->cursor),
 			text, vec->size);
-	return ((int)(cursor - vec->cstring));
+	if (cursor)
+		return ((int)(cursor - vec->cstring));
+	return (-1);
 }
 
-int	str_search(t_string *vec, const char *text)
+int	str_search(t_string *vec, const char *text, int offset)
 {
 	char	*cursor;
 
-	cursor = ft_strnstr(((const char *) vec->cstring), text, vec->size);
+	cursor = ft_strnstr(((const char *) vec->cstring + offset),
+			text, vec->size);
 	if (cursor)
 		return ((int)(cursor - vec->cstring));
 	return (-1);

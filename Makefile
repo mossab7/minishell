@@ -14,7 +14,7 @@ SRCS=./src/containers/string/string.c ./src/containers/token/token_array.c ./src
 	./src/built_ins/exit.c ./src/built_ins/unset.c ./src/signals/here_doc_signals.c ./src/parsing/heredoc_utils.c ./src/parsing/setup_heredoc.c ./src/parsing/parse_and_or_pipe.c\
 	./src/environment/env_insert_defaults.c ./src/environment/env_join.c ./src/expansion/tokens_expand.c ./src/containers/token/tokens_copying.c ./src/execution/built_ins_exec.c\
 	./src/expansion/wildcard_match.c ./src/containers/token/tokens_wild_card_helpers.c ./src/expansion/wildcard_open_dir.c ./src/expansion/wildcard_errors.c ./src/execution/execute_pipe.c\
-	./src/lexer/lexer_consume_symbol.c
+	./src/lexer/lexer_consume_symbol.c ./src/expansion/find_next_expansion.c
 OBJS=$(SRCS:%.c=%.o)
 ZEN_LIB=libzen.a
 NAME=minishell
@@ -22,7 +22,7 @@ CC=cc
 LIBS=-L. -L$(LIB_FT_PRINTF_DIR) -L$(LIB_FT_DIR) -lzen -lftprintf -lreadline -lft
 INCLUDE=-I./include
 MAIN=./src/zen.c
-CFLAGS=-Wall -Wextra -Werror $(INCLUDE) -ggdb -fsanitize=address -g
+CFLAGS=-Wall -Wextra -Werror $(INCLUDE) # -ggdb -fsanitize=address -g
 AR=ar rsc
 RM=rm -f
 

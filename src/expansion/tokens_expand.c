@@ -11,29 +11,6 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-static char	*get_last(t_string *string)
-{
-	return (&string->cstring[string->size - 1]);
-}
-
-void	find_next_expansion(t_token_array *tokens, size_t *cursor)
-{
-	*cursor = 0;
-	while (*cursor < tokens->size
-		&& (!ft_strchr(tokens->items[*cursor].lexeme->cstring, '$')
-			|| (tokens->items[*cursor].lexeme->size == 1)))
-		(*cursor)++;
-	while (*cursor < tokens->size
-		&& (tokens->items[*cursor].type != TOK_WORD))
-		(*cursor)++;
-	if (*cursor < tokens->size)
-	{
-		if (get_last(tokens->items[*cursor].lexeme)
-			== ft_strchr(tokens->items[*cursor].lexeme->cstring, '$'))
-			*cursor = tokens->size;
-	}
-}
-
 int	is_expandable(t_token_type type)
 {
 	return ((type == TOK_WORD) || (type == TOK_WILD_CARD));
