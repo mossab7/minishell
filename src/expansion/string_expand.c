@@ -17,7 +17,7 @@ static int	find_dollar_sign(t_string *string)
 		return (0);
 	string->cursor = str_search(string, "$", string->cursor);
 	while (string->cursor > 0 && string->cursor < (int)string->size
-		&& string->mask->items[string->cursor] == SINGLE_QUOTED)
+		&& is_dollar_sign_not_expandable(string, string->cursor))
 	{
 		string->cursor++;
 		string->cursor = str_search(string, "$", string->cursor);
@@ -32,10 +32,12 @@ static t_string	*build_key(t_string *string, t_u8 context)
 	t_string	*key;
 
 	key = str_construct();
+	key->mask->context = context;
 	str_push_back(key, string->cstring[string->cursor++]);
 	while (string->cstring[string->cursor] != 0
 		&& !ft_isspace(string->cstring[string->cursor])
-		&& string->cstring[string->cursor] != '/')
+		&& string->cstring[string->cursor] != '/'
+		&& string->mask->items[string->cursor] == context)
 	{
 		if (key->size > 1 && !ft_isalnum(string->cstring[string->cursor])
 			&& string->cstring[string->cursor] != '_')
@@ -47,7 +49,6 @@ static t_string	*build_key(t_string *string, t_u8 context)
 		if (string->cstring[string->cursor] == '$')
 			break ;
 	}
-	key->mask->context = context;
 	return (key);
 }
 
@@ -55,6 +56,11 @@ static t_string	*handle_solo_dollar(t_string *string, t_string *key)
 {
 	if (key->size == 1)
 	{
+		if (string->cursor && string->cstring[string->cursor] != 0)
+		{
+			str_shift_left(string, (string->cursor - 1), 1);
+			string->cstring[string->size] = 0;
+		}
 		str_destruct(key);
 		return (extract_key(string));
 	}

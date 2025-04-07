@@ -35,6 +35,8 @@ typedef struct s_string
 	int		cursor;
 }			t_string;
 
+void		str_shift_left(t_string *str, int new_dest, int size);
+void		str_shift_right(t_string *string, int old_dest, int size);
 t_string	*str_construct(void);
 int			str_search(t_string *vec, const char *text, int offset);
 int			str_search_using_cursor(t_string *vec, const char *text);
@@ -57,4 +59,5 @@ void		mask_fill(t_mask *mask, t_u8 item, size_t size);
 void		mask_copy(t_mask *dst, t_mask *src, size_t start);
 void		mask_print(t_mask *mask);
 void		mask_copy_ignore_spaces(t_mask *dst, t_string *src, size_t start);
+int			is_dollar_sign_not_expandable(t_string *string, int index);
 #endif // !T_STRING_H

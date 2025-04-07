@@ -65,7 +65,10 @@ void	expand_command(t_env *env, t_token_array **tokens_array, size_t cursor)
 		if (!get_next_(tokens, &cursor))
 			break ;
 		if (tokens->items[cursor].type == TOK_WORD)
+		{
+			tokens->items[cursor].lexeme->cursor = 0;
 			tokens_expand(env, tokens, &cursor, is_export);
+		}
 		else if (tokens->items[cursor].type == TOK_WILD_CARD)
 			wildcard_expand(tokens_array, &cursor);
 	}
