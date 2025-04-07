@@ -141,4 +141,6 @@ t_ast					*create_binary_node(t_node_type type, t_ast *left,
 							t_ast *right);
 t_ast					*parse_primary(t_token_array *tokens, size_t *index);
 t_ast					*parse_pipe(t_token_array *tokens, size_t *index);
+void	heredoc_traverse_ast(t_ast *root, int *pipefd);
+int heredoc_collect_all(t_ast *root);
 #endif // SYNTAX_TREE_H
