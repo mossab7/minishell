@@ -135,7 +135,7 @@ int heredoc_collect_all(t_ast *root)
 		close(pipefd[0]);
 		heredoc_traverse_ast(root,pipefd);
 		close(pipefd[1]);
-		return (0);
+		exit(0);
 	}
 	close(pipefd[1]);
 	read_from_pipe(pipefd[0]);
