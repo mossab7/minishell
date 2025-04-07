@@ -11,10 +11,11 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-static int	is_dollar_sign_expandable(t_string *string, int index)
+int	is_dollar_sign_not_expandable(t_string *string, int index)
 {
 	return (ft_isspace(string->cstring[index + 1])
 		|| string->mask->items[index] == SINGLE_QUOTED
+		|| string->mask->items[index] == EXPANDED
 		|| !string->cstring[index + 1]);
 }
 
@@ -36,7 +37,7 @@ static int	look_for_valid(t_string *string)
 		index = str_search_using_cursor(string, "$");
 		if (index < 0 || index == (int)string->size - 1)
 			return (0);
-		if (is_dollar_sign_expandable(string, index))
+		if (is_dollar_sign_not_expandable(string, index))
 		{
 			string->cursor = (index + 1);
 			continue ;
