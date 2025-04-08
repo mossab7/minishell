@@ -5,3 +5,5 @@ lazmoud@/home/lazmoud/Desktop/programming/projects/minishell: << a << asdasd
 
  ls -al$jfls -al
 2333333222333333
+
+when oldpwd is not valid it shall not be added to env

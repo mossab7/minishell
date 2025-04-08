@@ -14,7 +14,6 @@
 void	parser_procced_to_exec(t_parser *parser)
 {
 	parser->tree = build_ast(parser->lexer->tokens);
-	heredoc_collect_all(parser->tree);
 	if (parser->lexer->tokens->size == 0)
 	{
 		add_history(parser->input->cstring);

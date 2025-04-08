@@ -17,12 +17,12 @@ int	execute_here_doc(t_redirect *redir)
 	int	fd;
 
 	fd = open(redir->filename, O_RDONLY);
-	unlink(redir->filename);
 	if (fd == -1)
 	{
 		perror(redir->filename);
 		return (-1);
 	}
+	unlink(redir->filename);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	return (0);

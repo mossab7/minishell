@@ -58,7 +58,8 @@ t_redirect	*create_redirect(t_redirect_type type, char *target)
 	if (type == REDIR_HEREDOC)
 	{
 		redir->delimiter = target;
-		redir->filename = NULL;
+		if (!check_context_flag(FLAG_SIGINT_RECEIVED))
+			setup_here_doc(redir);
 	}
 	else
 	{

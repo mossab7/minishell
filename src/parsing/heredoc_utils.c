@@ -12,6 +12,7 @@
 
 #include <zen.h>
 
+
 char	*ft_mkstemp(void)
 {
 	long	i;
@@ -42,6 +43,9 @@ int	cleanup_on_error(char *filename, int fd, int status)
 		ft_free(filename);
 	}
 	if (status == -1 || WTERMSIG(WEXITSTATUS(status)) == SIGINT)
+	{
 		set_context_flag(FLAG_SYNTAX_ERROR);
+		set_context_flag(FLAG_SIGINT_RECEIVED);
+	}
 	return (-1);
 }
