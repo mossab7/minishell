@@ -46,9 +46,7 @@ typedef struct s_redirect
 
 typedef struct s_command
 {
-	char				*name;
-	char				**args;
-	int					argc;
+	t_token_array		*args;
 	struct s_redirect	**redirects;
 	int					redirect_count;
 }						t_command;
@@ -109,14 +107,14 @@ bool					collect_subshell_redirections(t_ast *subshell_node,
 							t_token_array *tokens, size_t *index);
 t_ast					*parse_subshell_redirections(t_token_array *tokens,
 							size_t *index, t_ast *node);
-t_ast					*create_command_node(t_arg arg, t_redirect **redirects,
+t_ast					*create_command_node(t_token_array *args, t_redirect **redirects,
 							int redirect_count);
-void					init_command_resources(t_arg *arg,
+void					init_command_resources(t_token_array **args,
 							t_redirect ***redirects, int *redirect_count,
 							size_t size);
-void					cleanup_command_resources(t_arg *arg,
+void					cleanup_command_resources(t_token_array *args,
 							t_redirect **redirects);
-void					process_word_token(t_token token, t_arg *arg,
+void					process_word_token(t_token token, t_token_array *args,
 							size_t *index);
 bool					process_redirection_token(t_token_array *tokens,
 							size_t *index, t_redirect **redirects,

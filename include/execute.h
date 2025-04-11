@@ -39,5 +39,5 @@ int		execute_built_in_commands(t_command *cmd, char *command, t_env *env,
 			char **args);
 int		get_command_status(t_env *env, int status);
 int		execute_command(t_command *cmd, t_env *env);
-void	launch_command(t_command *cmd, t_env *env);
+void	launch_command(t_command *cmd, t_env *env, char **args);
 #endif // EXECUTE_H

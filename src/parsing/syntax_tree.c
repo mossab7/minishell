@@ -73,8 +73,6 @@ void	ast_destroy(t_ast *root)
 	ast_destroy(root->left);
 	ast_destroy(root->right);
 	i = 0;
-	while (i < root->u_value.command.argc)
-		ft_free(root->u_value.command.args[i++]);
 	ft_free(root->u_value.command.args);
 	i = 0;
 	while (i < root->u_value.command.redirect_count)

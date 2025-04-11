@@ -20,7 +20,7 @@ t_ast	*create_subshell_node(t_ast *child)
 	node->type = NODE_SUBSHELL;
 	if (child)
 	{
-		node->u_value.command = (t_command){.args = NULL, .argc = 0,
+		node->u_value.command = (t_command){.args = NULL,
 			.redirects = child->u_value.command.redirects,
 			.redirect_count = child->u_value.command.redirect_count};
 	}
@@ -38,7 +38,6 @@ t_ast	*init_subshell_node(t_ast *child, t_token_array *tokens)
 	subshell_node->left = child;
 	subshell_node->right = NULL;
 	subshell_node->u_value.command.args = NULL;
-	subshell_node->u_value.command.argc = 0;
 	subshell_node->u_value.command.redirects = alloc(tokens->size
 			* sizeof(t_redirect *));
 	subshell_node->u_value.command.redirect_count = 0;

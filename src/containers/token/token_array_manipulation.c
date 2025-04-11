@@ -70,3 +70,22 @@ char	*get_type_as_cstr(t_token_type type)
 	them[TOK_EOF] = "EOF";
 	return (them[type]);
 }
+
+t_token	*ft_tokdup(t_token token)
+{
+	t_token	*new_token;
+	size_t	index;
+
+	new_token = alloc(sizeof(t_token));
+	new_token->type = token.type;
+	new_token->lexeme = vstr_construct(1,token.lexeme->cstring);
+	new_token->lexeme->mask = mask_construct();
+	index = 0;
+	while (index < token.lexeme->mask->size)
+	{
+		mask_push_back(new_token->lexeme->mask,
+			token.lexeme->mask->items[index]);
+		index++;
+	}
+	return (new_token);
+}

@@ -52,6 +52,7 @@ t_string	*read_heredoc_content(t_redirect *redir, int fd)
 		write(fd, line->cstring, line->size);
 		write(fd, "\n", 1);
 		str_join(input, 2, line->cstring, "\n");
+		add_history(line->cstring);
 		str_destruct(line);
 	}
 	return (input);

@@ -86,7 +86,7 @@ int	execute_built_in_commands(t_command *cmd, char *command, t_env *env,
 		return (-1);
 	if (setup_builtin_redirections(cmd, setup) == -1)
 		return (1);
-	command_result = functions[i](env, cmd->argc, args);
+	command_result = functions[i](env, cmd->args->size, args);
 	setup_builtin_redirections(cmd, teardown);
 	return (command_result);
 }

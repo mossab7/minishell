@@ -128,4 +128,5 @@ bool				should_skip_expansion(t_token_array *tokens, size_t cursor);
 void				handle_no_matches(t_token_array *tokens, size_t cursor,
 						t_string_vector *entries);
 void				find_next_expansion(t_token_array *tokens, size_t *cursor);
+t_token				*ft_tokdup(t_token token);
 #endif // !TOKEN_H
