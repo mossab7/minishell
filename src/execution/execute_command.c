@@ -55,7 +55,7 @@ char	**collect_args(t_token_array *tokens)
 
 	i = 0;
 	args = alloc(sizeof(char *) * (tokens->size + 1));
-	while(i < tokens->size)
+	while (i < tokens->size)
 	{
 		args[i] = ft_strdup(tokens->items[i].lexeme->cstring);
 		i++;
@@ -85,7 +85,7 @@ int	execute_command(t_command *cmd, t_env *env)
 		return (-1);
 	}
 	if (current_pid == 0)
-		launch_command(cmd, env,args);
+		launch_command(cmd, env, args);
 	waitpid(current_pid, &status, 0);
 	return (get_command_status(env, status));
 }

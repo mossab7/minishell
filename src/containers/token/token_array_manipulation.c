@@ -78,7 +78,7 @@ t_token	*ft_tokdup(t_token token)
 
 	new_token = alloc(sizeof(t_token));
 	new_token->type = token.type;
-	new_token->lexeme = vstr_construct(1,token.lexeme->cstring);
+	new_token->lexeme = vstr_construct(1, token.lexeme->cstring);
 	new_token->lexeme->mask = mask_construct();
 	index = 0;
 	while (index < token.lexeme->mask->size)

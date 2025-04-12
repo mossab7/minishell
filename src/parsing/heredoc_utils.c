@@ -12,7 +12,6 @@
 
 #include <zen.h>
 
-
 char	*ft_mkstemp(void)
 {
 	long	i;
