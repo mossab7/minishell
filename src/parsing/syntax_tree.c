@@ -85,4 +85,3 @@ void	ast_destroy(t_ast *root)
 	ft_free(root->u_value.command.redirects);
 	ft_free(root);
 }
-

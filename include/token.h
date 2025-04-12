@@ -46,6 +46,7 @@
 	// NOTE:	set a bit
 		byte |= (1 << index)
 */
+
 typedef enum e_parsing_state
 {
 	STATE_GENERAL = 0,

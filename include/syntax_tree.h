@@ -107,8 +107,8 @@ bool					collect_subshell_redirections(t_ast *subshell_node,
 							t_token_array *tokens, size_t *index);
 t_ast					*parse_subshell_redirections(t_token_array *tokens,
 							size_t *index, t_ast *node);
-t_ast					*create_command_node(t_token_array *args, t_redirect **redirects,
-							int redirect_count);
+t_ast					*create_command_node(t_token_array *args,
+							t_redirect **redirects, int redirect_count);
 void					init_command_resources(t_token_array **args,
 							t_redirect ***redirects, int *redirect_count,
 							size_t size);
@@ -139,6 +139,6 @@ t_ast					*create_binary_node(t_node_type type, t_ast *left,
 							t_ast *right);
 t_ast					*parse_primary(t_token_array *tokens, size_t *index);
 t_ast					*parse_pipe(t_token_array *tokens, size_t *index);
-void	heredoc_traverse_ast(t_ast *root, int *pipefd);
-int heredoc_collect_all(t_ast *root);
+void					heredoc_traverse_ast(t_ast *root, int *pipefd);
+int						heredoc_collect_all(t_ast *root);
 #endif // SYNTAX_TREE_H
