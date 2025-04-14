@@ -14,8 +14,8 @@
 int	is_dollar_sign_not_expandable(t_string *string, int index)
 {
 	return (ft_isspace(string->cstring[index + 1])
-		|| string->mask->items[index] == SINGLE_QUOTED
-		|| string->mask->items[index] == EXPANDED
+		|| string->mask->items[index] & SINGLE_QUOTED
+		|| string->mask->items[index] & EXPANDED
 		|| !string->cstring[index + 1]);
 }
 

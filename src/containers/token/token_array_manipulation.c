@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:04:47 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/24 16:04:29 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/14 22:49:01 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -78,7 +78,7 @@ t_token	*ft_tokdup(t_token token)
 
 	new_token = alloc(sizeof(t_token));
 	new_token->type = token.type;
-	new_token->lexeme = vstr_construct(1,token.lexeme->cstring);
+	new_token->lexeme = vstr_construct(1, token.lexeme->cstring);
 	new_token->lexeme->mask = mask_construct();
 	index = 0;
 	while (index < token.lexeme->mask->size)

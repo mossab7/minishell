@@ -1,23 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalnum.c                                       :+:      :+:    :+:   */
+/*   ft_free_2d.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 14:27:16 by lazmoud           #+#    #+#             */
-/*   Updated: 2024/10/22 16:05:32 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/04/14 22:04:05 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/04/14 22:05:00 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-#include "libft.h"
+#include <libft.h>
 
-int	ft_isalnum(int c)
+char	**ft_free_2d(char **v, size_t size)
 {
-	return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= '0'
-			&& c <= '9'));
-}
+	size_t	e;
 
-int	ft_isalnum_or_underscore(int c)
-{
-	return (ft_isalnum(c) || c == '_');
+	if (v)
+	{
+		e = 0;
+		while (e < size)
+		{
+			ft_free(v[e]);
+			e++;
+		}
+		ft_free(v);
+	}
+	return (NULL);
 }

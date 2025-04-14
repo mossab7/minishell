@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/25 18:38:09 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/14 22:08:49 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,10 +35,11 @@
 # define ZERO_BYTE '\0'
 # define ESCAPE '\\'
 # define COMMENT '#'
-# define NOT_QUOTED 0
-# define SINGLE_QUOTED 1
-# define DOUBLE_QUOTED 2
-# define EXPANDED 3
+# define NOT_QUOTED 1
+# define SINGLE_QUOTED 2
+# define DOUBLE_QUOTED 4
+# define EXPANDED 8
+// # define FIELD_SPLIT 8
 
 /*
 	// NOTE:		Unset a bit
@@ -123,6 +124,7 @@ void				token_next(t_token_array *vec);
 void				tok_array_expand(t_token_array *vec);
 void				tok_array_expand_anyhow(t_token_array *vec);
 void				tok_array_print(t_token_array *array);
+void				tok_array_push_back(t_token_array *array, t_token *tok);
 void				token_push_back(t_token *tok, char c, t_u8 state);
 bool				should_skip_expansion(t_token_array *tokens, size_t cursor);
 void				handle_no_matches(t_token_array *tokens, size_t cursor,

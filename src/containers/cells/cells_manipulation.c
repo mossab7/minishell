@@ -84,7 +84,6 @@ void	cells_remove(t_cells *cells, char *key)
 	index = cells_search(cells, key);
 	if (index < cells->size)
 	{
-		cells->size--;
 		ft_free(cells->items[index].value);
 		ft_free(cells->items[index].key);
 		memmove(cells->items + index,

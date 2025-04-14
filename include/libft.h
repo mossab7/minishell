@@ -66,6 +66,7 @@ int							ft_atol_base(const char *str, const char *base,
 void						ft_bzero(void *s, size_t n);
 void						*ft_calloc(size_t count, size_t size);
 int							ft_isalnum(int c);
+int							ft_isalnum_or_underscore(int c);
 int							ft_isalpha(int c);
 int							ft_isascii(int c);
 int							ft_isdigit(int c);
@@ -153,4 +154,6 @@ char						*ft_strcpy_until(char *dst, const char *src,
 char						*ft_strchr(char *s, int c);
 int							is_not_null(int c);
 bool						is_dir(const char *filename);
+char						**ft_free_2d(char **v, size_t size);
+char						**ft_split_set(char const *s, char *set);
 #endif // LIBFT_H

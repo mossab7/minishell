@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:43:05 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 17:10:54 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/14 22:09:53 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -21,7 +21,7 @@ void	expand(t_env *env, t_token_array **tokens_array)
 	while (iter < tokens->size)
 	{
 		if (tokens->items[iter].type == TOK_WORD)
-			tokens_expand(env, tokens, &iter, 0);
+			tokens_expand(env, tokens, &iter);
 		else if (tokens->items[iter].type == TOK_WILD_CARD)
 			wildcard_expand(tokens_array, &iter);
 		iter++;
@@ -67,9 +67,10 @@ void	expand_command(t_env *env, t_token_array **tokens_array, size_t cursor)
 		if (tokens->items[cursor].type == TOK_WORD)
 		{
 			tokens->items[cursor].lexeme->cursor = 0;
-			tokens_expand(env, tokens, &cursor, is_export);
+			tokens_expand(env, tokens, &cursor);
 		}
 		else if (tokens->items[cursor].type == TOK_WILD_CARD)
 			wildcard_expand(tokens_array, &cursor);
 	}
+	field_split(tokens_array, is_export);
 }

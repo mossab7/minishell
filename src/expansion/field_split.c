@@ -6,58 +6,85 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:22:59 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 17:05:49 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/14 22:43:43 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
 
-void	put_fields_inplace(t_token_array *tokens, size_t index,
-		t_token_array *fields, t_mask *mask)
+int	is_field_split_character(t_string *lexeme)
 {
-	size_t	i;
-	size_t	j;
-
-	ft_memmove(tokens->items + index + fields->size, tokens->items + index,
-		(tokens->size - index) * sizeof(*tokens->items));
-	ft_memcpy(tokens->items + index, fields->items, fields->size
-		* sizeof(*tokens->items));
-	i = index;
-	while ((i - index) < fields->size)
-	{
-		tokens->items[i].lexeme = vstr_construct(1, fields->items[i
-				- index].lexeme->cstring);
-		tokens->items[i].lexeme->mask->size = 0;
-		j = 0;
-		while (j < tokens->items[i].lexeme->size
-			&& mask->cursor < mask->size)
-		{
-			mask_push_back(tokens->items[i].lexeme->mask,
-				mask->items[mask->cursor]);
-			mask->cursor++;
-			j++;
-		}
-		i++;
-	}
-	tokens->size += fields->size;
+	return ((lexeme->mask->items[lexeme->cursor] & EXPANDED)
+		&& (lexeme->mask->items[lexeme->cursor] & NOT_QUOTED));
 }
 
-void	tokens_field_split(t_token_array *tokens, size_t index)
+int	lexeme_ended(t_string *lexeme)
 {
-	t_token_array	*fields;
-	t_mask			*mask;
-	t_token			*tk;
+	return (lexeme->cursor >= (int)lexeme->size);
+}
 
-	mask = mask_construct();
-	tk = &(tokens->items[index]);
-	mask_copy_ignore_spaces(mask, tk->lexeme, 0);
-	fields = tokenize_source((const char *)tk->lexeme->cstring);
-	while (fields->size + tokens->size >= tokens->cap)
-		tok_array_expand_anyhow(tokens);
-	str_destruct(tk->lexeme);
-	ft_memmove((tokens->items + index + 0), (tokens->items + index + 1),
-		(tokens->size - index) * sizeof(*tokens->items));
-	tokens->size--;
-	if (fields->size)
-		put_fields_inplace(tokens, index, fields, mask);
-	toks_destroy(fields);
+void	consume_non_splitable(t_token *dst, t_token *src)
+{
+	while (!lexeme_ended(src->lexeme)
+		&& (!is_field_split_character(src->lexeme)
+			|| !ft_isspace(src->lexeme->cstring[src->lexeme->cursor])))
+	{
+		token_push_back(dst, src->lexeme->cstring[src->lexeme->cursor],
+			src->lexeme->mask->items[src->lexeme->cursor]);
+		src->lexeme->cursor++;
+	}
+}
+
+void	consume_into_token(t_token_array *dest_array, t_token *tk)
+{
+	t_token			tmp_token;
+
+	tmp_token.lexeme = str_construct();
+	tmp_token.type = tk->type;
+	if (!lexeme_ended(tk->lexeme) && is_field_split_character(tk->lexeme))
+	{
+		while (!lexeme_ended(tk->lexeme)
+			&& ft_isspace(tk->lexeme->cstring[tk->lexeme->cursor]))
+			tk->lexeme->cursor++;
+		while (!lexeme_ended(tk->lexeme)
+			&& is_field_split_character(tk->lexeme))
+		{
+			token_push_back(&tmp_token,
+				tk->lexeme->cstring[tk->lexeme->cursor],
+				tk->lexeme->mask->items[tk->lexeme->cursor]);
+			tk->lexeme->cursor++;
+			if (ft_isspace(tk->lexeme->cstring[tk->lexeme->cursor]))
+				break ;
+		}
+	}
+	consume_non_splitable(&tmp_token, tk);
+	tok_array_push_back(dest_array, &tmp_token);
+	str_destruct(tmp_token.lexeme);
+}
+
+void	field_split(t_token_array **tokens_array, int is_export)
+{
+	t_token_array	*tokens;
+	t_token			*tk;
+	t_token_array	*new_tokens;
+	size_t			i;
+
+	new_tokens = tok_array_construct();
+	tokens = *tokens_array;
+	i = 0;
+	while (i < tokens->size)
+	{
+		tk = (&tokens->items[i]);
+		tk->lexeme->cursor = 0;
+		if (is_export && ft_strchr(tk->lexeme->cstring, '='))
+		{
+			tok_array_push_back(new_tokens, tk);
+			i++;
+			continue ;
+		}
+		while (!lexeme_ended(tk->lexeme))
+			consume_into_token(new_tokens, tk);
+		i++;
+	}
+	toks_destroy(*tokens_array);
+	*tokens_array = new_tokens;
 }

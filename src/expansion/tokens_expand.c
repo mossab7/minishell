@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:08:42 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 20:24:36 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/14 22:54:13 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -16,14 +16,7 @@ int	is_expandable(t_token_type type)
 	return ((type == TOK_WORD) || (type == TOK_WILD_CARD));
 }
 
-static int	must_field_split(t_string *key, t_token *tk, int is_export)
-{
-	return (key->mask->context == NOT_QUOTED
-		&& !is_export && !ft_strchr(tk->lexeme->cstring, '='));
-}
-
-void	tokens_expand(t_env *env, t_token_array *tokens,
-				size_t *cursor, int is_export)
+void	tokens_expand(t_env *env, t_token_array *tokens, size_t *cursor)
 {
 	t_string	*key;
 	char		*value;
@@ -38,11 +31,6 @@ void	tokens_expand(t_env *env, t_token_array *tokens,
 		else
 			value = ft_strdup(env_get(env, ((key->cstring) + 1)));
 		str_substitute(tk->lexeme, value, key);
-		if (must_field_split(key, tk, is_export))
-		{
-			tokens_field_split(tokens, *cursor);
-			find_next_expansion(tokens, cursor);
-		}
 		ft_free(value);
 		str_destruct(key);
 		if (tokens->size == 0 || *cursor == tokens->size)

@@ -52,13 +52,12 @@ typedef enum e_error_res
 void			lex_quote(t_token *tok, t_u8 *state, char quote,
 					t_stack *stacks[QUOTING_STACKS_SIZE]);
 void			tokens_expand(t_env *env,
-					t_token_array *tokens,
-					size_t *cursor, int is_export);
+					t_token_array *tokens, size_t *cursor);
 void			string_expand(t_env *env, t_string *string);
 void			expand(t_env *env, t_token_array **tokens);
 int				zen_elog(const char *fmt, ...);
 t_string		*zen_prompt(t_env *env);
-void			tokens_field_split(t_token_array *tokens, size_t index);
+void			field_split(t_token_array **tokens_array, int is_export);
 void			wildcard_expand(t_token_array **tokens, size_t *cursor);
 void			ft_quote_error(t_parser *parser);
 t_string		*extract_key(t_string *string);

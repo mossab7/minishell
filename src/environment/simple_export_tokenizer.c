@@ -24,7 +24,7 @@ static int	parse_variable_name(t_lexer *lex, t_token_array *token_array)
 	if (!ft_isalpha(lex->source[lex->cursor]))
 		return (0);
 	token_array->current->type = TOK_WORD;
-	consume_if(lex, ft_isalnum);
+	consume_if(lex, ft_isalnum_or_underscore);
 	return (1);
 }
 

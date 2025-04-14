@@ -55,6 +55,8 @@ static void	print_export(t_env *env)
 	size_t	i;
 
 	i = 0;
+	if (!env->export_cells->size)
+		return ;
 	cells_sort(env->export_cells);
 	while (i < env->export_cells->size)
 	{
