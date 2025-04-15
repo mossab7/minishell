@@ -6,23 +6,22 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:20:30 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/14 22:53:32 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/15 16:08:22 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
 
 static int	find_dollar_sign(t_string *string)
 {
-	if (string->cursor < 0 || string->size == 0)
+	if (lexeme_ended(string))
 		return (0);
 	string->cursor = str_search(string, "$", string->cursor);
-	while (string->cursor > 0 && string->cursor < (int)string->size
-		&& is_dollar_sign_not_expandable(string, string->cursor))
+	while (is_dollar_sign_not_expandable(string, string->cursor))
 	{
 		string->cursor++;
 		string->cursor = str_search(string, "$", string->cursor);
 	}
-	if (string->cursor < 0 || string->cursor == (int)string->size)
+	if (lexeme_ended(string) || string->cursor < 0)
 		return (0);
 	return (1);
 }
@@ -34,7 +33,7 @@ static t_string	*build_key(t_string *string, t_u8 context)
 	key = str_construct();
 	key->mask->context = context;
 	str_push_back(key, string->cstring[string->cursor++]);
-	while (string->cstring[string->cursor] != 0
+	while (!lexeme_ended(string)
 		&& !ft_isspace(string->cstring[string->cursor])
 		&& string->cstring[string->cursor] != '/'
 		&& string->mask->items[string->cursor] == context)
@@ -44,9 +43,9 @@ static t_string	*build_key(t_string *string, t_u8 context)
 			break ;
 		str_push_back(key, string->cstring[string->cursor]);
 		string->cursor++;
-		if (context != string->mask->items[string->cursor])
-			break ;
-		if (string->cstring[string->cursor] == '$')
+		if (lexeme_ended(string)
+			|| (context != string->mask->items[string->cursor])
+			|| string->cstring[string->cursor] == '$')
 			break ;
 	}
 	return (key);
@@ -72,7 +71,7 @@ t_string	*extract_key(t_string *string)
 	t_u8		context;
 	t_string	*key;
 
-	if (!string->size)
+	if (lexeme_ended(string) || !string->size)
 		return (NULL);
 	if (!find_dollar_sign(string))
 		return (NULL);

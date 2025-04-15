@@ -13,6 +13,8 @@
 
 int	is_dollar_sign_not_expandable(t_string *string, int index)
 {
+	if (lexeme_ended(string) || index < 0)
+		return (0);
 	return (ft_isspace(string->cstring[index + 1])
 		|| string->mask->items[index] & SINGLE_QUOTED
 		|| string->mask->items[index] & EXPANDED

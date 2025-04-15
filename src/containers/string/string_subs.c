@@ -25,6 +25,8 @@ void	str_shift_left(t_string *str, int new_dest, int size)
 
 void	str_shift_right(t_string *string, int old_dest, int size)
 {
+	if (!size)
+		return ;
 	ft_memmove((string->cstring + old_dest + size),
 		(string->cstring + old_dest),
 		(string->size - old_dest));
@@ -54,7 +56,7 @@ void	str_substitute(t_string *string, char *repl, t_string *which)
 				return ;
 		}
 		ctx_mask = string->mask->items[cursor];
-		while (string->size - which->size + repl_size >= string->cap)
+		while (string->size + repl_size >= string->cap)
 			str_expand_anyhow(string);
 		str_shift_left(string, cursor, which->size);
 		str_shift_right(string, cursor, repl_size);

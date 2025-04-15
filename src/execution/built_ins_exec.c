@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 20:34:24 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/25 21:25:55 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/15 15:23:43 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,14 +56,16 @@ void	init_builtin_commands(t_built_in_command *functions,
 	functions[3] = built_in_exit;
 	functions[4] = built_in_export;
 	functions[5] = built_in_unset;
-	functions[6] = NULL;
+	functions[6] = built_in_pwd;
+	functions[7] = NULL;
 	function_names[0] = "cd";
 	function_names[1] = "echo";
 	function_names[2] = "env";
 	function_names[3] = "exit";
 	function_names[4] = "export";
 	function_names[5] = "unset";
-	function_names[6] = NULL;
+	function_names[6] = "pwd";
+	function_names[7] = NULL;
 }
 
 int	execute_built_in_commands(t_command *cmd, char *command, t_env *env,

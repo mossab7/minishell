@@ -15,13 +15,13 @@ void	mask_expand_anyhow(t_mask *mask)
 {
 	mask->cap *= VEC_GROWTH_FAC;
 	mask->items = ft_realloc(mask->items,
-			mask->cap * sizeof(*(mask->items)),
-			mask->size * sizeof(*(mask->items)));
+			mask->cap * sizeof(mask->items[0]),
+			mask->size * sizeof(mask->items[0]));
 }
 
 void	mask_expand(t_mask *mask)
 {
-	if (mask->size >= mask->cap)
+	if (mask->size + 1 >= mask->cap)
 		mask_expand_anyhow(mask);
 }
 
@@ -29,6 +29,7 @@ void	mask_push_back(t_mask *mask, t_u8 item)
 {
 	mask_expand(mask);
 	mask->items[mask->size++] = item;
+	mask->items[mask->size] = 0;
 }
 
 t_mask	*mask_construct(void)

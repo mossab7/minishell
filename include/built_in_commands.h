@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/24 19:43:41 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/04/15 15:22:18 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,4 +38,5 @@ int			built_in_export(t_env *env, int argc, char **args);
 int			__resolve_path(t_string *path, t_env *env, char *dst);
 int			built_in_set(t_env *env, int argc, char **args);
 int			built_in_unset(t_env *env, int argc, char **args);
+int			built_in_pwd(t_env *env, int argc, char **args);
 #endif // BUILT_IN_COMMANDS_H

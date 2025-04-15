@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/04/14 22:08:49 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/15 15:29:44 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,4 +132,5 @@ void				handle_no_matches(t_token_array *tokens, size_t cursor,
 						t_string_vector *entries);
 void				find_next_expansion(t_token_array *tokens, size_t *cursor);
 t_token				*ft_tokdup(t_token token);
+int					lexeme_ended(t_string *lexeme);
 #endif // !TOKEN_H
