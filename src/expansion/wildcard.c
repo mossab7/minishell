@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 18:09:45 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 18:18:33 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/16 22:20:32 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -79,7 +79,8 @@ static void	process_dir_entries(DIR *dir, t_string_vector *entries,
 		if (!entry)
 			break ;
 		hidden = (*(entry->d_name) == '.');
-		if ((!hidden || *pattern->cstring == '.') && ft_strchr(pattern->cstring, '/')
+		if ((!hidden || *pattern->cstring == '.')
+			&& ft_strchr(pattern->cstring, '/')
 			&& is_dir(entry->d_name))
 		{
 			handle_dir(entry->d_name, entries, pattern);
@@ -98,6 +99,7 @@ t_string_vector	*wildcardexpansion(t_string *pattern)
 	DIR				*dir;
 	char			buffer[PATH_MAX];
 	t_string_vector	*entries;
+
 	entries = strv_construct();
 	dir = open_current_directory(entries, buffer);
 	if (!dir)

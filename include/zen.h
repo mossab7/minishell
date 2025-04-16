@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:23:54 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 18:38:00 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/16 22:18:51 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef ZEN_H
@@ -67,4 +67,7 @@ t_string_vector	*check_for_errors(t_string_vector *entries, DIR *dir);
 void			expand_command(t_env *env,
 					t_token_array **tokens);
 int				is_expandable(t_token_type type);
+void			initialize_shell(t_parser *parser,
+					const char *envp[], const char *program);
+void			shell_loop(t_parser *parser);
 #endif // ZEN_H
