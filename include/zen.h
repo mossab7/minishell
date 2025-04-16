@@ -65,6 +65,6 @@ bool			match_pattern(const char *pattern, const char *str);
 DIR				*open_current_directory(t_string_vector *entries, char *buffer);
 t_string_vector	*check_for_errors(t_string_vector *entries, DIR *dir);
 void			expand_command(t_env *env,
-					t_token_array **tokens, size_t cursor);
+					t_token_array **tokens);
 int				is_expandable(t_token_type type);
 #endif // ZEN_H

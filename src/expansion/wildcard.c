@@ -104,5 +104,6 @@ t_string_vector	*wildcardexpansion(char *pattern)
 	if (!dir)
 		return (NULL);
 	process_dir_entries(dir, entries, pattern);
+	strv_sort(entries);
 	return (check_for_errors(entries, dir));
 }

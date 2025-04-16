@@ -30,4 +30,5 @@ void			strv_push_back(t_string_vector *vec, char *item);
 void			strv_append(char *src, t_string_vector *vec);
 t_string_vector	*strv_construct(void);
 void			strv_destruct(t_string_vector *vec);
+void			strv_sort(t_string_vector *vector);
 #endif // !T_STRING_VECTOR_H

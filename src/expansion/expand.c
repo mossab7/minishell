@@ -11,23 +11,6 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-void	expand(t_env *env, t_token_array **tokens_array)
-{
-	size_t			iter;
-	t_token_array	*tokens;
-
-	tokens = *tokens_array;
-	iter = 0;
-	while (iter < tokens->size)
-	{
-		if (tokens->items[iter].type == TOK_WORD)
-			tokens_expand(env, tokens, &iter);
-		else if (tokens->items[iter].type == TOK_WILD_CARD)
-			wildcard_expand(tokens_array, &iter);
-		iter++;
-	}
-}
-
 static void	find_next_wcard(t_token_array *tokens, size_t *cursor)
 {
 	*cursor = 0;
@@ -39,38 +22,43 @@ static void	find_next_wcard(t_token_array *tokens, size_t *cursor)
 		(*cursor)++;
 }
 
-static int	get_next_(t_token_array *tokens, size_t *cursor)
+void	pathname_expansion(t_token_array **tokens_array)
 {
-	find_next_expansion(tokens, cursor);
-	if (*cursor < tokens->size)
-		return (1);
-	find_next_wcard(tokens, cursor);
-	if (*cursor < tokens->size)
-		return (1);
-	return (0);
+	t_token_array	*tokens;
+	size_t			cursor;
+
+	while (true)
+	{
+		tokens = *tokens_array;
+		find_next_wcard(tokens, &cursor);
+		if (cursor >= tokens->size)
+			break ;
+		wildcard_expand(tokens_array, &cursor);
+	}
 }
 
-void	expand_command(t_env *env, t_token_array **tokens_array, size_t cursor)
+void	expand_command(t_env *env, t_token_array **tokens_array)
 {
 	t_token_array	*tokens;
 	int				is_export;
+	size_t			cursor;
 
 	is_export = 0;
+	cursor = 0;
 	tokens = *tokens_array;
 	if (ft_strcmp(tokens->items[cursor].lexeme->cstring, "export") == 0)
 		is_export = 1;
 	while (true)
 	{
-		tokens = *tokens_array;
-		if (!get_next_(tokens, &cursor))
+		find_next_expansion(tokens, &cursor);
+		if (cursor >= tokens->size)
 			break ;
 		if (tokens->items[cursor].type == TOK_WORD)
 		{
 			tokens->items[cursor].lexeme->cursor = 0;
 			tokens_expand(env, tokens, &cursor);
 		}
-		else if (tokens->items[cursor].type == TOK_WILD_CARD)
-			wildcard_expand(tokens_array, &cursor);
 	}
 	field_split(tokens_array, is_export);
+	pathname_expansion(tokens_array);
 }

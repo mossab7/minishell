@@ -72,7 +72,7 @@ int	execute_command(t_command *cmd, t_env *env)
 	status = 0;
 	if (cmd->args->size == 0)
 		return (0);
-	expand_command(get_context_env(), &cmd->args, 0);
+	expand_command(get_context_env(), &cmd->args);
 	args = collect_args(cmd->args);
 	env->last_command_status = execute_built_in_commands(cmd, args[0], env,
 			args);

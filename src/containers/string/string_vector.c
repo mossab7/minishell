@@ -52,3 +52,27 @@ t_string_vector	*strv_construct(void)
 	vec->size = 0;
 	return (vec);
 }
+
+void	strv_sort(t_string_vector *vector)
+{
+	char	*tmp;
+	size_t	i;
+	size_t	j;
+
+	i = 0;
+	while (i < vector->size)
+	{
+		j = i + 1;
+		while (j < vector->size)
+		{
+			if (compare_alpha(vector->cstrings[i], vector->cstrings[j]) > 0)
+			{
+				tmp = vector->cstrings[i];
+				vector->cstrings[i] = vector->cstrings[j];
+				vector->cstrings[j] = tmp;
+			}
+			j++;
+		}
+		i++;
+	}
+}
