@@ -61,7 +61,7 @@ void			field_split(t_token_array **tokens_array, int is_export);
 void			wildcard_expand(t_token_array **tokens, size_t *cursor);
 void			ft_quote_error(t_parser *parser);
 t_string		*extract_key(t_string *string);
-bool			match_pattern(const char *pattern, const char *str);
+bool			match_pattern(t_string *pattern, const char *str, int index);
 DIR				*open_current_directory(t_string_vector *entries, char *buffer);
 t_string_vector	*check_for_errors(t_string_vector *entries, DIR *dir);
 void			expand_command(t_env *env,

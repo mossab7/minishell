@@ -12,22 +12,22 @@
 #include <zen.h>
 
 static void	handle_dir(char *entry_name, t_string_vector *entries,
-		char *pattern)
+		t_string *pattern)
 {
 	size_t	pattern_len;
 
-	pattern_len = strlen(pattern);
-	if (pattern[pattern_len - 1] == '/')
+	pattern_len = strlen(pattern->cstring);
+	if (pattern->cstring[pattern_len - 1] == '/')
 	{
-		pattern[pattern_len - 1] = '\0';
+		pattern->cstring[pattern_len - 1] = '\0';
 	}
-	if (match_pattern(pattern, entry_name) && is_dir(entry_name))
+	if (match_pattern(pattern, entry_name, 0) && is_dir(entry_name))
 	{
 		strv_push_back(entries, entry_name);
 	}
-	if (pattern[pattern_len - 1] == '\0')
+	if (pattern->cstring[pattern_len - 1] == '\0')
 	{
-		pattern[pattern_len - 1] = '/';
+		pattern->cstring[pattern_len - 1] = '/';
 	}
 }
 
@@ -51,7 +51,7 @@ void	wildcard_expand(t_token_array **tokens_array, size_t *cursor)
 	tokens = *tokens_array;
 	if (should_skip_expansion(tokens, *cursor))
 		return ;
-	entries = wildcardexpansion(tokens->items[*cursor].lexeme->cstring);
+	entries = wildcardexpansion(tokens->items[*cursor].lexeme);
 	if (entries->size == 0)
 	{
 		handle_no_matches(tokens, *cursor, entries);
@@ -67,7 +67,7 @@ void	wildcard_expand(t_token_array **tokens_array, size_t *cursor)
 }
 
 static void	process_dir_entries(DIR *dir, t_string_vector *entries,
-		char *pattern)
+		t_string *pattern)
 {
 	struct dirent	*entry;
 	t_u8			hidden;
@@ -79,26 +79,25 @@ static void	process_dir_entries(DIR *dir, t_string_vector *entries,
 		if (!entry)
 			break ;
 		hidden = (*(entry->d_name) == '.');
-		if ((!hidden || *pattern == '.') && ft_strchr(pattern, '/')
+		if ((!hidden || *pattern->cstring == '.') && ft_strchr(pattern->cstring, '/')
 			&& is_dir(entry->d_name))
 		{
 			handle_dir(entry->d_name, entries, pattern);
 			continue ;
 		}
-		if (match_pattern(pattern, entry->d_name) && (!hidden
-				|| *pattern == '.'))
+		if (match_pattern(pattern, entry->d_name, 0) && (!hidden
+				|| *pattern->cstring == '.'))
 		{
 			strv_push_back(entries, entry->d_name);
 		}
 	}
 }
 
-t_string_vector	*wildcardexpansion(char *pattern)
+t_string_vector	*wildcardexpansion(t_string *pattern)
 {
 	DIR				*dir;
 	char			buffer[PATH_MAX];
 	t_string_vector	*entries;
-
 	entries = strv_construct();
 	dir = open_current_directory(entries, buffer);
 	if (!dir)

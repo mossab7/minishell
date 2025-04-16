@@ -81,7 +81,7 @@ typedef struct s_arg
 void					print_ast(t_ast *node, int level);
 void					ast_destroy(t_ast *root);
 t_ast					*build_ast(t_token_array *tokens);
-t_string_vector			*wildcardexpansion(char *pattern);
+t_string_vector			*wildcardexpansion(t_string *pattern);
 void					parser_destroy(t_parser *parser);
 t_error					parser_prepare_input(t_parser *parser);
 void					parser_lex(t_parser *parser);
@@ -140,6 +140,4 @@ t_ast					*create_binary_node(t_node_type type, t_ast *left,
 							t_ast *right);
 t_ast					*parse_primary(t_token_array *tokens, size_t *index);
 t_ast					*parse_pipe(t_token_array *tokens, size_t *index);
-void					heredoc_traverse_ast(t_ast *root, int *pipefd);
-int						heredoc_collect_all(t_ast *root);
 #endif // SYNTAX_TREE_H

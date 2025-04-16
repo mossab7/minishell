@@ -11,25 +11,26 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-bool	match_pattern(const char *pattern, const char *str)
+bool	match_pattern(t_string *pattern, const char *str, int index)
 {
-	if (*pattern == '\0')
+	if (pattern->cstring[index] == '\0')
 		return (*str == '\0');
-	if (*pattern != '*')
+	str_print(pattern);
+	if (pattern->cstring[index] != '*')
 	{
 		if (*str == '\0')
 			return (false);
-		if (*pattern != *str)
+		if (pattern->cstring[index] != *str)
 			return (false);
-		return (match_pattern(pattern + 1, str + 1));
+		return (match_pattern(pattern, str + 1, ++index));
 	}
-	while (*(pattern + 1) == '*')
-		pattern++;
+	while (pattern->cstring[index + 1] == '*' && (pattern->mask->items[index + 1] & NOT_QUOTED))
+		index++;
 	while (*str != '\0')
 	{
-		if (match_pattern(pattern + 1, str))
+		if (match_pattern(pattern, str, ++index))
 			return (true);
 		str++;
 	}
-	return (match_pattern(pattern + 1, str));
+	return (match_pattern(pattern, str, ++index));
 }
