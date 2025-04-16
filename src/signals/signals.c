@@ -36,12 +36,14 @@ void	handle_sigquit(int signum)
 void	handle_sigterm(int signum)
 {
 	(void)signum;
+	cleanup_memory_tracker(get_memory_tracker());
 	exit(0);
 }
 
 void	signal_error(char *msg)
 {
 	perror(msg);
+	cleanup_memory_tracker(get_memory_tracker());
 	exit(1);
 }
 
