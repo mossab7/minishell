@@ -32,7 +32,6 @@ static int	set_oldpwd(t_env *env, char *oldpwd)
 		return (is_invalid_found);
 	if (is_dir(oldpwd))
 	{
-		printf("SET: oldpwd = %s\n", oldpwd);
 		env_append_both(env, "OLDPWD", oldpwd);
 		return (is_invalid_found);
 	}

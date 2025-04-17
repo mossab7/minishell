@@ -21,12 +21,18 @@
 # include <sys/types.h>
 # include <t_string.h>
 # include <unistd.h>
+# include <sys/types.h>
+# include <sys/stat.h>
+# include <fcntl.h>
 
+# define DEV_NULL "/dev/null"
 # define MAX_LONG 9223372036854775807
 # define NON -2
 # define OVER_FLOW_DETECTED -1
 # define SUCCESS 1
 # define DONE 0
+# define SET_NO_ECHO 0
+# define RESTORE 1
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1024
