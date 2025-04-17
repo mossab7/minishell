@@ -14,10 +14,8 @@
 static void	switch_echo_state(int a)
 {
 	static int	stdout_backup;
-	int			dev_null;
+	static int	dev_null;
 
-	stdout_backup = -1;
-	dev_null = -1;
 	if (isatty(STDIN_FILENO))
 		return ;
 	if (a == SET_NO_ECHO)
