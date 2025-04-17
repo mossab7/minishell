@@ -11,27 +11,38 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-void	increment_shell_level(t_env *env)
+static void	set_pwd(t_env *env)
 {
-	long	lvl;
-	int		res;
-	int		index;
+	char		pwd[PATH_MAX];
 
-	index = env->cells->size - 1;
-	res = ft_atol_base(env->cells->items[index].value, BASE_10, &lvl);
-	lvl++;
-	if (lvl > SHLVL_MAX && (res != NON && res != OVER_FLOW_DETECTED))
+	if (!getcwd(pwd, PATH_MAX))
 	{
-		zen_elog("warning: shell level (%d) too high, resetting to 1\n", lvl);
+		zen_elog("error retrieving current directory: "
+			"getcwd: cannot access parent directories: "
+			"No such file or directory\n");
 	}
-	if (res == NON || res == OVER_FLOW_DETECTED || lvl > SHLVL_MAX)
-		lvl = 1;
-	if (lvl < 0)
-		lvl = 0;
-	ft_free(env->cells->items[index].value);
-	env->cells->items[index].value = ft_itoa(lvl);
-	ft_free(env->export_cells->items[index].value);
-	env->export_cells->items[index].value = ft_itoa(lvl);
+	env_append_both(env, "PWD", pwd);
+}
+
+static int	set_oldpwd(t_env *env, char *oldpwd)
+{
+	static int	is_invalid_found;
+
+	if (!env && !oldpwd)
+		return (is_invalid_found);
+	if (is_dir(oldpwd))
+	{
+		printf("SET: oldpwd = %s\n", oldpwd);
+		env_append_both(env, "OLDPWD", oldpwd);
+		return (is_invalid_found);
+	}
+	is_invalid_found = 1;
+	return (is_invalid_found);
+}
+
+int	invalid_oldpwd_detected(void)
+{
+	return (set_oldpwd(NULL, NULL));
 }
 
 static void	process_env_entries(t_env *env, const char *envp[])
@@ -44,7 +55,14 @@ static void	process_env_entries(t_env *env, const char *envp[])
 	{
 		entry = ft_split((char const *)envp[iter], '=');
 		if (ft_strcmp(entry[KEY_INDEX], "_") != 0)
-			env_append_both(env, entry[KEY_INDEX], entry[VALUE_INDEX]);
+		{
+			if (ft_strcmp(entry[KEY_INDEX], "OLDPWD") == 0)
+				set_oldpwd(env, entry[VALUE_INDEX]);
+			else if (ft_strcmp(entry[KEY_INDEX], "PWD") == 0)
+				set_pwd(env);
+			else
+				env_append_both(env, entry[KEY_INDEX], entry[VALUE_INDEX]);
+		}
 		if (ft_strcmp(entry[KEY_INDEX], "PATH") == 0)
 			parse_path(env->path, entry[VALUE_INDEX]);
 		if (ft_strcmp(entry[KEY_INDEX], "SHLVL") == 0)

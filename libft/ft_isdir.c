@@ -18,9 +18,7 @@ bool	is_dir(const char *filename)
 	if (stat(filename, &file_stat) == 0)
 	{
 		if (S_ISDIR(file_stat.st_mode))
-		{
 			return (true);
-		}
 	}
 	return (false);
 }

@@ -27,7 +27,8 @@ void	env_set_defaults(t_env *env)
 	insert_if_not_found(env->cells, "SHLVL", "1");
 	insert_if_not_found(env->export_cells, "SHLVL", "1");
 	insert_if_not_found(env->cells, "_", (char *)env->program);
-	if (!cells_key_exists(env->export_cells, "OLDPWD"))
+	if (!cells_key_exists(env->export_cells, "OLDPWD")
+		&& !invalid_oldpwd_detected())
 		cells_push_back(env->export_cells,
 			"OLDPWD", NULL);
 }

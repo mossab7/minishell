@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/25 16:18:29 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/17 04:14:02 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,5 @@ void				parse_path(t_string_vector *path, char *src);
 t_string			*search_path(t_string_vector *path, char *command);
 int					cells_key_exists(t_cells *cells, char *key);
 void				env_set_defaults(t_env *env);
+void				increment_shell_level(t_env *env);
 #endif // !ENV_H

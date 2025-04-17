@@ -70,4 +70,5 @@ int				is_expandable(t_token_type type);
 void			initialize_shell(t_parser *parser,
 					const char *envp[], const char *program);
 void			shell_loop(t_parser *parser);
+int				invalid_oldpwd_detected(void);
 #endif // ZEN_H
