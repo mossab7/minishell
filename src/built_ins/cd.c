@@ -35,6 +35,7 @@ static int	__cd_success(t_env *env, t_string *resolved_path,
 		return (env->last_command_status = 1);
 	}
 	env_set(env, "PWD", owd);
+	set_pwd(env_get(env, "PWD"));
 	str_destruct(resolved_path);
 	return (env->last_command_status = 0);
 }
@@ -51,6 +52,7 @@ int	built_in_cd(t_env *env, int argc, char **dst)
 	if (res != SUCCESS)
 		return ((str_destruct(resolved_path))
 			, env->last_command_status = 1);
+	// If this dir is not valid it should set the old dir to the current directory.
 	if (!getcwd(owd, PATH_MAX))
 	{
 		zen_elog("error retrieving current directory: "

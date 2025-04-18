@@ -28,6 +28,7 @@ typedef struct s_context
 	int			flags;
 	t_string	*input;
 	t_env		*env;
+	char		*pwd;
 }				t_context;
 
 t_context		**get_context(void);
@@ -38,4 +39,5 @@ void			toggle_context_flag(t_ctx_flags flag);
 bool			check_context_flag(t_ctx_flags flag);
 void			set_context_flag(t_ctx_flags flag);
 void			unset_context_flag(t_ctx_flags flag);
+void			set_pwd(char *pwd);
 #endif // !CONTEXT_H

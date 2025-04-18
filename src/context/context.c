@@ -22,6 +22,7 @@ t_context	**get_context(void)
 		set_context_flag(FLAG_READLINE_ACTIVE);
 		context->input = NULL;
 		context->env = NULL;
+		context->pwd = getcwd(NULL, 0);
 	}
 	return (&context);
 }
@@ -51,4 +52,12 @@ t_env	*get_context_env(void)
 
 	context = *get_context();
 	return (context->env);
+}
+
+void	set_pwd(char *pwd)
+{
+	t_context	*context;
+
+	context = *get_context();
+	context->pwd = pwd;
 }
