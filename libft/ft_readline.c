@@ -43,6 +43,8 @@ t_string	*ft_readline(const char *prompt)
 	switch_echo_state(SET_NO_ECHO);
 	tmp = readline(prompt);
 	switch_echo_state(RESTORE);
+	if (!tmp)
+		return (NULL);
 	line = str_construct();
 	str_append(tmp, line);
 	free(tmp);

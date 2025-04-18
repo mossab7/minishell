@@ -126,6 +126,7 @@ void				tok_array_expand(t_token_array *vec);
 void				tok_array_expand_anyhow(t_token_array *vec);
 void				tok_array_print(t_token_array *array);
 void				tok_array_push_back(t_token_array *array, t_token *tok);
+void				toks_remove(t_token_array *array, size_t location);
 void				token_push_back(t_token *tok, char c, t_u8 state);
 bool				should_skip_expansion(t_token_array *tokens, size_t cursor);
 void				handle_no_matches(t_token_array *tokens, size_t cursor,

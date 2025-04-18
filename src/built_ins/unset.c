@@ -21,6 +21,8 @@ int	built_in_unset(t_env *env, int argc, char **args)
 	{
 		cells_remove(env->cells, args[iter]);
 		cells_remove(env->export_cells, args[iter]);
+		if (ft_strcmp(args[iter], "PATH") == 0)
+			parse_path(env->path, NULL);
 		iter++;
 	}
 	return (0);

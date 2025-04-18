@@ -35,7 +35,6 @@ static t_error	process_command(t_parser *parser)
 void	initialize_shell(t_parser *parser,
 					const char *envp[], const char *program)
 {
-	setbuf(stdout, NULL);
 	setup_signal_handlers();
 	ft_memset(parser, 0, sizeof(*parser));
 	parser->env = env_parse(envp, program);

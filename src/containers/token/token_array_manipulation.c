@@ -89,3 +89,13 @@ t_token	*ft_tokdup(t_token token)
 	}
 	return (new_token);
 }
+
+void	toks_remove(t_token_array *array, size_t location)
+{
+	if (!array->size)
+		return ;
+	ft_memmove(array->items + location,
+		array->items + location + 1,
+		((array->size - location) * sizeof(array->items[0])));
+	array->size--;
+}

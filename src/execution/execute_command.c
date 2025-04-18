@@ -54,6 +54,8 @@ char	**collect_args(t_token_array *tokens)
 	char	**args;
 
 	i = 0;
+	if (tokens->size == 0)
+		return (NULL);
 	args = alloc(sizeof(char *) * (tokens->size + 1));
 	while (i < tokens->size)
 	{
@@ -74,6 +76,8 @@ int	execute_command(t_command *cmd, t_env *env)
 		return (0);
 	expand_command(get_context_env(), &cmd->args);
 	args = collect_args(cmd->args);
+	if (!args)
+		return (0);
 	env->last_command_status = execute_built_in_commands(cmd, args[0], env,
 			args);
 	if (env->last_command_status != -1)

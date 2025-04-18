@@ -16,6 +16,11 @@ void	parse_path(t_string_vector *path, char *src)
 	char	**paths;
 
 	ft_free(path->cstrings);
+	if (!src)
+	{
+		ft_memset(path, 0, sizeof(*path));
+		return ;
+	}
 	path->cstrings = alloc(VEC_INIT_CAP * sizeof(*path->cstrings));
 	path->cap = VEC_INIT_CAP;
 	path->size = 0;
@@ -38,6 +43,8 @@ t_string	*search_path(t_string_vector *path, char *command)
 			return (NULL);
 	}
 	iter = 0;
+	if (!path->size)
+		return (NULL);
 	full_path = str_construct();
 	while (iter < path->size)
 	{
@@ -49,6 +56,5 @@ t_string	*search_path(t_string_vector *path, char *command)
 			return (full_path);
 		iter++;
 	}
-	str_destruct(full_path);
-	return (NULL);
+	return (str_destruct(full_path), NULL);
 }

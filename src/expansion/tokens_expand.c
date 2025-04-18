@@ -32,6 +32,8 @@ void	tokens_expand(t_env *env, t_token_array *tokens, size_t *cursor)
 			value = ft_strdup(env_get(env, ((key->cstring) + 1)));
 		str_substitute(tk->lexeme, value, key);
 		ft_free(value);
+		if ((tk->lexeme->size == 0) && (key->mask->context & NOT_QUOTED))
+			toks_remove(tokens, *cursor);
 		str_destruct(key);
 		if (tokens->size == 0 || *cursor == tokens->size)
 			break ;
