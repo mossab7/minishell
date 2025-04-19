@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 19:52:49 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/25 19:52:50 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/04/19 13:52:44 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ t_redirect	*parse_redirection(t_token_array *tokens, size_t *index)
 	if (token.type != TOK_WORD)
 		return (syntax_error("Expected filename/delimiter after redirection"));
 	(*index)++;
+	string_expand(get_context_env(), token.lexeme);
 	return (create_redirect(type, ft_strdup(token.lexeme->cstring)));
 }
 

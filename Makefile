@@ -22,7 +22,7 @@ CC=cc
 LIBS=-L. -L$(LIB_FT_PRINTF_DIR) -L$(LIB_FT_DIR) -lzen -lftprintf -lreadline -lft
 INCLUDE=-I./include
 MAIN=./src/zen.c
-CFLAGS=-Wall -Wextra -Werror $(INCLUDE)
+CFLAGS=-Wall -Wextra -Werror $(INCLUDE) -ggdb
 AR=ar rsc
 RM=rm -f
 

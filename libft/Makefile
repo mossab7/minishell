@@ -13,7 +13,7 @@ SRCS=ft_atoi.c ft_bzero.c ft_isalnum.c\
 	ft_lstsize_bonus.c ft_strcmp.c ft_realloc.c ft_free.c ft_malloc.c\
 	ft_ispunct.c ft_isspace.c ft_isquote.c ft_atol_base.c ft_readline.c\
 	get_next_line.c get_next_line_utils.c ft_is_not_null.c ft_isdir.c ft_split_set.c\
-	ft_free_2d.c
+	ft_free_2d.c ft_strcpy.c
 OBJS=$(SRCS:%.c=%.o)
 NAME=libft.a
 INCLUDE=-I../include

@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:20:30 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/15 16:08:22 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/19 13:23:49 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -43,9 +43,10 @@ static t_string	*build_key(t_string *string, t_u8 context)
 			break ;
 		str_push_back(key, string->cstring[string->cursor]);
 		string->cursor++;
+		if ((string->cstring[string->cursor - 1] == '$') && (key->size == 2))
+			break ;
 		if (lexeme_ended(string)
-			|| (context != string->mask->items[string->cursor])
-			|| string->cstring[string->cursor] == '$')
+			|| (context != string->mask->items[string->cursor]))
 			break ;
 	}
 	return (key);

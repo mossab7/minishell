@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 19:48:57 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 19:50:17 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/19 13:22:44 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -24,6 +24,7 @@ static t_error	check_next(t_token *tok, t_lexer *lex, t_token_type pair_type)
 static t_error	consume_sym_pair(t_token *tok, t_lexer *lex, t_token_type type,
 		t_token_type pair_type)
 {
+	tok = (lex->tokens->items + lex->tokens->size - 1);
 	tok->type = type;
 	token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
 	return (check_next(tok, lex, pair_type));

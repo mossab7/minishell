@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-static void	set_pwd(t_env *env)
+static void	_set_pwd(t_env *env)
 {
 	char		pwd[PATH_MAX];
 
@@ -58,7 +58,7 @@ static void	process_env_entries(t_env *env, const char *envp[])
 			if (ft_strcmp(entry[KEY_INDEX], "OLDPWD") == 0)
 				set_oldpwd(env, entry[VALUE_INDEX]);
 			else if (ft_strcmp(entry[KEY_INDEX], "PWD") == 0)
-				set_pwd(env);
+				_set_pwd(env);
 			else
 				env_append_both(env, entry[KEY_INDEX], entry[VALUE_INDEX]);
 		}

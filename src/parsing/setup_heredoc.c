@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 19:45:34 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/25 19:45:35 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/04/19 13:32:47 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,12 @@ t_string	*read_heredoc_content(t_redirect *redir, int fd)
 			zen_elog(DL, redir->delimiter);
 			break ;
 		}
+		string_expand(get_context_env(), line);
 		if (strcmp(line->cstring, redir->delimiter) == 0)
 		{
 			str_destruct(line);
 			break ;
 		}
-		string_expand(get_context_env(), line);
 		write(fd, line->cstring, line->size);
 		write(fd, "\n", 1);
 		str_join(input, 2, line->cstring, "\n");
