@@ -27,7 +27,6 @@ void	launch_command(t_command *cmd, t_env *env, char **args)
 		execve(cmd_path->cstring, args, env->envp);
 		str_destruct(cmd_path);
 	}
-	zen_elog("%s: command not found\n", args[0]);
 	exit(127);
 }
 

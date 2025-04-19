@@ -30,31 +30,31 @@ void	parse_path(t_string_vector *path, char *src)
 	ft_free(paths);
 }
 
-t_string	*search_path(t_string_vector *path, char *command)
+t_string	*search_path(t_string_vector *path, char *cmd)
 {
 	size_t		iter;
 	t_string	*full_path;
 
-	if (ft_strchr(command, '/'))
+	if (ft_strchr(cmd, '/'))
 	{
-		if (access(command, F_OK) == 0)
-			return (vstr_construct(1, command));
+		if (access(cmd, F_OK))
+			return (vstr_construct(1, cmd));
 		else
-			return (NULL);
+			return (zen_elog("%s: Permission denied\n", cmd), NULL);
 	}
 	iter = 0;
 	if (!path->size)
-		return (NULL);
+		return (zen_elog("%s: command not found\n", cmd), NULL);
 	full_path = str_construct();
 	while (iter < path->size)
 	{
 		str_overwrite(path->cstrings[iter], full_path);
 		if (full_path->cstring[full_path->size - 1] != '/')
 			str_push_back(full_path, '/');
-		str_join(full_path, 1, command);
+		str_join(full_path, 1, cmd);
 		if (access(full_path->cstring, F_OK) == 0)
 			return (full_path);
 		iter++;
 	}
-	return (str_destruct(full_path), NULL);
+	return (str_destruct(full_path), zen_elog("%s: command not found\n", cmd), NULL);
 }
