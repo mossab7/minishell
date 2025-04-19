@@ -15,19 +15,21 @@
 void	launch_command(t_command *cmd, t_env *env, char **args)
 {
 	t_string	*cmd_path;
+	int			code;
 
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (setup_redirections(cmd) == -1)
 		exit(EXIT_FAILURE);
-	cmd_path = search_path(env->path, args[0]);
+	code = COMMAND_NOT_FOUND;
+	cmd_path = search_path(env->path, args[0], &code);
 	if (cmd_path)
 	{
 		env_join(env);
 		execve(cmd_path->cstring, args, env->envp);
 		str_destruct(cmd_path);
 	}
-	exit(127);
+	exit(code);
 }
 
 int	get_command_status(t_env *env, int status)
