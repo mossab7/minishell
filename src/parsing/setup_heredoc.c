@@ -44,7 +44,7 @@ t_string	*read_heredoc_content(t_redirect *redir, int fd)
 			break ;
 		}
 		string_expand(get_context_env(), line);
-		if (strcmp(line->cstring, redir->delimiter) == 0)
+		if (ft_strcmp(line->cstring, redir->delimiter) == 0)
 		{
 			str_destruct(line);
 			break ;
