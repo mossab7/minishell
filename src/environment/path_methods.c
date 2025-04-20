@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/07 21:09:13 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/17 17:01:32 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/20 15:09:19 by mbouhia          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -37,7 +37,7 @@ t_string	*search_path(t_string_vector *path, char *cmd, int *code)
 
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, F_OK))
+		if (access(cmd, F_OK | X_OK) == 0)
 			return (vstr_construct(1, cmd));
 		*code = PERM_DENIED;
 		return (zen_elog("%s: Permission denied\n", cmd), NULL);
