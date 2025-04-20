@@ -46,6 +46,7 @@ t_redirect	*parse_redirection(t_token_array *tokens, size_t *index)
 	if (token.type != TOK_WORD)
 		return (syntax_error("Expected filename/delimiter after redirection"));
 	(*index)++;
+	// TODO: The delimiter should be a token so we could know if we need to expnad inside a context of a heredoc..
 	string_expand(get_context_env(), token.lexeme);
 	return (create_redirect(type, ft_strdup(token.lexeme->cstring)));
 }
