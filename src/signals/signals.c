@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 01:24:19 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/24 01:24:20 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/04/20 19:01:17 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,6 @@ void	handle_sigquit(int signum)
 void	handle_sigterm(int signum)
 {
 	(void)signum;
-	cleanup_memory_tracker(get_memory_tracker());
-	exit(0);
 }
 
 void	signal_error(char *msg)

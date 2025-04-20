@@ -1,5 +1,2 @@
 kill 0
-pipes are leaking
-invalid commands are leaking
-subshell leaking
 ctrl-d leaks
