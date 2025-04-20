@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:42:01 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:42:18 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/20 18:30:00 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -35,8 +35,6 @@ bool	is_ambiguous_redirect(const char *filename)
 int	execute_subshell(t_ast *node, t_env *env)
 {
 	pid_t	pid;
-	t_env	*subshell_env;
-	int		result;
 	int		status;
 
 	pid = fork();
@@ -46,17 +44,7 @@ int	execute_subshell(t_ast *node, t_env *env)
 		return (-1);
 	}
 	if (pid == 0)
-	{
-		subshell_env = env_copy(env);
-		if (setup_redirections(&node->u_value.command) == -1)
-		{
-			env_destroy(subshell_env);
-			exit(EXIT_FAILURE);
-		}
-		result = execute_ast(node->left, subshell_env);
-		env_destroy(subshell_env);
-		exit(result);
-	}
+		subshell_execute(node, env);
 	waitpid(pid, &status, 0);
 	return (env->last_command_status = WEXITSTATUS(status));
 }

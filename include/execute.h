@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/24 19:43:41 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/04/20 18:30:45 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,4 +40,5 @@ int		execute_built_in_commands(t_command *cmd, char *command, t_env *env,
 int		get_command_status(t_env *env, int status);
 int		execute_command(t_command *cmd, t_env *env);
 void	launch_command(t_command *cmd, t_env *env, char **args);
+void	subshell_execute(t_ast *node, t_env *env);
 #endif // EXECUTE_H

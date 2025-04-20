@@ -6,11 +6,17 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 20:34:36 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/04/15 16:10:00 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/20 18:28:56 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <zen.h>
+
+void	safe_exit(int code)
+{
+	cleanup_memory_tracker(get_memory_tracker());
+	exit(code);
+}
 
 void	launch_command(t_command *cmd, t_env *env, char **args)
 {
@@ -20,7 +26,7 @@ void	launch_command(t_command *cmd, t_env *env, char **args)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (setup_redirections(cmd) == -1)
-		exit(EXIT_FAILURE);
+		safe_exit(EXIT_FAILURE);
 	code = COMMAND_NOT_FOUND;
 	cmd_path = search_path(env->path, args[0], &code);
 	if (cmd_path)
@@ -29,7 +35,7 @@ void	launch_command(t_command *cmd, t_env *env, char **args)
 		execve(cmd_path->cstring, args, env->envp);
 		str_destruct(cmd_path);
 	}
-	exit(code);
+	safe_exit(code);
 }
 
 int	get_command_status(t_env *env, int status)

@@ -1,23 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   context.c                                          :+:      :+:    :+:   */
+/*   subshell_execute.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 15:19:43 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/20 18:23:19 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/04/20 18:27:50 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/04/20 18:30:29 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
 
-void	init_context(t_string *initial_input, t_env *env)
+void	subshell_execute(t_ast *node, t_env *env)
 {
-	t_context	*context;
+	t_env	*subshell_env;
+	int		result;
 
-	context = *get_context();
-	context->flags = 0;
-	context->input = initial_input;
-	if (!context->env)
-		context->env = env;
+	subshell_env = env_copy(env);
+	set_subshell_env(subshell_env);
+	if (setup_redirections(&node->u_value.command) == -1)
+	{
+		env_destroy(subshell_env);
+		safe_exit(EXIT_FAILURE);
+	}
+	result = execute_ast(node->left, subshell_env);
+	env_destroy(subshell_env);
+	unset_subshell_env();
+	safe_exit(result);
 }
