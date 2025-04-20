@@ -33,7 +33,9 @@ t_error	lexer_tokenize(t_lexer *lex)
 			lex->cursor++;
 		if (ft_zen_isalnum(lex->source[lex->cursor])
 			|| is_quote(lex->source[lex->cursor]))
+		{
 			err = consume_word(lex);
+		}
 		else if (ft_ispunct(lex->source[lex->cursor]))
 			err = consume_symbol(lex);
 		if (err != OK)

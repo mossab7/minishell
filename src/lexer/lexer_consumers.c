@@ -34,7 +34,10 @@ static int	process_char(t_token *tok, t_lexer *lex, t_u8 *input_state,
 	if (*input_state)
 		token_push_back(tok, lex->source[lex->cursor++], *input_state);
 	else
+	{
 		token_push_back(tok, lex->source[lex->cursor++], NOT_QUOTED);
+		tok->lexeme->mask->context |= (NOT_QUOTED);
+	}
 	return (0);
 }
 

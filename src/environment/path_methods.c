@@ -43,8 +43,6 @@ t_string	*search_path(t_string_vector *path, char *cmd, int *code)
 		return (zen_elog("%s: Permission denied\n", cmd), NULL);
 	}
 	iter = 0;
-	if (!path->size)
-		return (zen_elog("%s: command not found\n", cmd), NULL);
 	full_path = str_construct();
 	while (iter < path->size)
 	{

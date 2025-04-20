@@ -55,7 +55,13 @@ void	lex_quote(t_token *tok, t_u8 *state, char quote,
 		t_stack *stacks[QUOTING_STACKS_SIZE])
 {
 	if (quote == QUOTE_SINGLE)
+	{
+		tok->lexeme->mask->context |= (SINGLE_QUOTED);
 		lex_single(tok, state, quote, stacks);
+	}
 	else
+	{
+		tok->lexeme->mask->context |= (DOUBLE_QUOTED);
 		lex_double(tok, state, quote, stacks);
+	}
 }

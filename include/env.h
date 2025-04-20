@@ -13,15 +13,15 @@
 #ifndef ENV_H
 # define ENV_H
 
-# define KEY_INDEX 0
-# define VALUE_INDEX 1
 # include <cells.h>
 # include <t_string.h>
 # include <t_string_vector.h>
 # include <zenint.h>
 
-#define COMMAND_NOT_FOUND 127
-#define PERM_DENIED 126
+# define KEY_INDEX 0
+# define VALUE_INDEX 1
+# define COMMAND_NOT_FOUND 127
+# define PERM_DENIED 126
 
 typedef struct s_env
 {
@@ -46,7 +46,8 @@ void				env_set(t_env *env, char *key, char *new_value);
 char				*env_get(t_env *env, char *key);
 void				env_print(t_env *env);
 void				parse_path(t_string_vector *path, char *src);
-t_string			*search_path(t_string_vector *path, char *command, int *code);
+t_string			*search_path(t_string_vector *path,
+						char *command, int *code);
 int					cells_key_exists(t_cells *cells, char *key);
 void				env_set_defaults(t_env *env);
 void				increment_shell_level(t_env *env);

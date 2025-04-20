@@ -22,6 +22,13 @@ static void	find_next_wcard(t_token_array *tokens, size_t *cursor)
 		(*cursor)++;
 }
 
+static int	_is_export(t_string *command)
+{
+	return (ft_strcmp(command->cstring, "export") == 0
+		&& (!(command->mask->context & SINGLE_QUOTED)
+			&& !(command->mask->context & DOUBLE_QUOTED)));
+}
+
 void	pathname_expansion(t_token_array **tokens_array)
 {
 	t_token_array	*tokens;
@@ -46,8 +53,7 @@ void	expand_command(t_env *env, t_token_array **tokens_array)
 	is_export = 0;
 	cursor = 0;
 	tokens = *tokens_array;
-	if (ft_strcmp(tokens->items[cursor].lexeme->cstring, "export") == 0)
-		is_export = 1;
+	is_export = _is_export(tokens->items[cursor].lexeme);
 	while (true)
 	{
 		find_next_expansion(tokens, &cursor);

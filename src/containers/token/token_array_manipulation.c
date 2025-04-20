@@ -87,6 +87,7 @@ t_token	*ft_tokdup(t_token token)
 			token.lexeme->mask->items[index]);
 		index++;
 	}
+	new_token->lexeme->mask->context = token.lexeme->mask->context;
 	return (new_token);
 }
 
