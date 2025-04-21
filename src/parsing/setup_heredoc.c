@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 19:45:34 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/04/19 13:32:47 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/20 21:11:01 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,13 @@ t_string	*read_heredoc_content(t_redirect *redir, int fd)
 		line = ft_readline("> ");
 		if (line == NULL)
 		{
-			zen_elog(DL, redir->delimiter);
+			zen_elog(DL, redir->heredoc_delimiter->cstring);
 			break ;
 		}
-		string_expand(get_context_env(), line);
-		if (ft_strcmp(line->cstring, redir->delimiter) == 0)
+		if (!(redir->heredoc_delimiter->mask->context & SINGLE_QUOTED)
+			&& !(redir->heredoc_delimiter->mask->context & DOUBLE_QUOTED))
+			string_expand(get_context_env(), line);
+		if (ft_strcmp(line->cstring, redir->heredoc_delimiter->cstring) == 0)
 		{
 			str_destruct(line);
 			break ;

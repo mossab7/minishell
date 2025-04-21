@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/04/14 22:57:45 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/20 21:12:06 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ typedef struct s_redirect
 	char				*filename;
 	int					fd;
 	char				*delimiter;
+	t_string			*heredoc_delimiter;
 }						t_redirect;
 
 typedef struct s_command
@@ -121,7 +122,7 @@ bool					process_redirection_token(t_token_array *tokens,
 							size_t *index, t_redirect **redirects,
 							int *redirect_count);
 t_ast					*parse_command(t_token_array *tokens, size_t *index);
-t_redirect				*create_redirect(t_redirect_type type, char *target);
+t_redirect				*create_redirect(t_redirect_type type, t_string *target);
 t_redirect				*parse_redirection(t_token_array *tokens,
 							size_t *index);
 t_ast					*create_binary_node(t_node_type node_type, t_ast *left,

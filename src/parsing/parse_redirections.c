@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 19:52:49 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/04/20 18:26:38 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/20 21:11:41 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,10 +47,10 @@ t_redirect	*parse_redirection(t_token_array *tokens, size_t *index)
 		return (syntax_error("Expected filename/delimiter after redirection"));
 	(*index)++;
 	string_expand(get_context_env(), token.lexeme);
-	return (create_redirect(type, ft_strdup(token.lexeme->cstring)));
+	return (create_redirect(type, token.lexeme));
 }
 
-t_redirect	*create_redirect(t_redirect_type type, char *target)
+t_redirect	*create_redirect(t_redirect_type type, t_string *target)
 {
 	t_redirect	*redir;
 
@@ -58,13 +58,13 @@ t_redirect	*create_redirect(t_redirect_type type, char *target)
 	redir->type = type;
 	if (type == REDIR_HEREDOC)
 	{
-		redir->delimiter = target;
+		redir->heredoc_delimiter = target;
 		if (!check_context_flag(FLAG_SIGINT_RECEIVED))
 			setup_here_doc(redir);
 	}
 	else
 	{
-		redir->filename = target;
+		redir->filename = ft_strdup(target->cstring);
 		redir->delimiter = NULL;
 	}
 	return (redir);
