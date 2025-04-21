@@ -62,16 +62,14 @@ int	__resolve_path(t_string *path, t_env *env, char *dst)
 	char	*home;
 	char	buffer[PATH_MAX];
 
-	if (!dst || !*dst || ft_strcmp(dst, "~") == 0)
+	if (!dst || !*dst)
+		return ((zen_elog("cd: provide a relative/abs path\n")), FAILURE);
+	if (ft_strcmp(dst, "~") == 0)
 	{
-		if (dst == NULL || ft_strcmp(dst, "~") == 0)
-		{
-			home = env_get(env, "HOME");
-			if (!home)
-				return ((zen_elog("cd: HOME not set\n")), FAILURE);
-			return (__resolve_path(path, env, home));
-		}
-		return (__resolve_path(path, env, "."));
+		home = env_get(env, "HOME");
+		if (!home)
+			return ((zen_elog("cd: HOME not set\n")), FAILURE);
+		return (__resolve_path(path, env, home));
 	}
 	res = handle_hiphen(env, buffer, dst);
 	if (res == HANDLED)

@@ -42,7 +42,15 @@ t_env	*get_context_env(void)
 	t_context	*context;
 
 	context = *get_context();
-	if (context->flags & IN_SUBSHELL)
+	if (get_is_insubshell())
 		return (context->subshell_env);
 	return (context->env);
+}
+
+int	get_is_insubshell(void)
+{
+	t_context	*context;
+
+	context = *get_context();
+	return (context->flags & IN_SUBSHELL);
 }

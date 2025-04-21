@@ -27,22 +27,23 @@ int	built_in_exit(t_env *env, int argc, char **args)
 	int	code;
 
 	(void)env;
-	code = 0;
+	code = env->last_command_status;
+	if (!get_is_insubshell())
+		ft_printf("exit\n");
 	if (args && args[1])
 	{
 		if (argc > 2)
 		{
 			zen_elog("exit: too many arguments \n");
-			return (1);
+			code = 1;
 		}
 		else if (!is_numeric(args[1]))
 		{
 			zen_elog("exit: %s: numeric argument required \n", args[1]);
-			return (2);
-		}
-		code = ft_atoi(args[1]);
+			code = 2;
+		} else
+			code = ft_atoi(args[1]);
 	}
-	ft_printf("exit\n");
 	cleanup_memory_tracker(get_memory_tracker());
 	exit(code);
 	return (0);

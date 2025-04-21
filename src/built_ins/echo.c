@@ -51,7 +51,7 @@ int	built_in_echo(t_env *env, int argc, char **args)
 	}
 	new_line = true;
 	i = 1;
-	if (is_no_nlarg(args[i]))
+	while (is_no_nlarg(args[i]))
 	{
 		new_line = false;
 		i++;

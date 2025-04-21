@@ -37,10 +37,14 @@ t_string	*search_path(t_string_vector *path, char *cmd, int *code)
 
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, F_OK | X_OK) == 0)
+		if (is_dir(cmd))
+			zen_elog("%s: Is a directory\n", cmd);
+		else if (access(cmd, F_OK | X_OK))
+			zen_elog("%s: Permission denied\n", cmd);
+		else
 			return (vstr_construct(1, cmd));
 		*code = PERM_DENIED;
-		return (zen_elog("%s: Permission denied\n", cmd), NULL);
+		return (NULL);
 	}
 	iter = 0;
 	full_path = str_construct();

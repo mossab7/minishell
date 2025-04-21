@@ -39,7 +39,7 @@ typedef enum e_redirect_type
 typedef struct s_redirect
 {
 	t_redirect_type		type;
-	char				*filename;
+	t_string			*filename;
 	int					fd;
 	char				*delimiter;
 	t_string			*heredoc_delimiter;

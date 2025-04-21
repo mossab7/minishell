@@ -16,13 +16,13 @@ int	execute_here_doc(t_redirect *redir)
 {
 	int	fd;
 
-	fd = open(redir->filename, O_RDONLY);
+	fd = open(redir->filename->cstring, O_RDONLY);
 	if (fd == -1)
 	{
-		perror(redir->filename);
+		perror(redir->filename->cstring);
 		return (-1);
 	}
-	unlink(redir->filename);
+	unlink(redir->filename->cstring);
 	dup2(fd, STDIN_FILENO);
 	close(fd);
 	return (0);
@@ -32,10 +32,10 @@ int	inptu_redirection(t_redirect *redir)
 {
 	int	fd;
 
-	fd = open(redir->filename, O_RDONLY);
+	fd = open(redir->filename->cstring, O_RDONLY);
 	if (fd == -1)
 	{
-		perror(redir->filename);
+		perror(redir->filename->cstring);
 		return (-1);
 	}
 	dup2(fd, STDIN_FILENO);
@@ -47,10 +47,10 @@ int	output_redirection(t_redirect *redir)
 {
 	int	fd;
 
-	fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	fd = open(redir->filename->cstring, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		perror(redir->filename);
+		perror(redir->filename->cstring);
 		return (-1);
 	}
 	dup2(fd, STDOUT_FILENO);
@@ -62,10 +62,10 @@ int	append_redirection(t_redirect *redir)
 {
 	int	fd;
 
-	fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	fd = open(redir->filename->cstring, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
-		perror(redir->filename);
+		perror(redir->filename->cstring);
 		return (-1);
 	}
 	dup2(fd, STDOUT_FILENO);
@@ -86,7 +86,7 @@ int	setup_redirections(t_command *cmd)
 		if (redir->type != REDIR_HEREDOC)
 		{
 			if (is_ambiguous_redirect(redir->filename))
-				return ((zen_elog("ambiguous redirect\n")), -1);
+				return (-1);
 		}
 		if (redir->type == REDIR_INPUT)
 			fd = inptu_redirection(redir);

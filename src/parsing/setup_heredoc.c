@@ -100,13 +100,13 @@ int	setup_here_doc(t_redirect *redir)
 
 	status = 0;
 	set_context_flag(FLAG_HERE_DOC_ACTIVE);
-	if (init_heredoc(&redir->filename, &fd, pipefd) == -1)
+	if (init_heredoc(&redir->filename->cstring, &fd, pipefd) == -1)
 		return (-1);
 	pid = fork();
 	if (pid == -1)
 	{
 		perror("fork");
-		return (cleanup_on_error(redir->filename, fd, -1));
+		return (cleanup_on_error(redir->filename->cstring, fd, -1));
 	}
 	if (pid == 0)
 		handle_heredoc_child(fd, pipefd, redir);
@@ -116,6 +116,6 @@ int	setup_here_doc(t_redirect *redir)
 	close(pipefd[0]);
 	waitpid(pid, &status, 0);
 	if (WIFSIGNALED(WEXITSTATUS(status)))
-		return (cleanup_on_error(redir->filename, -1, status));
+		return (cleanup_on_error(redir->filename->cstring, -1, status));
 	return (0);
 }

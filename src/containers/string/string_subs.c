@@ -63,6 +63,7 @@ void	str_substitute(t_string *string, char *repl, t_string *which)
 		ft_memcpy((string->cstring + cursor), (const char *)repl, repl_size);
 		ft_memset(string->mask->items + cursor,
 			(ctx_mask | EXPANDED), repl_size);
+		string->mask->context |= EXPANDED;
 		string->cstring[string->size] = 0;
 	}
 }

@@ -11,24 +11,31 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-bool	is_ambiguous_redirect(const char *filename)
+bool	is_ambiguous_redirect(t_string *filename)
 {
 	struct stat	file_stat;
 
-	if (!filename || filename[0] == '\0')
+	if (!filename->cstring)
+	{
+		zen_elog("%s: ambiguous redirect\n", filename->cstring);
 		return (true);
-	if (stat(filename, &file_stat) == 0)
+	}
+	if (stat(filename->cstring, &file_stat) == 0)
 	{
 		if (S_ISDIR(file_stat.st_mode))
 		{
-			zen_elog("bash: %s/: Is a directory\n", filename);
+			zen_elog("%s/: Is a directory\n", filename->cstring);
 			return (true);
 		}
 	}
-	if (ft_strchr((char *)filename, '$')
-		|| ft_strchr((char *)filename, '*')
-		|| ft_strchr((char *)filename, '?'))
+	// TODO: the filename->cstring we get here should be not expanded
+	if (ft_strchr((char *)filename->cstring, '$')
+		|| ft_strchr((char *)filename->cstring, '*')
+		|| ft_strchr((char *)filename->cstring, '?'))
+	{
+		zen_elog("%s: ambiguous redirect\n", filename->cstring);
 		return (true);
+	}
 	return (false);
 }
 

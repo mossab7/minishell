@@ -60,4 +60,5 @@ void		mask_copy(t_mask *dst, t_mask *src, size_t start);
 void		mask_print(t_mask *mask);
 void		mask_copy_ignore_spaces(t_mask *dst, t_string *src, size_t start);
 int			is_dollar_sign_not_expandable(t_string *string, int index);
+t_string	*string_dup(t_string *other);
 #endif // !T_STRING_H

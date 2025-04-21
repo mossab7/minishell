@@ -33,15 +33,16 @@ typedef struct s_context
 	char		*pwd;
 }				t_context;
 
-t_context		**get_context(void);
-t_string		*get_context_input(void);
-void			init_context(t_string *initial_input, t_env *env);
-t_env			*get_context_env(void);
-void			toggle_context_flag(t_ctx_flags flag);
-bool			check_context_flag(t_ctx_flags flag);
-void			set_context_flag(t_ctx_flags flag);
-void			unset_context_flag(t_ctx_flags flag);
-void			set_pwd(char *pwd);
-void			set_subshell_env(t_env *senv);
-void			unset_subshell_env(void);
+t_context	**get_context(void);
+t_string	*get_context_input(void);
+void		init_context(t_string *initial_input, t_env *env);
+t_env		*get_context_env(void);
+void		toggle_context_flag(t_ctx_flags flag);
+bool		check_context_flag(t_ctx_flags flag);
+void		set_context_flag(t_ctx_flags flag);
+void		unset_context_flag(t_ctx_flags flag);
+void		set_pwd(char *pwd);
+void		set_subshell_env(t_env *senv);
+void		unset_subshell_env(void);
+int			get_is_insubshell(void);
 #endif // !CONTEXT_H

@@ -46,7 +46,6 @@ t_redirect	*parse_redirection(t_token_array *tokens, size_t *index)
 	if (token.type != TOK_WORD)
 		return (syntax_error("Expected filename/delimiter after redirection"));
 	(*index)++;
-	string_expand(get_context_env(), token.lexeme);
 	return (create_redirect(type, token.lexeme));
 }
 
@@ -58,13 +57,14 @@ t_redirect	*create_redirect(t_redirect_type type, t_string *target)
 	redir->type = type;
 	if (type == REDIR_HEREDOC)
 	{
+		string_expand(get_context_env(), target);
 		redir->heredoc_delimiter = target;
 		if (!check_context_flag(FLAG_SIGINT_RECEIVED))
 			setup_here_doc(redir);
 	}
 	else
 	{
-		redir->filename = ft_strdup(target->cstring);
+		redir->filename = string_dup(target);
 		redir->delimiter = NULL;
 	}
 	return (redir);
