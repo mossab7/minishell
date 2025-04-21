@@ -79,7 +79,10 @@ t_ast	*parse_primary(t_token_array *tokens, size_t *index)
 	{
 		node = parse_command(tokens, index);
 		if (!node && !check_context_flag(FLAG_SYNTAX_ERROR))
+		{
+			zen_elog("unfinished logical statement\n");
 			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
+		}
 	}
 	return (node);
 }
@@ -96,7 +99,10 @@ t_ast	*parse_pipe(t_token_array *tokens, size_t *index)
 		left = create_binary_node(NODE_PIPE, left, parse_primary(tokens,
 					index));
 		if (!left->right)
+		{
+			zen_elog("unfinished pipe\n");
 			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
+		}
 	}
 	return (left);
 }
