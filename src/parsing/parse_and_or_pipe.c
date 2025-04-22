@@ -78,8 +78,7 @@ t_ast	*parse_primary(t_token_array *tokens, size_t *index)
 		node = parse_command(tokens, index);
 		if (!node && !check_context_flag(FLAG_SYNTAX_ERROR))
 		{
-			zen_elog("syntax error near unexpected token: %s\n",
-				tokens->items[*index - 1].lexeme->cstring);
+			zen_elog("syntax error near unexpected token\n");
 			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
 		}
 	}

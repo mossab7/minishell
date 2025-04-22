@@ -27,7 +27,7 @@ static t_error	process_command(t_parser *parser)
 	parser_lex(parser);
 	if (parser->lexer_status == ERROR_QUOTE_UNCLOSED)
 		ft_quote_error(parser);
-	if (parser->lexer_status == OK)
+	if ((parser->lexer_status == OK) && (parser->lexer->tokens->size))
 		parser_procced_to_exec(parser);
 	return (OK);
 }
