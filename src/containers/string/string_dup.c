@@ -16,15 +16,16 @@ t_string	*string_dup(t_string *other)
 	t_string	*new;
 	size_t		index;
 
-	new = vstr_construct(1, other->cstring);
+	new = str_construct();
 	new->mask = mask_construct();
 	index = 0;
-	while (index < new->mask->size)
+	while (index < other->size)
 	{
-		mask_push_back(new->mask,
-			other->mask->items[index]);
+		str_push_back(new, other->cstring[index]);
+		mask_push_back(new->mask, other->mask->items[index]);
 		index++;
 	}
 	new->mask->context = other->mask->context;
+	new->tmp_type = other->tmp_type;
 	return (new);
 }

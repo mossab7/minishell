@@ -74,4 +74,5 @@ int				invalid_oldpwd_detected(void);
 void			safe_exit(int code);
 void			ft_perror(char *cstring);
 void			expand_if_delim_not_quoted(t_string *delim, t_string *line);
+t_token_array	*expand_string_to_tokens(t_string *string);
 #endif // ZEN_H

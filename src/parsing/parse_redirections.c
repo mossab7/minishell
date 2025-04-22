@@ -43,9 +43,10 @@ t_redirect	*parse_redirection(t_token_array *tokens, size_t *index)
 		return (NULL);
 	(*index)++;
 	token = peek_token(tokens, *index);
-	if (token.type != TOK_WORD)
+	if (token.type != TOK_WORD && token.type != TOK_WILD_CARD)
 		return (syntax_error("Expected filename/delimiter after redirection"));
 	(*index)++;
+	token.lexeme->tmp_type = token.type;
 	return (create_redirect(type, token.lexeme));
 }
 

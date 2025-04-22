@@ -28,7 +28,7 @@ int		handle_pipe_error(int *pipefd, char *msg);
 void	launch_left_pipe(t_ast *node, t_env *env, int pipefd[2]);
 void	launch_right_pipe(t_ast *node, t_env *env, int pipefd[2]);
 int		execute_pipe(t_ast *node, t_env *env);
-bool	is_ambiguous_redirect(t_string *filename);
+bool	is_ambiguous_redirect(t_string **filename);
 int		execute_subshell(t_ast *node, t_env *env);
 int		execute_logical_or(t_ast *node, t_env *env, int left_status);
 void	reset_redirections(int *original_stdin, int *original_stdout);

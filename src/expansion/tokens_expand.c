@@ -41,3 +41,15 @@ void	tokens_expand(t_env *env, t_token_array *tokens, size_t *cursor)
 		key = extract_key(tk->lexeme);
 	}
 }
+
+t_token_array	*expand_string_to_tokens(t_string *string)
+{
+	t_token_array	*toks;
+
+	toks = tok_array_construct();
+	toks->items[toks->size].lexeme = string_dup(string);
+	toks->items[toks->size].type = string->tmp_type;
+	toks->size++;
+	expand_command(get_context_env(), &toks);
+	return (toks);
+}

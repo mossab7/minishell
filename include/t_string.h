@@ -28,11 +28,12 @@ typedef struct s_mask
 
 typedef struct s_string
 {
-	t_mask	*mask;
-	char	*cstring;
-	size_t	size;
-	size_t	cap;
-	int		cursor;
+	t_mask		*mask;
+	int			tmp_type;
+	char		*cstring;
+	size_t		size;
+	size_t		cap;
+	int			cursor;
 }			t_string;
 
 void		str_shift_left(t_string *str, int new_dest, int size);

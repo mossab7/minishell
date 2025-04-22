@@ -67,6 +67,7 @@ void	expand_command(t_env *env, t_token_array **tokens_array)
 	}
 	field_split(tokens_array, is_export);
 	pathname_expansion(tokens_array);
+	tokens = *tokens_array;
 }
 
 void	expand_if_delim_not_quoted(t_string *delim, t_string *line)

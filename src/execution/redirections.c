@@ -85,7 +85,7 @@ int	setup_redirections(t_command *cmd)
 		redir = cmd->redirects[i++];
 		if (redir->type != REDIR_HEREDOC)
 		{
-			if (is_ambiguous_redirect(redir->filename))
+			if (is_ambiguous_redirect(&redir->filename))
 				return (-1);
 		}
 		if (redir->type == REDIR_INPUT)

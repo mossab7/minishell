@@ -11,29 +11,30 @@
 /* ************************************************************************** */
 #include <zen.h>
 
-bool	is_ambiguous_redirect(t_string *filename)
+bool	is_ambiguous_redirect(t_string **filename)
 {
-	struct stat	file_stat;
+	struct stat		file_stat;
+	t_token_array	*toks;
 
-	if (!filename->cstring)
+	if (!(*filename)->cstring)
+		return (zen_elog("%s: ambiguous redirect\n", (*filename)->cstring), 1);
+	toks = expand_string_to_tokens(*filename);
+	if (toks->size > 1)
 	{
-		zen_elog("%s: ambiguous redirect\n", filename->cstring);
+		zen_elog("%s: ambiguous redirect\n", (*filename)->cstring);
+		toks_destroy(toks);
 		return (true);
 	}
-	if (stat(filename->cstring, &file_stat) == 0)
+	str_destruct(*filename);
+	*filename = string_dup(toks->items[0].lexeme);
+	toks_destroy(toks);
+	if (stat((*filename)->cstring, &file_stat) == 0)
 	{
 		if (S_ISDIR(file_stat.st_mode))
 		{
-			zen_elog("%s/: Is a directory\n", filename->cstring);
+			zen_elog("%s/: Is a directory\n", (*filename)->cstring);
 			return (true);
 		}
-	}
-	if (ft_strchr((char *)filename->cstring, '$')
-		|| ft_strchr((char *)filename->cstring, '*')
-		|| ft_strchr((char *)filename->cstring, '?'))
-	{
-		zen_elog("%s: ambiguous redirect\n", filename->cstring);
-		return (true);
 	}
 	return (false);
 }
