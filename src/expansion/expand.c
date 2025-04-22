@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:43:05 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/19 11:18:55 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/22 11:11:05 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -67,4 +67,11 @@ void	expand_command(t_env *env, t_token_array **tokens_array)
 	}
 	field_split(tokens_array, is_export);
 	pathname_expansion(tokens_array);
+}
+
+void	expand_if_delim_not_quoted(t_string *delim, t_string *line)
+{
+	if (!(delim->mask->context & SINGLE_QUOTED)
+		&& !(delim->mask->context & DOUBLE_QUOTED))
+		string_expand(get_context_env(), line);
 }

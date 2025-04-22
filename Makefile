@@ -2,7 +2,7 @@ LIB_FT_DIR=./libft/
 LIB_FT_PRINTF_DIR=./ft_printf/
 LIB_FT=$(LIB_FT_DIR)libft.a
 LIB_FT_PRINTF=$(LIB_FT_PRINTF_DIR)libftprintf.a
-SRCS=./src/containers/string/string.c ./src/containers/token/token_array.c ./src/containers/stack/stack.c ./src/parsing/syntax_tree.c\
+SRCS=./src/containers/string/string_dup.c ./src/containers/string/string.c ./src/containers/token/token_array.c ./src/containers/stack/stack.c ./src/parsing/syntax_tree.c\
 	./src/environment/env.c ./src/environment/env_methods.c ./src/environment/env_methods_.c ./src/pathname/path_resolver.c ./src/logger/zenlogger.c\
 	./src/execution/execute.c ./src/environment/path_methods.c ./src/containers/string/string_vector.c ./src/expansion/expand.c ./src/expansion/wildcard.c\
 	./src/containers/string/string_mask.c ./src/containers/token/token_push_back.c ./src/signals/signals.c ./src/context/context.c ./src/built_ins/export.c ./src/containers/cells/cells.c\

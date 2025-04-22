@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 20:34:59 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/04/20 21:01:25 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/22 11:06:21 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	execute_here_doc(t_redirect *redir)
 	fd = open(redir->filename->cstring, O_RDONLY);
 	if (fd == -1)
 	{
-		perror(redir->filename->cstring);
+		ft_perror(redir->filename->cstring);
 		return (-1);
 	}
 	unlink(redir->filename->cstring);
@@ -35,7 +35,7 @@ int	inptu_redirection(t_redirect *redir)
 	fd = open(redir->filename->cstring, O_RDONLY);
 	if (fd == -1)
 	{
-		perror(redir->filename->cstring);
+		ft_perror(redir->filename->cstring);
 		return (-1);
 	}
 	dup2(fd, STDIN_FILENO);
@@ -50,7 +50,7 @@ int	output_redirection(t_redirect *redir)
 	fd = open(redir->filename->cstring, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fd == -1)
 	{
-		perror(redir->filename->cstring);
+		ft_perror(redir->filename->cstring);
 		return (-1);
 	}
 	dup2(fd, STDOUT_FILENO);
@@ -65,7 +65,7 @@ int	append_redirection(t_redirect *redir)
 	fd = open(redir->filename->cstring, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
 	{
-		perror(redir->filename->cstring);
+		ft_perror(redir->filename->cstring);
 		return (-1);
 	}
 	dup2(fd, STDOUT_FILENO);

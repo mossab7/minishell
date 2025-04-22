@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:23:54 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/16 22:18:51 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/22 11:11:19 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef ZEN_H
@@ -72,4 +72,6 @@ void			initialize_shell(t_parser *parser,
 void			shell_loop(t_parser *parser);
 int				invalid_oldpwd_detected(void);
 void			safe_exit(int code);
+void			ft_perror(char *cstring);
+void			expand_if_delim_not_quoted(t_string *delim, t_string *line);
 #endif // ZEN_H

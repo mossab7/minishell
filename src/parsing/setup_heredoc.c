@@ -6,16 +6,16 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 19:45:34 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/04/20 21:11:01 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/22 11:10:51 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <zen.h>
 
-int	init_heredoc(char **filename, int *fd, int pipefd[2])
+int	init_heredoc(t_string **filename, int *fd, int pipefd[2])
 {
-	*filename = ft_mkstemp();
-	*fd = open(*filename, O_RDWR | O_CREAT | O_EXCL, 0600);
+	*filename = vstr_construct(1, ft_mkstemp());
+	*fd = open((*filename)->cstring, O_RDWR | O_CREAT | O_EXCL, 0600);
 	if (pipe(pipefd) == -1)
 	{
 		perror("pipe");
@@ -43,9 +43,7 @@ t_string	*read_heredoc_content(t_redirect *redir, int fd)
 			zen_elog(DL, redir->heredoc_delimiter->cstring);
 			break ;
 		}
-		if (!(redir->heredoc_delimiter->mask->context & SINGLE_QUOTED)
-			&& !(redir->heredoc_delimiter->mask->context & DOUBLE_QUOTED))
-			string_expand(get_context_env(), line);
+		expand_if_delim_not_quoted(redir->heredoc_delimiter, line);
 		if (ft_strcmp(line->cstring, redir->heredoc_delimiter->cstring) == 0)
 		{
 			str_destruct(line);
@@ -100,7 +98,7 @@ int	setup_here_doc(t_redirect *redir)
 
 	status = 0;
 	set_context_flag(FLAG_HERE_DOC_ACTIVE);
-	if (init_heredoc(&redir->filename->cstring, &fd, pipefd) == -1)
+	if (init_heredoc(&redir->filename, &fd, pipefd) == -1)
 		return (-1);
 	pid = fork();
 	if (pid == -1)

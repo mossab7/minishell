@@ -53,9 +53,9 @@ t_ast	*build_ast(t_token_array *tokens)
 	index = 0;
 	ast = parse_and_or(tokens, &index);
 	token = peek_token(tokens, index);
-	if (token.type != TOK_EOF)
+	if (token.type != TOK_EOF && !check_context_flag(FLAG_SYNTAX_ERROR))
 	{
-		zen_elog ("syntax error near unexpected token : %s\n"\
+		zen_elog("syntax error near unexpected token : %s\n"\
 			, tokens->items[index].lexeme->cstring);
 		return (NULL);
 	}
@@ -78,7 +78,7 @@ void	ast_destroy(t_ast *root)
 	while (i < root->u_value.command.redirect_count)
 	{
 		ft_free(root->u_value.command.redirects[i]->delimiter);
-		ft_free(root->u_value.command.redirects[i]->filename);
+		str_destruct(root->u_value.command.redirects[i]->filename);
 		ft_free(root->u_value.command.redirects[i]);
 		i++;
 	}

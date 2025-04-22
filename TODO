@@ -1,3 +1,0 @@
-- `$PWD`: if it is a dir. print zen: $PWD: Is a directory
-- `ls > $a`: ambiguous redirect
-- `ls > g`:  g: is a directory.. but it displays two errors

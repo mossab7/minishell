@@ -28,7 +28,6 @@ bool	is_ambiguous_redirect(t_string *filename)
 			return (true);
 		}
 	}
-	// TODO: the filename->cstring we get here should be not expanded
 	if (ft_strchr((char *)filename->cstring, '$')
 		|| ft_strchr((char *)filename->cstring, '*')
 		|| ft_strchr((char *)filename->cstring, '?'))

@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 20:07:16 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/25 20:07:17 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/04/22 11:11:54 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,7 @@ t_ast	*parse_primary(t_token_array *tokens, size_t *index)
 		if (node == NULL)
 			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
 		if (!match_token(TOK_CPAREN, tokens, index))
-		{
 			return (syntax_error("unclosed parenthesis"));
-		}
 		node = parse_subshell_redirections(tokens, index, node);
 	}
 	else
@@ -80,7 +78,8 @@ t_ast	*parse_primary(t_token_array *tokens, size_t *index)
 		node = parse_command(tokens, index);
 		if (!node && !check_context_flag(FLAG_SYNTAX_ERROR))
 		{
-			zen_elog("unfinished logical statement\n");
+			zen_elog("syntax error near unexpected token: %s\n",
+				tokens->items[*index - 1].lexeme->cstring);
 			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
 		}
 	}
@@ -99,10 +98,7 @@ t_ast	*parse_pipe(t_token_array *tokens, size_t *index)
 		left = create_binary_node(NODE_PIPE, left, parse_primary(tokens,
 					index));
 		if (!left->right)
-		{
-			zen_elog("unfinished pipe\n");
 			return (set_context_flag(FLAG_SYNTAX_ERROR), NULL);
-		}
 	}
 	return (left);
 }

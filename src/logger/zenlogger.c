@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:43:55 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 06:43:57 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/22 11:06:56 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -30,4 +30,10 @@ void	ft_quote_error(t_parser *parser)
 	ppad(parser->lexer->cursor, ' ', NULL);
 	ft_fprintf(STDERR_FILENO, "^\n");
 	add_history(parser->input->cstring);
+}
+
+void	ft_perror(char *cstring)
+{
+	zen_elog("%s: ", cstring);
+	perror("");
 }

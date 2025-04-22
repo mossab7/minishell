@@ -41,7 +41,8 @@ int	built_in_exit(t_env *env, int argc, char **args)
 		{
 			zen_elog("exit: %s: numeric argument required \n", args[1]);
 			code = 2;
-		} else
+		}
+		else
 			code = ft_atoi(args[1]);
 	}
 	cleanup_memory_tracker(get_memory_tracker());

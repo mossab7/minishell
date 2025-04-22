@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 16:53:07 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/14 22:36:55 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/22 11:03:20 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -63,7 +63,6 @@ void	str_substitute(t_string *string, char *repl, t_string *which)
 		ft_memcpy((string->cstring + cursor), (const char *)repl, repl_size);
 		ft_memset(string->mask->items + cursor,
 			(ctx_mask | EXPANDED), repl_size);
-		string->mask->context |= EXPANDED;
 		string->cstring[string->size] = 0;
 	}
 }
