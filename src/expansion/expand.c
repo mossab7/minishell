@@ -17,6 +17,8 @@ static void	find_next_wcard(t_token_array *tokens, size_t *cursor)
 	while (*cursor < tokens->size
 		&& !ft_strchr(tokens->items[*cursor].lexeme->cstring, '*'))
 		(*cursor)++;
+	// if (*cursor < tokens->size && ft_strchr(tokens->items[*cursor].lexeme->cstring, '*'))
+	// 	return ;
 	while (*cursor < tokens->size
 		&& (tokens->items[*cursor].type != TOK_WILD_CARD))
 		(*cursor)++;

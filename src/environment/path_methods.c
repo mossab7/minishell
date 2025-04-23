@@ -32,12 +32,17 @@ void	parse_path(t_string_vector *path, char *src)
 
 static t_string	*resolve_abs_path(char *cmd, int *code)
 {
-	if (is_dir(cmd))
+	if (!access(cmd, F_OK) && !is_dir(cmd))
+	{
+		if (access(cmd, X_OK))
+			zen_elog("%s: Permission denied\n", cmd);
+		else
+			return (vstr_construct(1, cmd));
+	}
+	if (access(cmd, F_OK))
+		zen_elog("no such file or directory: %s\n", cmd);
+	else if (is_dir(cmd))
 		zen_elog("%s: Is a directory\n", cmd);
-	else if (access(cmd, F_OK | X_OK))
-		zen_elog("%s: Permission denied\n", cmd);
-	else
-		return (vstr_construct(1, cmd));
 	*code = PERM_DENIED;
 	return (NULL);
 }
