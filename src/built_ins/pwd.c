@@ -22,15 +22,16 @@ int	built_in_pwd(t_env *env, int argc, char **args)
 	(void)env;
 	context = *get_context();
 	pwd = context->pwd;
-	if (!pwd && !getcwd(owd, PATH_MAX))
+	if (!*pwd)
 	{
-		zen_elog("error retrieving current directory: "
-			"getcwd: cannot access parent directories: "
-			"No such file or directory\n");
-		return (1);
-	}
-	if (!pwd)
+		if (!getcwd(owd, PATH_MAX)) {
+			zen_elog("error retrieving current directory: "
+				"getcwd: cannot access parent directories: "
+				"No such file or directory\n");
+			return (1);
+		}
 		pwd = (char *)owd;
+	}
 	printf("%s\n", pwd);
 	return (0);
 }

@@ -16,7 +16,9 @@ void	set_pwd(char *pwd)
 	t_context	*context;
 
 	context = *get_context();
-	context->pwd = pwd;
+	if (context->pwd)
+		ft_free(context->pwd);
+	context->pwd = ft_strdup(pwd);
 }
 
 void	set_context_flag(t_ctx_flags flag)

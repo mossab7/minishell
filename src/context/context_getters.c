@@ -24,7 +24,11 @@ t_context	**get_context(void)
 		context->input = NULL;
 		context->env = NULL;
 		context->subshell_env = NULL;
-		context->pwd = getcwd(internal_buff, PATH_MAX);
+		if (getcwd(internal_buff, PATH_MAX))
+			context->pwd = ft_strdup(internal_buff);
+		else {
+			context->pwd = ft_strdup("");
+		}
 	}
 	return (&context);
 }
