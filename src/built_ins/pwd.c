@@ -24,7 +24,8 @@ int	built_in_pwd(t_env *env, int argc, char **args)
 	pwd = context->pwd;
 	if (!*pwd)
 	{
-		if (!getcwd(owd, PATH_MAX)) {
+		if (!getcwd(owd, PATH_MAX))
+		{
 			zen_elog("error retrieving current directory: "
 				"getcwd: cannot access parent directories: "
 				"No such file or directory\n");

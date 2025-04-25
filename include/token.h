@@ -39,14 +39,6 @@
 # define SINGLE_QUOTED 2
 # define DOUBLE_QUOTED 4
 # define EXPANDED 8
-// # define FIELD_SPLIT 8
-
-/*
-	// NOTE:		Unset a bit
-		byte &= ~(1 << index);
-	// NOTE:	set a bit
-		byte |= (1 << index)
-*/
 
 typedef enum e_parsing_state
 {
