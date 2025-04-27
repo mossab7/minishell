@@ -46,21 +46,20 @@ bool	match_token(t_token_type type, t_token_array *tokens, size_t *index)
 
 t_ast	*build_ast(t_token_array *tokens)
 {
-	size_t	index;
-	t_ast	*ast;
-	t_token	token;
+	size_t		index;
+	t_ast		*ast;
+	t_token		token;
+	t_context	*context;
 
 	index = 0;
 	ast = parse_and_or(tokens, &index);
 	token = peek_token(tokens, index);
-	if (token.type != TOK_EOF && !check_context_flag(FLAG_SYNTAX_ERROR))
+	context = *get_context();
+	if (check_context_flag(FLAG_SYNTAX_ERROR) || token.type != TOK_EOF)
 	{
-		zen_elog("syntax error near unexpected token : %s\n"\
-			, tokens->items[index].lexeme->cstring);
+		context->env->last_command_status = 2;
 		return (NULL);
 	}
-	if (check_context_flag(FLAG_SYNTAX_ERROR))
-		return (NULL);
 	return (ast);
 }
 
