@@ -42,7 +42,7 @@ void	launch_right_pipe(t_ast *node, t_env *env, int pipefd[2])
 int	execute_pipe(t_ast *node, t_env *env)
 {
 	int		pipefd[2];
-	int		pipe_status;
+	int		pipe_status[2];
 	pid_t	pid1;
 	pid_t	pid2;
 
@@ -60,8 +60,10 @@ int	execute_pipe(t_ast *node, t_env *env)
 		launch_right_pipe(node, env, pipefd);
 	close(pipefd[0]);
 	close(pipefd[1]);
-	waitpid(pid1, NULL, 0);
-	waitpid(pid2, &pipe_status, 0);
-	env->last_command_status = WEXITSTATUS(pipe_status);
-	return (env->last_command_status);
+	waitpid(pid1, &pipe_status[0], 0);
+	waitpid(pid2, &pipe_status[1], 0);
+	if (WEXITSTATUS(pipe_status[0]) == EXIT_SIGINT
+		|| WEXITSTATUS(pipe_status[1]) == EXIT_SIGINT)
+		set_context_flag(FLAG_SIGINT_RECEIVED);
+	return (env->last_command_status = WEXITSTATUS(pipe_status[1]));
 }
