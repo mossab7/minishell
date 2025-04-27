@@ -67,7 +67,7 @@ int	__resolve_path(t_string *path, t_env *env, char *dst)
 	if (ft_strcmp(dst, "~") == 0)
 	{
 		home = env_get(env, "HOME");
-		if (!home)
+		if (!*home)
 			return ((zen_elog("cd: HOME not set\n")), FAILURE);
 		return (__resolve_path(path, env, home));
 	}

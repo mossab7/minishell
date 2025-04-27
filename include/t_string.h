@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 15:15:46 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/14 22:16:08 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/27 17:17:47 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef T_STRING_H
@@ -62,4 +62,6 @@ void		mask_print(t_mask *mask);
 void		mask_copy_ignore_spaces(t_mask *dst, t_string *src, size_t start);
 int			is_dollar_sign_not_expandable(t_string *string, int index);
 t_string	*string_dup(t_string *other);
+void		jump_dollar_signs(t_string *string);
+int			delimiter_reached(t_string *delim, t_string *line);
 #endif // !T_STRING_H

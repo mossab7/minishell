@@ -16,15 +16,15 @@ t_string	*zen_prompt(t_env *env)
 	char		*user;
 	t_string	*buff;
 	t_string	*zen_prompt_;
-	char		*pwd;
+	t_context	*context;
 
 	zen_prompt_ = str_construct();
-	pwd = env_get(env, "PWD");
+	context = *get_context();
 	user = env_get(env, "USER");
-	if (!*user)
+	if (!*context->pwd)
 		user = "incognito";
 	if (isatty(STDIN_FILENO))
-		str_join(zen_prompt_, 4, user, "@", pwd, ": ");
+		str_join(zen_prompt_, 4, user, "@", context->pwd, ": ");
 	else
 		zen_prompt_->cstring = NULL;
 	set_context_flag(FLAG_READLINE_ACTIVE);

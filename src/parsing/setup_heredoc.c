@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 19:45:34 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/04/22 11:10:51 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/27 17:17:17 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ t_string	*read_heredoc_content(t_redirect *redir, int fd)
 	t_string	*input;
 
 	input = str_construct();
+	jump_dollar_signs(redir->heredoc_delimiter);
 	while (true)
 	{
 		line = ft_readline("> ");
@@ -43,12 +44,8 @@ t_string	*read_heredoc_content(t_redirect *redir, int fd)
 			zen_elog(DL, redir->heredoc_delimiter->cstring);
 			break ;
 		}
-		expand_if_delim_not_quoted(redir->heredoc_delimiter, line);
-		if (ft_strcmp(line->cstring, redir->heredoc_delimiter->cstring) == 0)
-		{
-			str_destruct(line);
+		if (delimiter_reached(redir->heredoc_delimiter, line))
 			break ;
-		}
 		write(fd, line->cstring, line->size);
 		write(fd, "\n", 1);
 		str_join(input, 2, line->cstring, "\n");

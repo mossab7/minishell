@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 19:52:49 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/04/20 21:11:41 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/27 17:18:30 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ t_redirect	*create_redirect(t_redirect_type type, t_string *target)
 	redir->type = type;
 	if (type == REDIR_HEREDOC)
 	{
-		string_expand(get_context_env(), target);
 		redir->heredoc_delimiter = target;
 		if (!check_context_flag(FLAG_SIGINT_RECEIVED))
 			setup_here_doc(redir);

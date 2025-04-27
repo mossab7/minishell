@@ -27,8 +27,7 @@ static int	__cd_success(t_env *env, t_string *resolved_path,
 {
 	char		cwd_buff[PATH_MAX];
 
-	if (*owd)
-		env_set(env, "OLDPWD", owd);
+	env_set(env, "OLDPWD", owd);
 	if (!getcwd(cwd_buff, PATH_MAX))
 	{
 		zen_elog("error retrieving current directory: "
@@ -38,8 +37,6 @@ static int	__cd_success(t_env *env, t_string *resolved_path,
 		return (env->last_command_status = 1);
 	}
 	env_set(env, "PWD", cwd_buff);
-	if (!*owd)
-		env_set(env, "OLDPWD", cwd_buff);
 	set_pwd(env_get(env, "PWD"));
 	str_destruct(resolved_path);
 	return (env->last_command_status = 0);
@@ -49,7 +46,6 @@ int	built_in_cd(t_env *env, int argc, char **dst)
 {
 	t_string	*resolved_path;
 	int			res;
-	char		owd[PATH_MAX];
 	char		*oldpwd_ptr;
 
 	(void)argc;
@@ -58,10 +54,7 @@ int	built_in_cd(t_env *env, int argc, char **dst)
 	if (res != SUCCESS)
 		return ((str_destruct(resolved_path))
 			, env->last_command_status = 1);
-	if (!getcwd(owd, PATH_MAX))
-		oldpwd_ptr = env_get(env, "PWD");
-	else
-		oldpwd_ptr = (char *)owd;
+	oldpwd_ptr = env_get(env, "PWD");
 	if (chdir(resolved_path->cstring) == 0)
 		return (__cd_success(env, resolved_path, oldpwd_ptr));
 	__cd_error(resolved_path, dst[1]);
