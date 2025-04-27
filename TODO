@@ -1,4 +1,0 @@
-i$_ not working no more
-exit with wrong arguments doesn't alwyse exit 
-exit status in exit is wrong in some cases
-redirection with no delemiter or file give wrong exit status and error msg
