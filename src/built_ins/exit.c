@@ -32,15 +32,15 @@ int	built_in_exit(t_env *env, int argc, char **args)
 		ft_printf("exit\n");
 	if (args && args[1])
 	{
-		if (argc > 2)
-		{
-			zen_elog("exit: too many arguments \n");
-			code = 1;
-		}
-		else if (!is_numeric(args[1]))
+		if (!is_numeric(args[1]))
 		{
 			zen_elog("exit: %s: numeric argument required \n", args[1]);
 			code = 2;
+		}
+		else if (argc > 2)
+		{
+			zen_elog("exit: too many arguments \n");
+			return (1);
 		}
 		else
 			code = ft_atoi(args[1]);
