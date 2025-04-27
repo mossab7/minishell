@@ -19,9 +19,6 @@ void	parser_procced_to_exec(t_parser *parser)
 		add_history(parser->input->cstring);
 		return ;
 	}
-	cells_push_back(parser->env->cells,
-		"_", parser->lexer->tokens->items[parser
-		->lexer->tokens->size - 1].lexeme->cstring);
 	if (parser->tree && !check_context_flag(FLAG_SYNTAX_ERROR))
 		execute_ast(parser->tree, parser->env);
 	add_history(parser->input->cstring);

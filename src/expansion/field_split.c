@@ -76,7 +76,7 @@ void	field_split(t_token_array **tokens_array, int is_export)
 		tk = (&tokens->items[i]);
 		tk->lexeme->cursor = 0;
 		if (tk->lexeme->size == 0
-			|| (is_export && ft_strchr(tk->lexeme->cstring, '=')))
+			|| (is_export && ft_strchr(tk->lexeme->cstring, '=') && !(ft_strchr(tk->lexeme->cstring, '=') > ft_strchr(tk->lexeme->cstring, '$'))))
 		{
 			tok_array_push_back(new_tokens, tk);
 			i++;

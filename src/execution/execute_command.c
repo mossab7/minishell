@@ -63,6 +63,8 @@ char	**collect_args(t_token_array *tokens)
 	i = 0;
 	if (tokens->size == 0)
 		return (NULL);
+	cells_push_back(get_context_env()->cells, "_",
+		tokens->items[tokens->size - 1].lexeme->cstring);
 	args = alloc(sizeof(char *) * (tokens->size + 1));
 	while (i < tokens->size)
 	{
