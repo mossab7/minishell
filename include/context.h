@@ -6,7 +6,7 @@
 /*   By: mbouhia <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/24 19:43:41 by mbouhia           #+#    #+#             */
-/*   Updated: 2025/03/24 19:43:41 by mbouhia          ###   ########.fr       */
+/*   Updated: 2025/04/28 14:28:13 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_context
 	t_env		*env;
 	t_env		*subshell_env;
 	char		*pwd;
+	int			_id_quoting;
 }				t_context;
 
 t_context	**get_context(void);
@@ -45,4 +46,5 @@ void		set_pwd(char *pwd);
 void		set_subshell_env(t_env *senv);
 void		unset_subshell_env(void);
 int			get_is_insubshell(void);
+int			*get_qid(void);
 #endif // !CONTEXT_H

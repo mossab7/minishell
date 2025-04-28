@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/25 17:18:17 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/25 17:19:00 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/28 15:19:30 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -29,7 +29,8 @@ void	copy_left_tokens(t_token_array *tokens, t_token_array *new_tokens_array,
 		while (j < tokens->items[i].lexeme->mask->size)
 		{
 			mask_push_back(new_tokens_array->items[i].lexeme->mask,
-				tokens->items[i].lexeme->mask->items[j]);
+				tokens->items[i].lexeme->mask->items[j],
+				tokens->items[i].lexeme->mask->ids[j]);
 			j++;
 		}
 		i++;
@@ -54,7 +55,7 @@ void	copy_entries(t_string_vector *entries, t_token_array *new_tokens_array,
 		while (j < ft_strlen(entries->cstrings[i]))
 		{
 			mask_push_back(new_tokens_array->items[cursor + i].lexeme->mask,
-				NOT_QUOTED);
+				NOT_QUOTED, 0);
 			j++;
 		}
 		i++;
@@ -81,7 +82,8 @@ void	copy_right_tokens(t_token_array *tokens,
 		while (j < tokens->items[i].lexeme->mask->size)
 		{
 			mask_push_back(new_tokens_array->items[dest_index].lexeme->mask,
-				tokens->items[i].lexeme->mask->items[j]);
+				tokens->items[i].lexeme->mask->items[j],
+				tokens->items[i].lexeme->mask->ids[j]);
 			j++;
 		}
 		i++;

@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 06:40:18 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/23 17:16:38 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/28 15:15:18 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -21,7 +21,7 @@ void	str_append(char *src, t_string *vec)
 	while (src[index])
 	{
 		str_push_back(vec, src[index]);
-		mask_push_back(vec->mask, 0);
+		mask_push_back(vec->mask, 0, 0);
 		index++;
 	}
 }
@@ -70,5 +70,9 @@ void	str_print(t_string *str)
 	i = 0;
 	while (i < str->mask->size)
 		ft_printf("%u", str->mask->items[i++]);
+	i = 0;
+	ft_printf("\n     ");
+	while (i < str->mask->size)
+		ft_printf("%u", str->mask->ids[i++]);
 	ft_printf("\n");
 }

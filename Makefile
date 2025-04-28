@@ -14,7 +14,8 @@ SRCS=./src/containers/string/string_heredoc_methods.c ./src/containers/string/st
 	./src/built_ins/exit.c ./src/built_ins/pwd.c ./src/built_ins/unset.c ./src/signals/here_doc_signals.c ./src/parsing/heredoc_utils.c ./src/parsing/setup_heredoc.c ./src/parsing/parse_and_or_pipe.c\
 	./src/environment/env_insert_defaults.c ./src/environment/env_join.c ./src/expansion/tokens_expand.c ./src/containers/token/tokens_copying.c ./src/execution/built_ins_exec.c\
 	./src/expansion/wildcard_match.c ./src/containers/token/tokens_wild_card_helpers.c ./src/expansion/wildcard_open_dir.c ./src/expansion/wildcard_errors.c ./src/execution/execute_pipe.c\
-	./src/lexer/lexer_consume_symbol.c ./src/expansion/find_next_expansion.c ./src/shell/shell.c ./src/environment/env_shlvl_handler.c ./src/execution/subshell_execute.c
+	./src/lexer/lexer_consume_symbol.c ./src/expansion/find_next_expansion.c ./src/shell/shell.c ./src/environment/env_shlvl_handler.c ./src/execution/subshell_execute.c\
+	./src/expansion/eshould_field_split.c
 OBJS=$(SRCS:%.c=%.o)
 ZEN_LIB=libzen.a
 NAME=minishell

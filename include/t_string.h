@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/21 15:15:46 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/27 17:17:47 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/28 14:34:32 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #ifndef T_STRING_H
@@ -21,6 +21,7 @@ typedef struct s_mask
 {
 	t_u8	context;
 	t_u8	*items;
+	size_t	*ids;
 	size_t	cap;
 	size_t	size;
 	size_t	cursor;
@@ -50,7 +51,7 @@ void		str_destruct(t_string *vec);
 void		str_join(t_string *vec, size_t count, ...);
 void		str_substitute(t_string *string, char *repl, t_string *which);
 void		mask_expand(t_mask *mask);
-void		mask_push_back(t_mask *mask, t_u8 item);
+void		mask_push_back(t_mask *mask, t_u8 item, unsigned int id);
 t_mask		*mask_construct(void);
 void		mask_destroy(t_mask *mask);
 void		mask_expand_anyhow(t_mask *mask);
@@ -59,9 +60,9 @@ void		str_print(t_string *str);
 void		mask_fill(t_mask *mask, t_u8 item, size_t size);
 void		mask_copy(t_mask *dst, t_mask *src, size_t start);
 void		mask_print(t_mask *mask);
-void		mask_copy_ignore_spaces(t_mask *dst, t_string *src, size_t start);
 int			is_dollar_sign_not_expandable(t_string *string, int index);
 t_string	*string_dup(t_string *other);
 void		jump_dollar_signs(t_string *string);
 int			delimiter_reached(t_string *delim, t_string *line);
+int			export_must_field_split(t_string *entry);
 #endif // !T_STRING_H

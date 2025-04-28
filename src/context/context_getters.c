@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/20 18:22:46 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/20 18:26:13 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/28 14:27:54 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -56,4 +56,12 @@ int	get_is_insubshell(void)
 
 	context = *get_context();
 	return (context->flags & IN_SUBSHELL);
+}
+
+int	*get_qid(void)
+{
+	t_context	*context;
+
+	context = *get_context();
+	return (&(context->_id_quoting));
 }

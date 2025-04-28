@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/05 13:01:26 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/14 22:08:27 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/28 14:32:02 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -14,7 +14,10 @@
 void	token_push_back(t_token	*tok, char c, t_u8 state)
 {
 	str_push_back(tok->lexeme, c);
-	mask_push_back(tok->lexeme->mask, state);
+	if (state & NOT_QUOTED)
+		mask_push_back(tok->lexeme->mask, state, 0);
+	else
+		mask_push_back(tok->lexeme->mask, state, *get_qid());
 }
 
 void	tok_array_push_back(t_token_array *array, t_token *tok)

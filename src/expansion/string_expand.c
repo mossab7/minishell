@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 17:20:30 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/19 13:23:49 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/28 15:19:05 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -28,15 +28,18 @@ static int	find_dollar_sign(t_string *string)
 
 static t_string	*build_key(t_string *string, t_u8 context)
 {
-	t_string	*key;
+	t_string		*key;
+	unsigned int	id;
 
 	key = str_construct();
 	key->mask->context = context;
+	id = string->mask->ids[string->cursor];
 	str_push_back(key, string->cstring[string->cursor++]);
 	while (!lexeme_ended(string)
 		&& !ft_isspace(string->cstring[string->cursor])
 		&& string->cstring[string->cursor] != '/'
-		&& string->mask->items[string->cursor] == context)
+		&& string->mask->items[string->cursor] == context
+		&& string->mask->ids[string->cursor] == id)
 	{
 		if (key->size > 1 && !ft_isalnum(string->cstring[string->cursor])
 			&& string->cstring[string->cursor] != '_')

@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/16 05:40:10 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/03/16 05:40:13 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/28 14:29:45 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -18,6 +18,7 @@ static void	lex_single(t_token *tok, t_u8 *state, char quote,
 		token_push_back(tok, quote, *state);
 	if (stacks[SINGLE_QUOTES_INDEX]->size)
 	{
+		(*get_qid())++;
 		stack_pop(stacks[SINGLE_QUOTES_INDEX]);
 		if (*state & SINGLE_QUOTED)
 			*state = 0;
@@ -38,6 +39,7 @@ static void	lex_double(t_token *tok, t_u8 *state, char quote,
 		token_push_back(tok, quote, *state);
 	if (stacks[DOUBLE_QUOTES_INDEX]->size)
 	{
+		(*get_qid())++;
 		stack_pop(stacks[DOUBLE_QUOTES_INDEX]);
 		if (*state & DOUBLE_QUOTED)
 			*state = 0;

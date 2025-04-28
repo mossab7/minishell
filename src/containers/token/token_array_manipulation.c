@@ -28,8 +28,12 @@ t_token_array	*tokens_copy(t_token_array *other)
 		copy->items[i].type = other->items[i].type;
 		j = 0;
 		while (j < other->items[i].lexeme->mask->size)
+		{
 			mask_push_back(copy->items[i].lexeme->mask,
-				other->items[i].lexeme->mask->items[j++]);
+				other->items[i].lexeme->mask->items[j],
+				other->items[i].lexeme->mask->ids[j]);
+			j++;
+		}
 		i++;
 	}
 	return (copy);
@@ -84,7 +88,8 @@ t_token	*ft_tokdup(t_token token)
 	while (index < token.lexeme->mask->size)
 	{
 		mask_push_back(new_token->lexeme->mask,
-			token.lexeme->mask->items[index]);
+			token.lexeme->mask->items[index],
+			token.lexeme->mask->ids[index]);
 		index++;
 	}
 	new_token->lexeme->mask->context = token.lexeme->mask->context;

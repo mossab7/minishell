@@ -1,24 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   context.c                                          :+:      :+:    :+:   */
+/*   eshould_field_split.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/17 15:19:43 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/28 14:26:43 by lazmoud          ###   ########.fr       */
+/*   Created: 2025/04/28 14:01:11 by lazmoud           #+#    #+#             */
+/*   Updated: 2025/04/28 14:01:22 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
 
-void	init_context(t_string *initial_input, t_env *env)
+int	export_must_field_split(t_string *entry)
 {
-	t_context	*context;
+	size_t	i;
 
-	context = *get_context();
-	context->flags = 0;
-	context->input = initial_input;
-	context->_id_quoting = 1;
-	if (!context->env)
-		context->env = env;
+	i = 0;
+	while (i < entry->size && entry->cstring[i] != '=')
+	{
+		if (entry->mask->items[i] & EXPANDED)
+			return (1);
+		i++;
+	}
+	return (0);
 }

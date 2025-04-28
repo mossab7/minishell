@@ -22,7 +22,8 @@ t_string	*string_dup(t_string *other)
 	while (index < other->size)
 	{
 		str_push_back(new, other->cstring[index]);
-		mask_push_back(new->mask, other->mask->items[index]);
+		mask_push_back(new->mask, other->mask->items[index],
+			other->mask->ids[index]);
 		index++;
 	}
 	new->mask->context = other->mask->context;

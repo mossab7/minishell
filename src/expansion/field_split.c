@@ -6,7 +6,7 @@
 /*   By: lazmoud <lazmoud@student.1337.ma>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/22 20:22:59 by lazmoud           #+#    #+#             */
-/*   Updated: 2025/04/14 22:58:37 by lazmoud          ###   ########.fr       */
+/*   Updated: 2025/04/28 15:18:30 by lazmoud          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 #include <zen.h>
@@ -76,7 +76,7 @@ void	field_split(t_token_array **tokens_array, int is_export)
 		tk = (&tokens->items[i]);
 		tk->lexeme->cursor = 0;
 		if (tk->lexeme->size == 0
-			|| (is_export && ft_strchr(tk->lexeme->cstring, '=') && !(ft_strchr(tk->lexeme->cstring, '=') > ft_strchr(tk->lexeme->cstring, '$'))))
+			|| (is_export && !export_must_field_split(tk->lexeme)))
 		{
 			tok_array_push_back(new_tokens, tk);
 			i++;

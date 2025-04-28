@@ -15,14 +15,14 @@ void	mask_fill(t_mask *mask, t_u8 item, size_t size)
 {
 	mask->size = 0;
 	while (mask->size < size)
-		mask_push_back(mask, item);
+		mask_push_back(mask, item, 0);
 }
 
 void	mask_copy(t_mask *dst, t_mask *src, size_t start)
 {
 	dst->size = start;
 	while (dst->size < src->size)
-		mask_push_back(dst, src->items[dst->size]);
+		mask_push_back(dst, src->items[dst->size], src->ids[dst->size]);
 }
 
 void	mask_print(t_mask *mask)
@@ -33,19 +33,4 @@ void	mask_print(t_mask *mask)
 	i = 0;
 	while (i < mask->size)
 		ft_printf("%u", mask->items[i++]);
-}
-
-void	mask_copy_ignore_spaces(t_mask *dst, t_string *src, size_t start)
-{
-	size_t	i;
-
-	dst->size = start;
-	i = start;
-	while (i < src->mask->size)
-	{
-		if (!ft_isspace(src->cstring[i]))
-			mask_push_back(dst, src->mask->items[i++]);
-		else
-			i++;
-	}
 }
