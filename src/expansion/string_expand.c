@@ -59,11 +59,15 @@ static t_string	*handle_solo_dollar(t_string *string, t_string *key)
 {
 	if (key->size == 1)
 	{
-		if (string->cursor && string->cstring[string->cursor] != 0)
+		if (string->cursor
+			&& string->cstring[string->cursor] != 0
+			&& string->mask->items[string->cursor - 1] & NOT_QUOTED)
 		{
 			str_shift_left(string, (string->cursor - 1), 1);
 			string->cstring[string->size] = 0;
 		}
+		else
+			string->mask->items[string->cursor - 1] |= EXPANDED;
 		str_destruct(key);
 		return (extract_key(string));
 	}
