@@ -53,5 +53,6 @@ dkms.conf
 minishell
 test.c
 ./minishell
+
 # Vscode files
 .vscode

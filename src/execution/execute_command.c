@@ -81,16 +81,15 @@ int	execute_command(t_command *cmd, t_env *env)
 	pid_t	current_pid;
 
 	status = 0;
-	if (cmd->args->size == 0)
-		return (0);
 	expand_command(get_context_env(), &cmd->args);
 	args = collect_args(cmd->args);
-	if (!args)
-		return (0);
-	env->last_command_status = execute_built_in_commands(cmd, args[0], env,
-			args);
-	if (env->last_command_status != -1)
-		return (env->last_command_status);
+	if (args)
+	{
+		env->last_command_status = execute_built_in_commands(cmd, args[0], env,
+				args);
+		if (env->last_command_status != -1)
+			return (env->last_command_status);
+	}
 	current_pid = fork();
 	if (current_pid == -1)
 	{
