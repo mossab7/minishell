@@ -19,7 +19,7 @@ SRCS=./src/containers/string/string_heredoc_methods.c ./src/containers/string/st
 OBJS=$(SRCS:%.c=%.o)
 ZEN_LIB=libzen.a
 NAME=minishell
-CC=cc
+CC=cc -g
 LIBS=-L. -L$(LIB_FT_PRINTF_DIR) -L$(LIB_FT_DIR) -lzen -lftprintf -lreadline -lft
 INCLUDE=-I./include
 MAIN=./src/zen.c

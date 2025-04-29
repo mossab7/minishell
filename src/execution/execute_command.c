@@ -27,6 +27,8 @@ void	launch_command(t_command *cmd, t_env *env, char **args)
 	signal(SIGQUIT, SIG_DFL);
 	if (setup_redirections(cmd) == -1)
 		safe_exit(EXIT_FAILURE);
+	if (!args)
+		safe_exit(EXIT_SUCCESS);
 	code = COMMAND_NOT_FOUND;
 	cmd_path = search_path(env->path, args[0], &code);
 	if (cmd_path)

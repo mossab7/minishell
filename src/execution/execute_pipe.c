@@ -28,7 +28,7 @@ void	launch_left_pipe(t_ast *node, t_env *env, int pipefd[2])
 	close(pipefd[0]);
 	dup2(pipefd[1], STDOUT_FILENO);
 	close(pipefd[1]);
-	exit(execute_ast(node->left, env));
+	safe_exit(execute_ast(node->left, env));
 }
 
 void	launch_right_pipe(t_ast *node, t_env *env, int pipefd[2])
@@ -36,7 +36,7 @@ void	launch_right_pipe(t_ast *node, t_env *env, int pipefd[2])
 	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
 	close(pipefd[0]);
-	exit(execute_ast(node->right, env));
+	safe_exit(execute_ast(node->right, env));
 }
 
 int	execute_pipe(t_ast *node, t_env *env)

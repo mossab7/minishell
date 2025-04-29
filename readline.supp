@@ -1,0 +1,9 @@
+# Suppression file for readline and ncurses memory leaks and reachable blocks
+
+# Readline suppressions
+{
+    ignore_libreadline_leaks
+    Memcheck:Leak
+    ...
+    obj:*/libreadline.so.*
+}

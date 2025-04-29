@@ -66,7 +66,7 @@ void	handle_heredoc_child(int fd, int pipefd[2], t_redirect *redir)
 	close(pipefd[1]);
 	close(fd);
 	str_destruct(input);
-	exit(0);
+	safe_exit(0);
 }
 
 void	read_from_pipe(int pipefd)
